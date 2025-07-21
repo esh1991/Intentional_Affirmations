@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affirmation Power</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="mic-permission-callout" style="display: none;">
+        <div class="arrow"></div>
+        Please click "Allow" on the microphone prompt so I can hear your affirmation!
+    </div>
+
+    <div class="app-container">
+        <!-- Screen 1: Category Selection -->
+        <div id="category-screen">
+            <h1 class="main-title">Speak It Into Existence.</h1>
+            <p class="main-subtitle">Science shows that declaring your goals out loud reprograms your brain for success. Choose a focus below and take the first step in just 15 seconds.</p>
+            <div class="categories">
+                <button class="category-btn" data-category="fitness">Fitness</button>
+                <button class="category-btn" data-category="confidence">Confidence</button>
+                <button class="category-btn" data-category="focus">Focus</button>
+                <button class="category-btn" data-category="gratitude">Gratitude</button>
+                <button class="category-btn" data-category="wealth">Wealth</button>
+                <button class="special" id="write-my-own-btn">Write My Own</button>
+            </div>
+        </div>
+        
+        <!-- Screen 1.5: Custom Input Screen -->
+        <div id="custom-input-screen" class="card" style="display: none;">
+            <h2>Write Your Own Affirmation</h2>
+            <textarea id="custom-text-input" placeholder="e.g., I am a creative problem solver."></textarea>
+            <button id="start-custom-btn">Start</button>
+            <button id="back-to-categories-btn" class="secondary">Back</button>
+        </div>
+
+        <!-- Screen 2: Affirmation Task -->
+        <div id="affirmation-screen" class="card" style="display: none;">
+            <p class="instruction-text">Say this out loud:</p>
+            <div class="affirmation-text-container" id="affirmation-text"></div>
+            <p id="status-message">Listening...</p>
+            <button id="refresh-btn" class="icon-btn" title="Get a new affirmation">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-9 9c-4.97 0-9-4.03-9-9s4.03-9 9-9c2.49 0 4.73.99 6.34 2.66"/><path d="M21 2v4h-4"/></svg>
+            </button>
+        </div>
+
+        <!-- Screen 3: The Win Screen! -->
+        <div id="win-screen" class="card" style="display: none;">
+            <img src="trophy.png" alt="Trophy" class="trophy-icon">
+            <h2>Success!</h2>
+            <p class="success-message">You've taken the first step. You've started to program your mind to take action and attract this into your life.</p>
+            <button id="another-one-btn">Do Another One</button>
+
+             <!-- UPDATED: Email signup is now INSIDE the win screen -->
+            <div id="email-signup-section" class="email-signup-container">
+                <h3>Keep the Momentum Going</h3>
+                <p>Get a powerful, thoughtful affirmation delivered to your inbox every morning. Free.</p>
+                <div id="email-capture-form">
+                    <input type="email" id="email-input" placeholder="Enter your email">
+                    <button id="submit-email-btn">Count Me In!</button>
+                </div>
+                <div id="email-thank-you" style="display: none;">
+                    <p>Awesome! Check your inbox to confirm.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
