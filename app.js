@@ -117,7 +117,7 @@ document.getElementById('submit-email-btn').addEventListener('click', async () =
     // ** PASTE YOUR N8N PRODUCTION URL HERE **
     const n8nWebhookUrl = 'https://esh1991.app.n8n.cloud/webhook/4e9ed364-627b-41bd-92fa-d6a36e63fbfc';
 
-    if (n8nWebhookUrl === 'https://esh1991.app.n8n.cloud/webhook/4e9ed364-627b-41bd-92fa-d6a36e63fbfc') {
+     if (n8nWebhookUrl === 'YOUR_N8N_PRODUCTION_URL_GOES_HERE') {
         alert('Please update the n8nWebhookUrl in app.js first!');
         return;
     }
