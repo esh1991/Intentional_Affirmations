@@ -33,10 +33,12 @@ function showScreen(screen) {
     [categoryScreen, customInputScreen, affirmationScreen, winScreen].forEach(s => s.style.display = 'none');
     screen.style.display = 'block';
     
-    // When showing the win screen, reset the email form for next time
     if (screen === winScreen) {
         document.getElementById('email-capture-form').style.display = 'flex';
         document.getElementById('email-thank-you').style.display = 'none';
+        const submitButton = document.getElementById('submit-email-btn');
+        submitButton.disabled = false;
+        submitButton.textContent = 'Count Me In!';
     }
 }
 
@@ -106,16 +108,45 @@ document.getElementById('refresh-btn').addEventListener('click', () => {
     }
 });
 
-document.getElementById('submit-email-btn').addEventListener('click', () => {
+// --- THIS IS THE NEW BACKEND-ENABLED CODE ---
+document.getElementById('submit-email-btn').addEventListener('click', async () => {
     const emailInput = document.getElementById('email-input');
-    if (emailInput.value && emailInput.checkValidity()) {
-        console.log(`Email captured: ${emailInput.value}`);
-        document.getElementById('email-capture-form').style.display = 'none';
-        document.getElementById('email-thank-you').style.display = 'block';
+    const email = emailInput.value;
+    const submitButton = document.getElementById('submit-email-btn');
+
+    // ** PASTE YOUR N8N PRODUCTION URL HERE **
+    const n8nWebhookUrl = 'https://esh1991.app.n8n.cloud/webhook/4e9ed364-627b-41bd-92fa-d6a36e63fbfc';
+
+    if (n8nWebhookUrl === 'https://esh1991.app.n8n.cloud/webhook/4e9ed364-627b-41bd-92fa-d6a36e63fbfc') {
+        alert('Please update the n8nWebhookUrl in app.js first!');
+        return;
+    }
+
+    if (email && emailInput.checkValidity()) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending...';
+        try {
+            const response = await fetch(n8nWebhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email }),
+            });
+            if (!response.ok) { throw new Error('Network response was not ok'); }
+            
+            document.getElementById('email-capture-form').style.display = 'none';
+            document.getElementById('email-thank-you').style.display = 'block';
+
+        } catch (error) {
+            console.error('There was a problem sending the email:', error);
+            alert('Sorry, there was an issue signing you up. Please try again later.');
+            submitButton.disabled = false;
+            submitButton.textContent = 'Count Me In!';
+        }
     } else {
         alert("Please enter a valid email address.");
     }
 });
+
 
 // --- 7. Speech Recognition Handlers ---
 recognition.onresult = (event) => {
@@ -147,7 +178,7 @@ recognition.onresult = (event) => {
 recognition.onerror = (event) => {
     console.error("Speech recognition error:", event);
     if (event.error === 'not-allowed') {
-        micPermissionCallout.style.display = 'block'; // Show the callout
+        micPermissionCallout.style.display = 'block';
         showScreen(categoryScreen);
     } else {
         document.getElementById('status-message').textContent = "Oops, an error occurred.";
