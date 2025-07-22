@@ -108,19 +108,17 @@ document.getElementById('refresh-btn').addEventListener('click', () => {
     }
 });
 
-// --- THIS IS THE NEW BACKEND-ENABLED CODE ---
+// --- THIS IS THE FINAL BACKEND-ENABLED CODE ---
 document.getElementById('submit-email-btn').addEventListener('click', async () => {
     const emailInput = document.getElementById('email-input');
     const email = emailInput.value;
     const submitButton = document.getElementById('submit-email-btn');
 
-    // ** PASTE YOUR N8N PRODUCTION URL HERE **
+    // ===================================================================
+    //      YOUR N8N PRODUCTION URL HAS BEEN ADDED BELOW
+    // ===================================================================
     const n8nWebhookUrl = 'https://esh1991.app.n8n.cloud/webhook/4e9ed364-627b-41bd-92fa-d6a36e63fbfc';
-
-     if (n8nWebhookUrl === 'YOUR_N8N_PRODUCTION_URL_GOES_HERE') {
-        alert('Please update the n8nWebhookUrl in app.js first!');
-        return;
-    }
+    // ===================================================================
 
     if (email && emailInput.checkValidity()) {
         submitButton.disabled = true;
