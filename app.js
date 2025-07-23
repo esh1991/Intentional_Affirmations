@@ -28,7 +28,7 @@ if (!SpeechRecognition) {
 const recognition = SpeechRecognition ? new SpeechRecognition() : null;
 if (recognition) {
     recognition.continuous = true;
-    recognition.interimResults = true; // CRITICAL for real-time highlighting
+    recognition.interimResults = true;
     recognition.lang = 'en-US';
 }
 
@@ -117,6 +117,15 @@ function handleSuccess() {
 function showScreen(screen) {
     [categoryScreen, affirmationScreen, winScreen].forEach(s => s.style.display = 'none');
     screen.style.display = 'block';
+
+    // When showing the win screen, always reset the email form for next time
+    if (screen === winScreen) {
+        document.getElementById('email-capture-form').style.display = 'flex';
+        document.getElementById('email-thank-you').style.display = 'none';
+        const submitButton = document.getElementById('submit-email-btn');
+        submitButton.disabled = false;
+        submitButton.textContent = 'Save My Progress!';
+    }
 }
 
 function checkSimilarity(spokenText) {
@@ -131,29 +140,60 @@ function checkSimilarity(spokenText) {
 // --- 5. Event Listeners & Initializer ---
 document.getElementById('another-one-btn').addEventListener('click', () => { clickSound.play(); showScreen(categoryScreen); });
 document.getElementById('refresh-btn').addEventListener('click', () => { clickSound.play(); startAffirmation(currentAffirmationData.category); });
-// Add your email button listener here if needed
+
+// --- THIS IS THE RESTORED EMAIL SUBMISSION CODE ---
+document.getElementById('submit-email-btn').addEventListener('click', async () => {
+    const emailInput = document.getElementById('email-input');
+    const email = emailInput.value;
+    const submitButton = document.getElementById('submit-email-btn');
+
+    // ** PASTE YOUR N8N PRODUCTION URL HERE **
+    const n8nWebhookUrl = 'https://esh1991.app.n8n.cloud/webhook/4e9ed364-627b-41bd-92fa-d6a36e63fbfc';
+
+    if (n8nWebhookUrl === 'YOUR_N8N_PRODUCTION_URL_GOES_HERE') {
+        alert('Please update the n8nWebhookUrl in app.js first!');
+        return;
+    }
+
+    if (email && emailInput.checkValidity()) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending...';
+        try {
+            const response = await fetch(n8nWebhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email }),
+            });
+            if (!response.ok) { throw new Error('Network response was not ok'); }
+            
+            document.getElementById('email-capture-form').style.display = 'none';
+            document.getElementById('email-thank-you').style.display = 'block';
+
+        } catch (error) {
+            console.error('There was a problem sending the email:', error);
+            alert('Sorry, there was an issue signing you up. Please try again later.');
+            submitButton.disabled = false;
+            submitButton.textContent = 'Save My Progress!';
+        }
+    } else {
+        alert("Please enter a valid email address.");
+    }
+});
+
 
 if (recognition) {
     recognition.onresult = (event) => {
-        let interimTranscript = '';
-        let finalTranscript = '';
-
+        let interimTranscript = '', finalTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; ++i) {
-            if (event.results[i].isFinal) {
-                finalTranscript += event.results[i][0].transcript;
-            } else {
-                interimTranscript += event.results[i][0].transcript;
-            }
+            if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript;
+            else interimTranscript += event.results[i][0].transcript;
         }
 
-        // --- THE HIGHLIGHTING LOGIC ---
         const allSpokenWords = (finalTranscript + interimTranscript).toLowerCase().split(' ');
         affirmationTextContainer.querySelectorAll('span').forEach((span) => {
             const originalWord = span.textContent.trim().toLowerCase().replace(/[^a-z0-9]/gi, '');
             if (originalWord && allSpokenWords.includes(originalWord)) {
                 span.classList.add('spoken');
-            } else {
-                span.classList.remove('spoken');
             }
         });
         
