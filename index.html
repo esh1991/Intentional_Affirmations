@@ -17,29 +17,14 @@
     </div>
 
     <div class="app-container">
-        <!-- Screen 1: Category Selection -->
         <div id="category-screen">
             <h1 class="main-title">Speak It Into Existence.</h1>
-            <p class="main-subtitle">Science shows that declaring your goals out loud reprograms your brain for success. Choose a focus below and take the first step in just 15 seconds.</p>
-            <div class="categories">
-                <button class="category-btn" data-category="fitness">Fitness</button>
-                <button class="category-btn" data-category="confidence">Confidence</button>
-                <button class="category-btn" data-category="focus">Focus</button>
-                <button class="category-btn" data-category="gratitude">Gratitude</button>
-                <button class="category-btn" data-category="wealth">Wealth</button>
-                <button class="special" id="write-my-own-btn">Write My Own</button>
+            <p class="main-subtitle">Choose a focus below and take the first step to reprogram your brain for success in just 15 seconds.</p>
+            <div id="categories-container" class="categories">
+                <p>Loading affirmations...</p>
             </div>
         </div>
         
-        <!-- Screen 1.5: Custom Input Screen -->
-        <div id="custom-input-screen" class="card" style="display: none;">
-            <h2>Write Your Own Affirmation</h2>
-            <textarea id="custom-text-input" placeholder="e.g., I am a creative problem solver."></textarea>
-            <button id="start-custom-btn">Start</button>
-            <button id="back-to-categories-btn" class="secondary">Back</button>
-        </div>
-
-        <!-- Screen 2: Affirmation Task -->
         <div id="affirmation-screen" class="card" style="display: none;">
             <p class="instruction-text">Say this out loud:</p>
             <div class="affirmation-text-container" id="affirmation-text"></div>
@@ -49,19 +34,24 @@
             </button>
         </div>
 
-        <!-- Screen 3: The Win Screen! -->
         <div id="win-screen" class="card" style="display: none;">
-            <img src="trophy.png" alt="Trophy" class="trophy-icon">
-            <h2>Success!</h2>
-            <p class="success-message">You've taken the first step. You've started to program your mind to take action and attract this into your life.</p>
+            <div class="star-container" id="star-container">
+                <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            </div>
+            <img src="trophy.png" alt="Trophy" class="trophy-icon" id="trophy-icon" style="display: none;">
+            
+            <h2 id="win-title">Success!</h2>
+            <p class="success-message" id="win-message"></p>
             <button id="another-one-btn">Do Another One</button>
 
             <div id="email-signup-section" class="email-signup-container">
-                <h3>Keep the Momentum Going</h3>
-                <p>Get a powerful, thoughtful affirmation delivered to your inbox every morning. Free.</p>
+                <h3>Want to Supercharge Your Progress?</h3>
+                <p>Sign up to save your progress and get personalized daily affirmations sent to your inbox. It's free!</p>
                 <div id="email-capture-form">
                     <input type="email" id="email-input" placeholder="Enter your email">
-                    <button id="submit-email-btn">Count Me In!</button>
+                    <button id="submit-email-btn">Save My Progress!</button>
                 </div>
                 <div id="email-thank-you" style="display: none;">
                     <p>Awesome! You're on the list.</p>
