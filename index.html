@@ -3,62 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Affirmation Power</title>
+    <title>Say This With Me</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="theme-affirmations">
 
-    <div id="mic-permission-callout" style="display: none;">
-        <div class="arrow"></div>
-        Please click "Allow" on the microphone prompt so I can hear your affirmation!
+    <div id="streak-tracker" class="streak-tracker" title="Keep going daily to stay in flow.">
+        <span class="streak-icon">⚡</span>
+        <span id="streak-count">Day 1</span>
     </div>
 
-    <div class="app-container">
-        <div id="category-screen">
-            <h1 class="main-title">Speak It Into Existence.</h1>
-            <p class="main-subtitle">Choose a focus below and take the first step to reprogram your brain for success in just 15 seconds.</p>
-            <div id="categories-container" class="categories">
-                <p>Loading affirmations...</p>
+    <header class="app-header">
+        <img src="logo.png" alt="Say This With Me Logo" class="brand-logo">
+        <p class="main-tagline">Your brain loves consistency. We clear the noise so that you can take 15 seconds for yourself.</p>
+    </header>
+
+    <main class="app-main">
+        <div id="home-view">
+            <div class="view-tabs">
+                <button class="tab-btn" data-mode="intentions">Intentions</button>
+                <button class="tab-btn active" data-mode="affirmations">Affirmations</button>
+                <button class="tab-btn" data-mode="gratitude">Gratitude</button>
+            </div>
+            <div id="category-screen" class="card">
+                <div id="categories-container" class="categories">
+                    <p>Loading...</p>
+                </div>
             </div>
         </div>
         
         <div id="affirmation-screen" class="card" style="display: none;">
+            <a href="#" id="home-btn-affirmation" class="icon-btn home-btn" title="Back to Home">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            </a>
+            <button id="favorite-btn" class="icon-btn favorite-btn" title="Add to favorites">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+            <button id="refresh-btn" class="icon-btn refresh-btn" title="Get a new affirmation">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+            </button>
+            
+            <div id="tooltip" class="tooltip">Saved!</div>
             <p class="instruction-text">Say this out loud:</p>
             <div class="affirmation-text-container" id="affirmation-text"></div>
             <p id="status-message">Listening...</p>
-            <button id="refresh-btn" class="icon-btn" title="Get a new affirmation">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-9 9c-4.97 0-9-4.03-9-9s4.03-9 9-9c2.49 0 4.73.99 6.34 2.66"/><path d="M21 2v4h-4"/></svg>
-            </button>
         </div>
 
         <div id="win-screen" class="card" style="display: none;">
-            <div class="star-container" id="star-container">
-                <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-            </div>
-            <img src="trophy.png" alt="Trophy" class="trophy-icon" id="trophy-icon" style="display: none;">
-            
-            <h2 id="win-title">Success!</h2>
-            <p class="success-message" id="win-message"></p>
-            <button id="another-one-btn">Do Another One</button>
-
-            <div id="email-signup-section" class="email-signup-container">
+            <div id="win-screen-content"></div>
+            <div id="win-screen-email-signup" class="email-signup-container large" style="display: none;">
                 <h3>Want to Supercharge Your Progress?</h3>
                 <p>Sign up to save your progress and get personalized daily affirmations sent to your inbox. It's free!</p>
-                <div id="email-capture-form">
-                    <input type="email" id="email-input" placeholder="Enter your email">
-                    <button id="submit-email-btn">Save My Progress!</button>
+                <div id="win-email-capture-form">
+                    <input type="email" id="win-email-input" placeholder="Enter your email">
+                    <button id="win-submit-email-btn">Save My Progress!</button>
                 </div>
-                <div id="email-thank-you" style="display: none;">
+                <div id="win-email-thank-you" style="display: none;">
                     <p>Awesome! You're on the list.</p>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <footer class="app-footer">
+        <div id="email-signup-section" class="email-signup-container">
+            <div id="email-capture-form">
+                <input type="email" id="email-input" placeholder="Enter email to get daily affirmations">
+                <button id="submit-email-btn">Submit</button>
+            </div>
+            <div id="email-thank-you" style="display: none;">
+                <p>Awesome! You're on the list.</p>
+            </div>
+        </div>
+    </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="app.js"></script>

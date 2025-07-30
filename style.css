@@ -1,100 +1,127 @@
-/* --- Basic Setup --- */
+/* --- CSS Variables for Theming --- */
+:root {
+    --bg-gradient: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+    --card-bg: rgba(255, 255, 255, 0.1);
+    --text-color: #fff;
+    --button-bg: #fff;
+    --button-text: #6a82fb;
+    --tab-bg: rgba(0, 0, 0, 0.2);
+    --tab-active-bg: #fff;
+    --tab-active-text: #333;
+}
+.theme-intentions {
+    --bg-gradient: linear-gradient(135deg, #ff9a8b 0%, #ff6a88 100%);
+    --button-text: #ff6a88;
+    --tab-active-text: #ff6a88;
+}
+.theme-gratitude {
+    --bg-gradient: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+    --button-text: #2c3e50;
+    --tab-active-text: #2c3e50;
+}
+
+/* --- Basic Setup & Layout --- */
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #fff;
+    background: var(--bg-gradient);
+    color: var(--text-color);
     margin: 0;
-    padding: 2rem 1rem;
+    padding: 1rem;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     min-height: 100vh;
     box-sizing: border-box;
+    transition: background 0.8s ease-in-out;
+}
+.app-header, .app-main, .app-footer {
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+.app-main { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%;}
+#main-content { width: 100%; }
+
+@media (min-width: 768px) {
+    .app-header, .app-main, .app-footer { max-width: 800px; }
 }
 
-/* --- Mic Permission Callout --- */
-#mic-permission-callout {
-    position: fixed; top: 20px; left: 20px; background: #ff4757; padding: 15px 20px;
-    border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000;
-    max-width: 250px; font-weight: 700; animation: pop-in 0.5s ease; text-align: left;
-}
-.arrow {
-    position: absolute; top: -10px; left: 30px; width: 0; height: 0; 
-    border-left: 10px solid transparent; border-right: 10px solid transparent;
-    border-bottom: 10px solid #ff4757;
-}
+/* --- Header & Branding --- */
+.brand-logo { max-width: 280px; margin-bottom: 1rem; }
+.main-tagline { font-size: 1.1rem; opacity: 0.9; margin: 0 auto 1.5rem auto; }
+#main-content { transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; }
+#main-content.fade-out { opacity: 0; transform: translateY(20px); }
 
-.app-container { width: 90%; max-width: 500px; text-align: center; }
-
-/* --- Intro Text --- */
-.main-title { font-size: 2.5rem; margin-bottom: 0.5rem; }
-.main-subtitle { font-size: 1.1rem; opacity: 0.9; max-width: 450px; margin: 0 auto 2rem auto; }
-
-/* --- Cards --- */
-.card {
-    background: rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2rem;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.18); position: relative;
+/* --- View Tabs --- */
+.view-tabs { display: flex; background: var(--tab-bg); border-radius: 50px; padding: 5px; margin-bottom: 2rem; }
+.tab-btn {
+    flex: 1; background: transparent; color: var(--text-color); border: none; padding: 0.8rem 1rem;
+    border-radius: 50px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;
 }
+.tab-btn.active { background: var(--tab-active-bg); color: var(--tab-active-text); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
-/* --- Buttons --- */
-button {
-    font-family: 'Poppins', sans-serif; font-weight: 700; background: #fff;
-    color: #667eea; border: none; border-radius: 50px; padding: 1rem 2rem;
-    font-size: 1rem; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: inline-flex; justify-content: center; align-items: center;
-    gap: 0.5rem; margin: 0.5rem;
-}
+/* --- Cards & Buttons --- */
+.card { background: var(--card-bg); border-radius: 20px; padding: 2rem; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.2); backdrop-filter: blur(5px); position: relative; width: 100%; box-sizing: border-box; }
+button { font-family: 'Poppins', sans-serif; font-weight: 700; border: none; border-radius: 50px; padding: 1rem 2rem; font-size: 1rem; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; display: inline-flex; justify-content: center; align-items: center; gap: 0.5rem; margin: 0.5rem; }
 button:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); }
-button:active { transform: translateY(1px); }
-.special { background: #f7b733; color: #333; }
-button.secondary { background: transparent; color: #fff; }
+.category-btn { background: var(--button-bg); color: var(--button-text); }
 
-/* --- Affirmation Screen --- */
-.affirmation-text-container { font-size: 2rem; font-weight: 700; margin: 2rem 0; min-height: 100px; }
-.affirmation-text-container span { transition: color 0.3s ease; } /* Added for smooth color change */
-.affirmation-text-container span.spoken { color: #8aff8a; }
-#status-message { min-height: 24px; font-style: italic; opacity: 0.8; }
+/* --- Icon Buttons --- */
 .icon-btn {
-    position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.2);
-    width: 40px; height: 40px; border-radius: 50%; padding: 0;
+    position: absolute;
+    top: 15px;
+    background: rgba(255, 255, 255, 0.2);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    padding: 0;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .icon-btn:hover { background: rgba(255, 255, 255, 0.4); }
-.icon-btn svg { stroke: #fff; width: 20px; height: 20px; }
+.icon-btn svg { width: 24px; height: 24px; stroke: white; stroke-width: 2; fill: none; transition: all 0.2s ease; }
+.home-btn { left: 15px; }
+.favorite-btn { left: 65px; }
+.refresh-btn { right: 15px; }
+.favorite-btn.favorited svg { fill: #ff4757; stroke: #ff4757; }
+.tooltip { position: absolute; top: 65px; left: 15px; background: #333; color: white; padding: 8px 12px; border-radius: 5px; opacity: 0; z-index: 10; transition: opacity 0.3s ease; pointer-events: none; }
+.tooltip.show { opacity: 1; }
+
+/* --- Affirmation Screen --- */
+#affirmation-screen .instruction-text { font-size: 1.2rem; }
+#affirmation-screen .affirmation-text-container { font-size: 2.5rem; font-weight: 700; }
+.affirmation-text-container span.spoken { color: #8aff8a; }
 
 /* --- Win Screen & Gamification --- */
-@keyframes pop-in {
-    0% { transform: scale(0.5) rotate(-15deg); opacity: 0; }
-    80% { transform: scale(1.1) rotate(5deg); opacity: 1; }
-    100% { transform: scale(1) rotate(0deg); opacity: 1; }
-}
 p.success-message { font-size: 1.1rem; line-height: 1.6; opacity: 0.9; }
-
 .star-container { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
 .star-icon { width: 50px; height: 50px; fill: #4a4a5e; transition: fill 0.5s ease, transform 0.5s ease; }
 .star-icon.unlocked { fill: #ffd700; transform: scale(1.1); }
-
-.trophy-icon { 
-    display: none; /* Hidden by default, JS will show it */
-    width: 100px; 
-    height: auto;
-    animation: pop-in 0.6s ease-out forwards; 
-    margin: 0 auto 1rem auto; /* THE FIX: This centers the trophy */
-}
-#trophy-icon { display: none; }
+.trophy-icon { display: block; width: 100px; height: auto; animation: pop-in 0.6s ease-out forwards; margin: 0 auto 1rem auto; }
+@keyframes pop-in { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+.trophy-subtitle { font-style: italic; opacity: 0.8; margin-top: 1rem; line-height: 1.2; font-size: 0.9rem; }
 
 /* --- Email Signup --- */
-.email-signup-container {
-    margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.2);
-}
-.email-signup-container h3 { margin-top: 0; font-size: 1.2rem; }
+.email-signup-container { width: 100%; }
 .email-signup-container p { margin-bottom: 1rem; }
-#email-capture-form { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+#email-capture-form { display: flex; justify-content: center; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 50px; padding: 5px; }
 #email-input {
-    width: 80%; padding: 0.8rem; border: 1px solid rgba(255,255,255,0.3);
-    background: transparent; color: #fff; border-radius: 8px;
-    font-size: 1rem; text-align: center;
+    flex-grow: 1; border: none; background: transparent; color: #fff;
+    padding: 0.8rem 1rem; font-size: 0.9rem;
 }
-#email-input::placeholder { color: rgba(255,255,255,0.5); }
-#submit-email-btn { background: #8aff8a; color: #333; }
+#email-input::placeholder { color: rgba(255,255,255,0.7); }
+#submit-email-btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; background: #8aff8a; color: #333; margin: 0; }
 #email-thank-you { font-weight: 700; font-size: 1.1rem; }
+.email-signup-container.large { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.2); }
+.email-signup-container.large h3 { margin-top: 0; font-size: 1.2rem; }
+#win-email-capture-form { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+#win-email-input { width: 80%; padding: 0.8rem; border: 1px solid rgba(255,255,255,0.3); background: transparent; color: #fff; border-radius: 8px; font-size: 1rem; text-align: center; }
+#win-email-input::placeholder { color: rgba(255,255,255,0.5); }
+#win-submit-email-btn { background: #8aff8a; color: #333; }
+
+/* --- Streak Tracker --- */
+.streak-tracker { position: fixed; top: 20px; right: 20px; left: auto; background: rgba(0,0,0,0.3); backdrop-filter: blur(5px); padding: 10px 20px; border-radius: 50px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; font-weight: 700; cursor: pointer; }
+.streak-icon { display: inline-block; transform: translateY(2px); margin-right: 8px; }

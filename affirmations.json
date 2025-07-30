@@ -1,92 +1,88 @@
-[
-  {
-    "category": "Confidence",
-    "affirmation": "I believe in my ability to succeed",
-    "successMessage": "Yes! You just sent a powerful signal of self-belief to your subconscious. Carry that with you."
-  },
-  {
-    "category": "Confidence",
-    "affirmation": "I am worthy of my dreams",
-    "successMessage": "Excellent. You've affirmed your worthiness. Your mind is now more open to seeing opportunities."
-  },
-  {
-    "category": "Confidence",
-    "affirmation": "I step forward with courage and grace",
-    "successMessage": "Beautifully said. You just programmed your mind to handle the day with poise and strength."
-  },
-  {
-    "category": "Career",
-    "affirmation": "I am a valuable asset to my team",
-    "successMessage": "You are. By saying it, you've reinforced your professional value in your own mind, which is where it counts most."
-  },
-  {
-    "category": "Career",
-    "affirmation": "My work makes a positive impact",
-    "successMessage": "It does. You just connected your actions to a sense of purpose. Powerful stuff."
-  },
-  {
-    "category": "Career",
-    "affirmation": "I attract new career opportunities",
-    "successMessage": "Your mind is now a magnet for professional growth. Be ready for it!"
-  },
-  {
-    "category": "Mindfulness",
-    "affirmation": "I am fully present in this moment",
-    "successMessage": "Perfect. You've anchored yourself in the now, the only place where life truly happens."
-  },
-  {
-    "category": "Mindfulness",
-    "affirmation": "I observe my thoughts without judgment",
-    "successMessage": "That is the heart of mindfulness. You just gave yourself the gift of inner peace."
-  },
-  {
-    "category": "Mindfulness",
-    "affirmation": "My breath is my calm anchor",
-    "successMessage": "Wonderful. You've reinforced your connection to your body's own natural stress-reliever."
-  },
-  {
-    "category": "Health",
-    "affirmation": "I make choices that support my well being",
-    "successMessage": "You just set a powerful intention for your health. Your body thanks you!"
-  },
-  {
-    "category": "Health",
-    "affirmation": "My body is strong and heals itself",
-    "successMessage": "Amazing. You've activated your belief in your body's incredible resilience and strength."
-  },
-  {
-    "category": "Health",
-    "affirmation": "I listen to what my body needs",
-    "successMessage": "Excellent. You just strengthened the connection between your mind and body. Listen closely today."
-  },
-  {
-    "category": "Relationships",
-    "affirmation": "I attract loving and supportive people",
-    "successMessage": "Your energy is now tuned to the frequency of positive relationships. Be open to who appears."
-  },
-  {
-    "category": "Relationships",
-    "affirmation": "I communicate with kindness and respect",
-    "successMessage": "You just set the standard for your interactions today. This will make a real difference."
-  },
-  {
-    "category": "Wealth",
-    "affirmation": "I am open to receiving abundance",
-    "successMessage": "The doors to prosperity are now open in your mind. You have declared your readiness to receive."
-  },
-  {
-    "category": "Wealth",
-    "affirmation": "I am a responsible steward of my money",
-    "successMessage": "Excellent. You've reinforced a mindset of financial wisdom and control."
-  },
-  {
-    "category": "Creativity",
-    "affirmation": "My creativity flows freely and easily",
-    "successMessage": "You just unlocked the channels of creative thought. Get ready for some great ideas!"
-  },
-  {
-    "category": "Creativity",
-    "affirmation": "I see the world from a unique perspective",
-    "successMessage": "Yes you do! You just gave yourself permission to trust your unique creative voice."
-  }
-]
+{
+  "intentions": [
+    { "category": "Productivity", "affirmation": "I will complete my most important task today", "successMessage": "You've set your focus. Your mind is now primed to seek completion. Go get it." },
+    { "category": "Mindset", "affirmation": "I will approach today with a positive attitude", "successMessage": "Excellent. You've chosen your emotional state in advance. That's a superpower." },
+    { "category": "Energy", "affirmation": "I will be filled with vibrant energy today", "successMessage": "You just flipped the switch! Your mind is now preparing your body for vitality." },
+    { "category": "Interactions", "affirmation": "I will bring kindness to every conversation", "successMessage": "A beautiful intention. You're not just changing your day; you're improving the day for everyone you meet." },
+    { "category": "Opportunity", "affirmation": "I will be open to new opportunities", "successMessage": "Your mind is now a magnet for fortunate events. Be ready to see them!" }
+  ],
+  "affirmations": [
+    { "category": "Confidence", "affirmation": "I believe in my ability to succeed", "successMessage": "Yes! You just sent a powerful signal of self-belief to your subconscious. Carry that with you." },
+    { "category": "Confidence", "affirmation": "I am worthy of my dreams", "successMessage": "Excellent. You've affirmed your worthiness. Your mind is now more open to seeing opportunities." },
+    { "category": "Career", "affirmation": "I am a valuable asset to my team", "successMessage": "You are. By saying it, you've reinforced your professional value in your own mind." },
+    { "category": "Career", "affirmation": "I handle challenges with wisdom and creativity", "successMessage": "You've just equipped your mind with the tools for success. No challenge is too great." },
+    { "category": "Mindfulness", "affirmation": "I am fully present in this moment", "successMessage": "Perfect. You've anchored yourself in the now, the only place where life truly happens." },
+    { "category": "Health", "affirmation": "I make choices that support my well being", "successMessage": "You just set a powerful intention for your health. Your body thanks you!" },
+    { "category": "Relationships", "affirmation": "I attract loving and supportive people", "successMessage": "Your energy is now tuned to the frequency of positive relationships." },
+    { "category": "Wealth", "affirmation": "I am open to receiving abundance", "successMessage": "The doors to prosperity are now open in your mind. You are ready to receive." },
+    { "category": "Creativity", "affirmation": "My creativity flows freely and easily", "successMessage": "You just unlocked the channels of creative thought. Get ready for some great ideas!" },
+    { "category": "Peace", "affirmation": "I release what I cannot control", "successMessage": "A weight has just been lifted. You've given yourself the freedom of letting go." },
+    { "category": "Resilience", "affirmation": "I bounce back from challenges stronger", "successMessage": "You are unbreakable. You've just programmed your mind to see setbacks as setups for comebacks." },
+    { "category": "Confidence", "affirmation": "I believe in my ability to succeed", "successMessage": "Yes! You just sent a powerful signal of self-belief to your subconscious. Carry that with you." },
+  { "category": "Confidence", "affirmation": "I am worthy of my dreams", "successMessage": "Excellent. You've affirmed your worthiness. Your mind is now more open to seeing opportunities." },
+  { "category": "Confidence", "affirmation": "I step forward with courage and grace", "successMessage": "Beautifully said. You just programmed your mind to handle the day with poise and strength." },
+  { "category": "Confidence", "affirmation": "I radiate confidence from within", "successMessage": "You've activated your inner source of confidence. Let it shine through in everything you do today." },
+  { "category": "Career", "affirmation": "I am a valuable asset to my team", "successMessage": "You are. By saying it, you've reinforced your professional value in your own mind, which is where it counts most." },
+  { "category": "Career", "affirmation": "My work makes a positive impact", "successMessage": "It does. You just connected your actions to a sense of purpose. Powerful stuff." },
+  { "category": "Career", "affirmation": "I attract new career opportunities", "successMessage": "Your mind is now a magnet for professional growth. Be ready for it!" },
+  { "category": "Career", "affirmation": "I handle challenges with wisdom and creativity", "successMessage": "You've just equipped your mind with the tools for success. No challenge is too great." },
+  { "category": "Mindfulness", "affirmation": "I am fully present in this moment", "successMessage": "Perfect. You've anchored yourself in the now, the only place where life truly happens." },
+  { "category": "Mindfulness", "affirmation": "I observe my thoughts without judgment", "successMessage": "That is the heart of mindfulness. You just gave yourself the gift of inner peace." },
+  { "category": "Mindfulness", "affirmation": "My breath is my calm anchor", "successMessage": "Wonderful. You've reinforced your connection to your body's own natural stress-reliever." },
+  { "category": "Mindfulness", "affirmation": "I find stillness in the chaos", "successMessage": "You have just created a sanctuary in your mind. Return to this feeling anytime you need." },
+  { "category": "Health", "affirmation": "I make choices that support my well being", "successMessage": "You just set a powerful intention for your health. Your body thanks you!" },
+  { "category": "Health", "affirmation": "My body is strong and heals itself", "successMessage": "Amazing. You've activated your belief in your body's incredible resilience and strength." },
+  { "category": "Health", "affirmation": "I listen to what my body needs", "successMessage": "Excellent. You just strengthened the connection between your mind and body. Listen closely today." },
+  { "category": "Health", "affirmation": "I have abundant energy and vitality", "successMessage": "You've just switched on your inner power source. Feel the energy build throughout your day." },
+  { "category": "Relationships", "affirmation": "I attract loving and supportive people", "successMessage": "Your energy is now tuned to the frequency of positive relationships. Be open to who appears." },
+  { "category": "Relationships", "affirmation": "I communicate with kindness and respect", "successMessage": "You just set the standard for your interactions today. This will make a real difference." },
+  { "category": "Relationships", "affirmation": "I am a good friend and partner", "successMessage": "By affirming this, you prime yourself to act in ways that strengthen your bonds. Well done." },
+  { "category": "Relationships", "affirmation": "I give and receive love freely", "successMessage": "You've opened the floodgates of your heart. Love is now flowing in both directions." },
+  { "category": "Wealth", "affirmation": "I am open to receiving abundance", "successMessage": "The doors to prosperity are now open in your mind. You have declared your readiness to receive." },
+  { "category": "Wealth", "affirmation": "I am a responsible steward of my money", "successMessage": "Excellent. You've reinforced a mindset of financial wisdom and control." },
+  { "category": "Wealth", "affirmation": "My finances improve every day", "successMessage": "You have set your financial trajectory upwards. Look for signs of this growth." },
+  { "category": "Wealth", "affirmation": "I create value and am rewarded for it", "successMessage": "This is the core of true wealth. You've focused your mind on giving and receiving." },
+  { "category": "Creativity", "affirmation": "My creativity flows freely and easily", "successMessage": "You just unlocked the channels of creative thought. Get ready for some great ideas!" },
+  { "category": "Creativity", "affirmation": "I see the world from a unique perspective", "successMessage": "Yes you do! You just gave yourself permission to trust your unique creative voice." },
+  { "category": "Creativity", "affirmation": "I express myself without fear", "successMessage": "You've dissolved the barriers to self-expression. Share your gifts with the world today." },
+  { "category": "Creativity", "affirmation": "Inspiration is all around me", "successMessage": "You've tuned your senses to find inspiration in the everyday. Keep your eyes open!" },
+  { "category": "Peace", "affirmation": "I am calm and at peace", "successMessage": "You have just cultivated a garden of tranquility in your mind. Wonderful." },
+  { "category": "Peace", "affirmation": "I release what I cannot control", "successMessage": "A weight has just been lifted. You've given yourself the freedom of letting go." },
+  { "category": "Peace", "affirmation": "I choose peace over conflict", "successMessage": "You've set your compass for a peaceful day. Navigate with this intention." },
+  { "category": "Gratitude", "affirmation": "I am grateful for this day", "successMessage": "Starting with gratitude changes everything. You've set a positive tone for all that follows." },
+  { "category": "Gratitude", "affirmation": "I find joy in the little things", "successMessage": "You've just switched on your joy-detector. Notice the small wonders today." },
+  { "category": "Gratitude", "affirmation": "My heart is filled with gratitude", "successMessage": "You have just filled your inner well with positivity. Draw from it all day." },
+  { "category": "Happiness", "affirmation": "I choose to be happy today", "successMessage": "Happiness is a choice, and you just made it. Excellent work." },
+  { "category": "Happiness", "affirmation": "I deserve to be happy and joyful", "successMessage": "Yes, you do. You've affirmed your right to joy, clearing the path for it to find you." },
+  { "category": "Happiness", "affirmation": "My happiness comes from within", "successMessage": "You've just connected with your own sustainable source of joy. It can never be taken away." },
+  { "category": "Motivation", "affirmation": "I am motivated and driven to succeed", "successMessage": "The engine has started! You've just fueled your mind with the drive to achieve." },
+  { "category": "Motivation", "affirmation": "I take decisive action on my goals", "successMessage": "You've just transformed from a dreamer to a doer. Now, go take that first step." },
+  { "category": "Motivation", "affirmation": "My potential is limitless", "successMessage": "You have just removed the ceiling on your own abilities. Soar." },
+  { "category": "Energy", "affirmation": "I am filled with vibrant energy", "successMessage": "You've just flipped the switch on your internal power grid. Feel the vitality!" },
+  { "category": "Energy", "affirmation": "I feel strong and alive", "successMessage": "Excellent. You've connected your mind to your body's life force." },
+  { "category": "Energy", "affirmation": "My energy inspires those around me", "successMessage": "You've become a beacon. Your positive energy will be contagious today." },
+  { "category": "Friendship", "affirmation": "I am a loyal and supportive friend", "successMessage": "You've just reinforced the qualities that make you a great friend. Your friends are lucky to have you." },
+  { "category": "Friendship", "affirmation": "I easily make new friends", "successMessage": "You've opened the door to new connections. Be ready to welcome new people into your life." },
+  { "category": "Friendship", "affirmation": "My friendships are a source of joy", "successMessage": "By appreciating them, you strengthen them. A beautiful intention." },
+  { "category": "Learning", "affirmation": "I love to learn and grow", "successMessage": "You've just adopted a growth mindset. Every experience today is a lesson." },
+  { "category": "Learning", "affirmation": "My mind is open to new ideas", "successMessage": "Curiosity activated! You are ready to expand your understanding of the world." },
+  { "category": "Learning", "affirmation": "I learn from my mistakes", "successMessage": "You've just transformed every stumble into a stepping stone. There is no failure, only feedback." },
+  { "category": "Forgiveness", "affirmation": "I forgive myself and others", "successMessage": "You've just released a heavy burden. Feel the lightness that comes with forgiveness." },
+  { "category": "Forgiveness", "affirmation": "I release the past and embrace the present", "successMessage": "You are free. By letting go, you've given yourself the gift of the here and now." },
+  { "category": "Fun", "affirmation": "I make time for play and fun", "successMessage": "Yes! You've just given yourself permission to experience joy. It's not a luxury, it's a necessity." },
+  { "category": "Fun", "affirmation": "I find humor and laughter in my day", "successMessage": "You've tuned your mind to the frequency of laughter. Get ready to smile." },
+  { "category": "Leadership", "affirmation": "I lead with integrity and compassion", "successMessage": "You've just set your internal compass to true north. Others will naturally follow." },
+  { "category": "Leadership", "affirmation": "I inspire the best in others", "successMessage": "You've activated your ability to uplift those around you. Your impact will be felt today." },
+  { "category": "Resilience", "affirmation": "I bounce back from challenges stronger", "successMessage": "You are unbreakable. You've just programmed your mind to see setbacks as setups for comebacks." },
+  { "category": "Resilience", "affirmation": "I am resilient and adaptable", "successMessage": "Like a mighty oak in the wind, you can bend without breaking. You are prepared for anything." },
+  { "category": "Purpose", "affirmation": "I am living my life on purpose", "successMessage": "You have just aligned your actions with your inner calling. Every step today has meaning." },
+  { "category": "Purpose", "affirmation": "My life has a deep meaning and purpose", "successMessage": "Yes, it does. You've reconnected with your 'why', the fuel for everything you do." }
+  ],
+  "gratitude": [
+    { "category": "People", "affirmation": "I am thankful for the kind people in my life", "successMessage": "By focusing on them, you amplify the love and support that surrounds you." },
+    { "category": "Health", "affirmation": "I am grateful my body allows me to experience life", "successMessage": "A beautiful thought. You've honored the incredible vessel that carries you through the world." },
+    { "category": "Moments", "affirmation": "I am thankful for the small joys of today", "successMessage": "Ending the day by noticing the small wonders is a powerful happiness practice." },
+    { "category": "Lessons", "affirmation": "I am grateful for the lessons I learned today", "successMessage": "You've transformed every experience, good or bad, into wisdom. That's how you grow." },
+    { "category": "Home", "affirmation": "I am grateful for the comfort of my home", "successMessage": "Acknowledging this sanctuary brings a deep sense of peace and security. Rest well." }
+  ]
+}
