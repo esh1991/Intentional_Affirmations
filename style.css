@@ -1,23 +1,34 @@
 /* --- CSS Variables for Theming --- */
 :root {
-    --bg-gradient: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+    /* Default Theme: Power Up */
+    --bg-gradient: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
     --card-bg: rgba(255, 255, 255, 0.1);
     --text-color: #fff;
     --button-bg: #fff;
-    --button-text: #6a82fb;
+    --button-text: #005bea;
     --tab-bg: rgba(0, 0, 0, 0.2);
     --tab-active-bg: #fff;
-    --tab-active-text: #333;
+    --tab-active-text: #005bea;
+    --success-color: #8aff8a;
+    --star-unlocked-color: #ffd700;
 }
-.theme-intentions {
-    --bg-gradient: linear-gradient(135deg, #ff9a8b 0%, #ff6a88 100%);
-    --button-text: #ff6a88;
-    --tab-active-text: #ff6a88;
+/* --- NEW: Theme for Break It --- */
+.theme-break-it {
+    --bg-gradient: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+    --button-text: #ff416c;
+    --tab-active-text: #ff416c;
 }
-.theme-gratitude {
-    --bg-gradient: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
-    --button-text: #2c3e50;
-    --tab-active-text: #2c3e50;
+/* --- NEW: Theme for Prime Me --- */
+.theme-prime-me {
+    --bg-gradient: linear-gradient(135deg, #1d2b64 0%, #f8cdda 100%);
+    --button-text: #1d2b64;
+    --tab-active-text: #1d2b64;
+}
+/* --- NEW: Theme for Rewire --- */
+.theme-rewire {
+    --bg-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    --button-text: #2c9a58;
+    --tab-active-text: #2c9a58;
 }
 
 /* --- Basic Setup & Layout --- */
@@ -53,34 +64,35 @@ body {
 #main-content { transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; }
 #main-content.fade-out { opacity: 0; transform: translateY(20px); }
 
-/* --- View Tabs --- */
+/* --- MODIFIED: View Tabs with Icons --- */
 .view-tabs { display: flex; background: var(--tab-bg); border-radius: 50px; padding: 5px; margin-bottom: 2rem; }
 .tab-btn {
     flex: 1; background: transparent; color: var(--text-color); border: none; padding: 0.8rem 1rem;
     border-radius: 50px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
 }
-.tab-btn.active { background: var(--tab-active-bg); color: var(--tab-active-text); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+.tab-btn svg {
+    width: 20px; height: 20px;
+    stroke: var(--text-color);
+    transition: all 0.3s ease;
+}
+.tab-btn.active {
+    background: var(--tab-active-bg);
+    color: var(--tab-active-text);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.tab-btn.active svg { stroke: var(--tab-active-text); }
 
 /* --- Cards & Buttons --- */
 .card { background: var(--card-bg); border-radius: 20px; padding: 2rem; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.2); backdrop-filter: blur(5px); position: relative; width: 100%; box-sizing: border-box; }
+/* NEW: Added a prompt style for the category screen */
+.category-prompt { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; }
 button { font-family: 'Poppins', sans-serif; font-weight: 700; border: none; border-radius: 50px; padding: 1rem 2rem; font-size: 1rem; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; display: inline-flex; justify-content: center; align-items: center; gap: 0.5rem; margin: 0.5rem; }
 button:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); }
 .category-btn { background: var(--button-bg); color: var(--button-text); }
 
 /* --- Icon Buttons --- */
-.icon-btn {
-    position: absolute;
-    top: 15px;
-    background: rgba(255, 255, 255, 0.2);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    padding: 0;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+.icon-btn { position: absolute; top: 15px; background: rgba(255, 255, 255, 0.2); width: 44px; height: 44px; border-radius: 50%; padding: 0; text-decoration: none; display: flex; justify-content: center; align-items: center; }
 .icon-btn:hover { background: rgba(255, 255, 255, 0.4); }
 .icon-btn svg { width: 24px; height: 24px; stroke: white; stroke-width: 2; fill: none; transition: all 0.2s ease; }
 .home-btn { left: 15px; }
@@ -92,36 +104,156 @@ button:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0, 0, 0,
 
 /* --- Affirmation Screen --- */
 #affirmation-screen .instruction-text { font-size: 1.2rem; }
-#affirmation-screen .affirmation-text-container { font-size: 2.5rem; font-weight: 700; }
-.affirmation-text-container span.spoken { color: #8aff8a; }
+#affirmation-screen .affirmation-text-container { font-size: 2.5rem; font-weight: 700; line-height: 1.3; }
+.affirmation-text-container span.spoken { color: var(--success-color); }
 
 /* --- Win Screen & Gamification --- */
 p.success-message { font-size: 1.1rem; line-height: 1.6; opacity: 0.9; }
 .star-container { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
 .star-icon { width: 50px; height: 50px; fill: #4a4a5e; transition: fill 0.5s ease, transform 0.5s ease; }
-.star-icon.unlocked { fill: #ffd700; transform: scale(1.1); }
+.star-icon.unlocked { fill: var(--star-unlocked-color); transform: scale(1.1); }
 .trophy-icon { display: block; width: 100px; height: auto; animation: pop-in 0.6s ease-out forwards; margin: 0 auto 1rem auto; }
 @keyframes pop-in { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-.trophy-subtitle { font-style: italic; opacity: 0.8; margin-top: 1rem; line-height: 1.2; font-size: 0.9rem; }
 
 /* --- Email Signup --- */
 .email-signup-container { width: 100%; }
 .email-signup-container p { margin-bottom: 1rem; }
 #email-capture-form { display: flex; justify-content: center; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 50px; padding: 5px; }
-#email-input {
-    flex-grow: 1; border: none; background: transparent; color: #fff;
-    padding: 0.8rem 1rem; font-size: 0.9rem;
-}
+#email-input { flex-grow: 1; border: none; background: transparent; color: #fff; padding: 0.8rem 1rem; font-size: 0.9rem; }
 #email-input::placeholder { color: rgba(255,255,255,0.7); }
-#submit-email-btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; background: #8aff8a; color: #333; margin: 0; }
+#submit-email-btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; background: var(--success-color); color: #333; margin: 0; }
 #email-thank-you { font-weight: 700; font-size: 1.1rem; }
 .email-signup-container.large { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.2); }
 .email-signup-container.large h3 { margin-top: 0; font-size: 1.2rem; }
 #win-email-capture-form { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
 #win-email-input { width: 80%; padding: 0.8rem; border: 1px solid rgba(255,255,255,0.3); background: transparent; color: #fff; border-radius: 8px; font-size: 1rem; text-align: center; }
 #win-email-input::placeholder { color: rgba(255,255,255,0.5); }
-#win-submit-email-btn { background: #8aff8a; color: #333; }
+#win-submit-email-btn { background: var(--success-color); color: #333; }
 
 /* --- Streak Tracker --- */
 .streak-tracker { position: fixed; top: 20px; right: 20px; left: auto; background: rgba(0,0,0,0.3); backdrop-filter: blur(5px); padding: 10px 20px; border-radius: 50px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; font-weight: 700; cursor: pointer; }
 .streak-icon { display: inline-block; transform: translateY(2px); margin-right: 8px; }
+
+/* --- [Previous CSS code remains the same] --- */
+/* Just add these new styles at the end of your style.css file */
+
+/* --- Streak Tracker --- */
+.streak-tracker { position: fixed; top: 20px; right: 20px; /* ... existing styles */ }
+.streak-icon { display: inline-block; /* ... existing styles */ }
+
+/* --- NEW: Footer Navigation --- */
+.app-footer {
+    /* Make space for the new footer nav */
+    padding-bottom: 1rem;
+}
+.footer-nav {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+.footer-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 700;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+.footer-link:hover {
+    opacity: 1;
+}
+.social-links {
+    display: flex;
+    gap: 1.5rem;
+}
+.social-icon {
+    color: var(--text-color);
+    opacity: 0.8;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.social-icon:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+.social-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+/* ... (add this somewhere with other nav-related styles) ... */
+
+/* NEW: Styles for the prominent link below the tabs */
+.secondary-nav {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.secondary-nav-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 700;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    background: rgba(0,0,0,0.15);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+}
+.secondary-nav-link:hover {
+    opacity: 1;
+}
+
+
+/* MODIFIED: Update the footer styles */
+.footer-nav {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem; /* Increased gap */
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+/* NEW: Style for the row of text links */
+.footer-links-row {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+.footer-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 700;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+.footer-link:hover {
+    opacity: 1;
+}
+.social-links {
+    display: flex;
+    gap: 1.5rem;
+}
+.social-icon {
+    color: var(--text-color);
+    opacity: 0.8;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.social-icon:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+.social-icon svg {
+    width: 28px;
+    height: 28px;
+}
+/* NEW: Copyright text style */
+.copyright {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    margin-top: 1.5rem;
+    text-align: center;
+}

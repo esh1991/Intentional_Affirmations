@@ -1,0 +1,121 @@
+{
+  "powerUp": {
+    "theme": "power-up",
+    "prompt": "Who are you becoming?",
+    "categories": [
+      {
+        "name": "A Decisive Leader",
+        "items": [
+          { "affirmation": "I am a clear and confident leader.", "successMessage": "You are leading with purpose. Feel that certainty." },
+          { "affirmation": "I make sound decisions with ease and conviction.", "successMessage": "Your judgment is sharp. Trust your instincts." },
+          { "affirmation": "I inspire my team to achieve greatness.", "successMessage": "You are a catalyst for success. Well done." }
+        ]
+      },
+      {
+        "name": "A Calm Parent",
+        "items": [
+          { "affirmation": "I respond with patience and love.", "successMessage": "You are creating a peaceful home. Well done." },
+          { "affirmation": "I am a safe harbor for my children's feelings.", "successMessage": "Your presence is a gift. You are their rock." },
+          { "affirmation": "I find joy in the small moments of parenthood.", "successMessage": "You are present and engaged. Beautiful." }
+        ]
+      },
+      {
+        "name": "My Healthiest Self",
+        "items": [
+          { "affirmation": "I make choices that nourish my body and mind.", "successMessage": "You are honoring your body. Keep it up." },
+          { "affirmation": "I am full of energy and vitality.", "successMessage": "Feel that power surging through you. Excellent." },
+          { "affirmation": "I treat my body with respect and kindness.", "successMessage": "You are your own best caretaker. Great job." }
+        ]
+      },
+      {
+        "name": "A Creative Powerhouse",
+        "items": [
+          { "affirmation": "Ideas flow to me and through me effortlessly.", "successMessage": "Your channel is open. You're ready to create." },
+          { "affirmation": "I embrace my unique perspective and share it boldly.", "successMessage": "Your voice is valuable. Let it be heard." }
+        ]
+      }
+    ]
+  },
+  "breakIt": {
+    "theme": "break-it",
+    "prompt": "What loop do you want to break?",
+    "categories": [
+      {
+        "name": "Overthinking & Analysis Paralysis",
+        "items": [
+          { "affirmation": "I release this thought and return to the present.", "successMessage": "You broke the cycle. You are in control." },
+          { "affirmation": "Done is better than perfect. I choose action.", "successMessage": "You've chosen progress. Momentum is yours." },
+          { "affirmation": "I trust my ability to handle what comes next.", "successMessage": "You are capable and resilient. Move forward." }
+        ]
+      },
+      {
+        "name": "Mindless Scrolling",
+        "items": [
+          { "affirmation": "My attention is mine to control.", "successMessage": "You chose presence over distraction. That is power." },
+          { "affirmation": "I am choosing the real world over the digital one.", "successMessage": "You are grounded in reality. Well done." }
+        ]
+      },
+      {
+        "name": "Negative Self-Talk",
+        "items": [
+          { "affirmation": "I am my own strongest ally.", "successMessage": "You are on your own side. That's a winning team." },
+          { "affirmation": "I replace self-criticism with self-compassion.", "successMessage": "You chose kindness. You deserve it." }
+        ]
+      }
+    ]
+  },
+  "primeMe": {
+    "theme": "prime-me",
+    "prompt": "What moment are you preparing for?",
+    "categories": [
+      {
+        "name": "Before a Big Meeting",
+        "items": [
+          { "affirmation": "I bring clarity and calm into this conversation.", "successMessage": "You are primed and ready. Go make an impact." },
+          { "affirmation": "My contributions are valuable and insightful.", "successMessage": "You are prepared. Your voice will be heard." }
+        ]
+      },
+      {
+        "name": "Starting the Workday",
+        "items": [
+          { "affirmation": "I am focused and ready to create value.", "successMessage": "Your mind is sharp. You're ready for a productive day." },
+          { "affirmation": "I will tackle today's challenges with energy and skill.", "successMessage": "You are capable and ready. Let's begin." }
+        ]
+      },
+      {
+        "name": "Winding Down for Sleep",
+        "items": [
+          { "affirmation": "I release the day and welcome restful sleep.", "successMessage": "Your mind is calm. Sweet dreams." },
+          { "affirmation": "I am grateful for today and peaceful about tomorrow.", "successMessage": "You are at peace. Rest well." }
+        ]
+      }
+    ]
+  },
+  "rewire": {
+    "theme": "rewire",
+    "prompt": "What belief are you ready to change?",
+    "categories": [
+      {
+        "name": "Flip 'I'm Not Good Enough'",
+        "items": [
+          { "affirmation": "I am worthy of success and happiness right now.", "successMessage": "You are rewriting your story. Believe this new truth." },
+          { "affirmation": "My worth is inherent and does not need to be earned.", "successMessage": "You are enough, exactly as you are. Own it." }
+        ]
+      },
+      {
+        "name": "Flip 'I'm Afraid to Fail'",
+        "items": [
+          { "affirmation": "Every experience is a lesson that helps me grow.", "successMessage": "You are embracing growth over fear. This is how you win." },
+          { "affirmation": "I choose courage over comfort.", "successMessage": "You are brave and expanding. Feel your strength." }
+        ]
+      },
+      {
+        "name": "Flip 'I Don't Deserve It'",
+        "items": [
+          { "affirmation": "I am open and ready to receive abundance.", "successMessage": "The universe is abundant, and you are part of it." },
+          { "affirmation": "I welcome all the good things life has to offer me.", "successMessage": "You are deserving. Accept the good that comes your way." }
+        ]
+      }
+    ]
+  }
+}

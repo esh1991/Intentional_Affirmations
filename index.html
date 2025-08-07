@@ -3,13 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Say This With Me</title>
+
+    <!-- SEO - Title -->
+    <title>Say This With Me: Voice-Activated Mindset Engine</title>
+
+    <!-- SEO - Meta Description and Keywords -->
+    <meta name="description" content="Rewire your brain with our Voice-Activated Mindset Engine. Speak new habits and identities into existence with daily affirmations for Powering Up, Breaking Habits, Priming for events, and Rewiring your thoughts.">
+    <meta name="keywords" content="affirmations, mindset, voice-activated, habit builder, identity shifter, break bad habits, positive thinking, rewire brain, daily ritual, focus, confidence, mental health">
+
+    <!-- FINALIZED: SEO for Facebook & Instagram Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Say This With Me: Voice-Activated Mindset Engine">
+    <meta property="og:description" content="Speak your future into existence. A 4-in-1 tool to build habits, break patterns, and rewire your identity using your own voice.">
+    <meta property="og:url" content="https://www.saythiswith.me">
+    
+    <!-- IMPORTANT: This tells Facebook/Instagram which image to use in the link preview.
+         You must upload your logo file (named 'say-this-with-me-logo.png') to your website's main folder
+         so this link works correctly. -->
+    <meta property="og:image" content="https://www.saythiswith.me/say-this-with-me-logo.png">
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="theme-affirmations">
+<body class="theme-power-up">
 
     <div id="streak-tracker" class="streak-tracker" title="Keep going daily to stay in flow.">
         <span class="streak-icon">⚡</span>
@@ -17,33 +36,52 @@
     </div>
 
     <header class="app-header">
-        <img src="logo.png" alt="Say This With Me Logo" class="brand-logo">
-        <p class="main-tagline">Your brain loves consistency. We clear the noise so that you can take 15 seconds for yourself.</p>
+        <!-- MODIFIED: SEO - Descriptive alt text for the logo -->
+        <img src="say-this-with-me-logo.png" alt="Say This With Me - Mindset Engine Logo" class="brand-logo">
+        <p id="main-tagline" class="main-tagline">Speak the identity you want to build.</p>
     </header>
 
     <main class="app-main">
+        <!-- Home View with Tabs -->
         <div id="home-view">
-            <div class="view-tabs">
-                <button class="tab-btn" data-mode="intentions">Intentions</button>
-                <button class="tab-btn active" data-mode="affirmations">Affirmations</button>
-                <button class="tab-btn" data-mode="gratitude">Gratitude</button>
+             <div class="view-tabs">
+                <button class="tab-btn active" data-mode="powerUp">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Power Up
+                </button>
+                <button class="tab-btn" data-mode="breakIt">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
+                    Break It
+                </button>
+                <button class="tab-btn" data-mode="primeMe">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                    Prime Me
+                </button>
+                 <button class="tab-btn" data-mode="rewire">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.1l4 4-4 4"></path><path d="M3 12.6l4-4-4-4"></path><path d="M21 6H11.5a4.5 4.5 0 0 0-4.5 4.5v0a4.5 4.5 0 0 0 4.5 4.5H13"></path><path d="M7 21.9l-4-4 4-4"></path><path d="M21 12.4l-4 4-4-4"></path><path d="M3 18h8.5a4.5 4.5 0 0 0 4.5-4.5v0a4.5 4.5 0 0 0-4.5-4.5H7"></path></svg>
+                    Rewire
+                </button>
             </div>
+            <div class="secondary-nav">
+                <a href="/resources.html" class="secondary-nav-link">How does this work? &rarr;</a>
+            </div>
+
             <div id="category-screen" class="card">
                 <div id="categories-container" class="categories">
                     <p>Loading...</p>
                 </div>
             </div>
         </div>
-        
+        <!-- Affirmation Screen -->
         <div id="affirmation-screen" class="card" style="display: none;">
             <a href="#" id="home-btn-affirmation" class="icon-btn home-btn" title="Back to Home">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             </a>
             <button id="favorite-btn" class="icon-btn favorite-btn" title="Add to favorites">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
             </button>
-            <button id="refresh-btn" class="icon-btn refresh-btn" title="Get a new affirmation">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+            <button id="refresh-btn" class="icon-btn refresh-btn" title="Get a new one">
+                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
             </button>
             
             <div id="tooltip" class="tooltip">Saved!</div>
@@ -52,11 +90,13 @@
             <p id="status-message">Listening...</p>
         </div>
 
+        <!-- Win Screen -->
         <div id="win-screen" class="card" style="display: none;">
-            <div id="win-screen-content"></div>
+            <!-- MODIFIED: SEO - Descriptive alt text -->
+            <div id="win-screen-content" data-trophy-alt="Trophy reward for completing a mindset exercise"></div>
             <div id="win-screen-email-signup" class="email-signup-container large" style="display: none;">
                 <h3>Want to Supercharge Your Progress?</h3>
-                <p>Sign up to save your progress and get personalized daily affirmations sent to your inbox. It's free!</p>
+                <p>Sign up to save your progress and get personalized content. It's free!</p>
                 <div id="win-email-capture-form">
                     <input type="email" id="win-email-input" placeholder="Enter your email">
                     <button id="win-submit-email-btn">Save My Progress!</button>
@@ -68,16 +108,36 @@
         </div>
     </main>
 
+    <!-- MODIFIED: Changed footer to include new nav and social links -->
+<!-- Replace your entire footer with this one -->
     <footer class="app-footer">
         <div id="email-signup-section" class="email-signup-container">
             <div id="email-capture-form">
-                <input type="email" id="email-input" placeholder="Enter email to get daily affirmations">
+                <input type="email" id="email-input" placeholder="Enter email for tips & updates">
                 <button id="submit-email-btn">Submit</button>
             </div>
             <div id="email-thank-you" style="display: none;">
                 <p>Awesome! You're on the list.</p>
             </div>
         </div>
+
+        <nav class="footer-nav">
+            <div class="footer-links-row">
+                <!-- THIS LINK IS NOW CORRECT -->
+                <a href="/resources.html#the-science" class="footer-link">The Science</a>
+                <a href="/faq.html" class="footer-link">FAQ</a>
+                <a href="mailto:intentionalaffirmations@gmail.com" class="footer-link">Contact</a>
+            </div>
+            <div class="social-links">
+                <a href="https://www.instagram.com/say_this_with_me/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Follow us on Instagram">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"></path></svg>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61578587621492" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Follow us on Facebook">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.32 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96A10 10 0 0 0 12 2.04Z"></path></svg>
+                </a>
+            </div>
+        </nav>
+        <p class="copyright">&copy; 2025 Say This With Me. All Rights Reserved.</p>
     </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
