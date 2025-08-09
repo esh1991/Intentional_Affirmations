@@ -94,7 +94,9 @@ function setupTabs() {
 function switchMode(newMode, isInitialLoad = false) {
     currentMode = newMode;
     const modeData = allData[currentMode];
-    
+    if (!isInitialLoad) {
+        trackEvent('tab_switched', { mode: newMode });
+    }
     tabBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === newMode));
     body.className = `theme-${modeData.theme}`;
     mainTagline.textContent = getTaglineForMode(newMode);
@@ -347,3 +349,4 @@ if (recognition) {
 document.body.addEventListener('click', () => { hasInteracted = true; }, { once: true });
 
 document.addEventListener('DOMContentLoaded', initializeApp);
+
