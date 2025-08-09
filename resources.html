@@ -1,118 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- ... (your head content remains the same) ... -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How It Works & The Science - Say This With Me</title>
-    <meta name="description" content="Learn how the Say This With Me engine works in 3 simple steps, and explore the science of neuroplasticity, habit loops, and cognitive priming that powers it.">
-    
+    <meta name="description" content="Learn how the Say This With Me engine works, and explore the science of neuroplasticity, habit loops, and cognitive priming that powers it.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="resources-style.css"> 
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-8GYK2VZBW9"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-8GYK2VZBW9');
-</script>
-    
 </head>
 <body>
 
     <header class="resource-header">
         <a href="https://www.saythiswith.me" class="back-link">&larr; Back to the App</a>
-        <h1>The Mindset Engine</h1>
-        <p class="subtitle">A practical guide on how to use this tool, and the science that makes it so effective.</p>
+        <h1>The Science Behind the Engine</h1>
+        <p class="subtitle">Each principle is a tool. Learn how they work, then use the app to put them into practice.</p>
     </header>
 
     <main class="resource-content">
 
-        <!-- SECTION 1: HOW IT WORKS (VISUAL & COLOR-CODED) -->
-        <section id="how-it-works" class="how-it-works-section">
-            <h2 class="section-title">How It Works: 3 Simple Steps</h2>
-            <div class="steps-container">
-                <div class="step-item">
-                    <div class="step-number">1</div>
-                    <h3>Choose Your Mode</h3>
-                    <p>Select the area you want to focus on. Each mode is designed for a specific mental task.</p>
-                </div>
-                <div class="step-connector"></div>
-                <div class="step-item">
-                    <div class="step-number">2</div>
-                    <h3>Speak It Out Loud</h3>
-                    <p>Your voice is a powerful tool. Speaking the phrase engages more of your brain than just thinking it.</p>
-                </div>
-                <div class="step-connector"></div>
-                <div class="step-item">
-                    <div class="step-number">3</div>
-                    <h3>Lock It In</h3>
-                    <p>Our app provides instant feedback, rewarding your brain and strengthening the new mental pathway.</p>
-                </div>
+        <!-- CARD 1: NEUROPLASTICITY -->
+        <article class="science-card" id="neuroplasticity">
+            <div class="card-content">
+                <h3>Neuroplasticity: Your Brain is Rewireable</h3>
+                <p>Your brain is not fixed. Every thought reinforces a neural pathway, like walking the same path in a forest. When you consistently speak a new thought ("I am confident"), you physically build a new, stronger path, making that thought your new default.</p>
             </div>
+            <footer class="card-footer">
+                <div class="card-links">
+                    <a href="https://www.youtube.com/watch?v=LNHBMFCzznE" target="_blank" rel="noopener noreferrer" class="source-link">Watch a Talk &rarr;</a>
+                    <a href="/index.html?mode=powerUp" class="action-link">⚡ Try Powering Up</a>
+                </div>
+                <div class="share-section">
+                    <p>Share this with someone who needs to hear it.</p>
+                    <button class="share-button" onclick="shareCard('neuroplasticity')">Share Concept</button>
+                </div>
+            </footer>
+        </article>
 
-            <div class="modes-grid">
-                <!-- Power Up Card -->
-                <a href="/index.html?mode=powerUp" class="mode-card powerup">
-                    <h4>⚡ Power Up</h4>
-                    <p>Your brain doesn't know the difference between a vividly imagined reality and your current one. When you repeatedly speak an identity statement, you are creating new neural pathways. This is <strong>self-directed neuroplasticity</strong>.</p>
-                </a>
-                <!-- Break It Card -->
-                <a href="/index.html?mode=breakIt" class="mode-card breakit">
-                    <h4>🛑 Break It</h4>
-                    <p>Interrupts the automated habit loop (Cue → Routine → Reward). When you feel an urge, you insert a new routine (speaking a disruptive truth), which robs the old habit of its power and builds a healthier response pattern.</p>
-                </a>
-                <!-- Prime Me Card -->
-                <a href="/index.html?mode=primeMe" class="mode-card primeme">
-                    <h4>🎯 Prime Me</h4>
-                    <p>Based on psychological priming. Exposing your brain to concepts like "calm" or "focus" right before an event makes you more likely to embody those traits when you need them.</p>
-                </a>
-                <!-- Rewire Card -->
-                <a href="/index.html?mode=rewire" class="mode-card rewire">
-                    <h4>🧠 Rewire</h4>
-                    <p>Uses a technique similar to CBT to identify a negative, automatic thought ("I'm not good enough") and consciously replace it with an empowering one. Speaking it aloud makes the replacement dramatically more effective.</p>
-                </a>
+        <!-- CARD 2: THE HABIT LOOP -->
+        <article class="science-card" id="habit-loop">
+            <div class="card-content">
+                <h3>The Habit Loop: Hijacking Your Routine</h3>
+                <p>Destructive habits run on a simple loop: Cue (the trigger), Routine (the action), Reward (the feeling). "Break It" works by consciously inserting a new Routine—speaking a powerful truth—to overwrite the old one and build a healthier response.</p>
             </div>
-        </section>
+            <footer class="card-footer">
+                 <div class="card-links">
+                    <a href="https://charlesduhigg.com/the-power-of-habit/" target="_blank" rel="noopener noreferrer" class="source-link">Read the Book &rarr;</a>
+                    <a href="/index.html?mode=breakIt" class="action-link">🛑 Try Breaking It</a>
+                </div>
+                <div class="share-section">
+                    <p>Help someone break a cycle they're stuck in.</p>
+                    <button class="share-button" onclick="shareCard('habit-loop')">Share Concept</button>
+                </div>
+            </footer>
+        </article>
 
-        <!-- SECTION 2: THE SCIENCE (EVIDENCE-BASED) -->
-        <section id="the-science" class="science-section">
-            <h2 class="section-title">The Science Behind It</h2>
-            <div class="science-articles">
-                <article class="science-card">
-                    <h3>Neuroplasticity: Your Brain is Rewireable</h3>
-                    <!-- DETAILED TEXT RESTORED HERE -->
-                    <p>Your brain is not fixed. Every thought and action creates and reinforces neural pathways. When you consistently speak a new thought, you are physically building a new "road" in your brain, making that thought easier to access in the future. This is how change happens on a biological level.</p>
-                    <footer><p><strong>Further Reading:</strong> [Placeholder for a link to a study on Hebbian Theory or Adult Neuroplasticity]</p></footer>
-                </article>
-
-                <article class="science-card">
-                    <h3>The Habit Loop: Cue, Routine, Reward</h3>
-                    <!-- DETAILED TEXT RESTORED HERE -->
-                    <p>Habits are automated by a neurological loop. "Break It" works by giving you a new, powerful "Routine" (speaking an affirmation) to insert when you get a "Cue" (an urge), leading to a positive "Reward" (a sense of control). This consciously overwrites the old, destructive pathway.</p>
-                     <footer><p><strong>Source Concept:</strong> The Power of Habit by Charles Duhigg</p></footer>
-                </article>
-
-                <article class="science-card">
-                    <h3>Embodied Cognition: The Power of Voice</h3>
-                    <!-- DETAILED TEXT RESTORED HERE -->
-                    <p>Thinking a thought is passive. Speaking it is an action. When you use your voice, you engage the motor cortex and auditory system. Hearing yourself say "I am confident" in your own voice provides a powerful feedback loop to your brain, making the statement more believable and emotionally resonant than a silent thought.</p>
-                     <footer><p><strong>Further Reading:</strong> [Placeholder for a link to research on Auditory Feedback Loops in self-perception]</p></footer>
-                </article>
-                 <article class="science-card">
-                    <h3>Cognitive Priming: Preparing Your Mind</h3>
-                    <!-- DETAILED TEXT RESTORED HERE -->
-                    <p>"Prime Me" is based on the proven psychological concept of priming. By exposing your brain to specific words and concepts (like "calm" or "focus") right before an event, you make those states more mentally accessible, increasing the likelihood that you will actually feel and act that way.</p>
-                     <footer><p><strong>Further Reading:</strong> [Placeholder for a link to a study by Bargh, Chen, & Burrows on priming]</p></footer>
-                </article>
+        <!-- CARD 3: COGNITIVE PRIMING -->
+        <article class="science-card" id="priming">
+            <div class="card-content">
+                <h3>Cognitive Priming: Preparing Your Mind</h3>
+                <p>"Prime Me" is based on the proven concept that exposing your brain to specific ideas (like "calm" or "focus") makes those states more accessible. You are pre-loading your desired mindset right before you need it most.</p>
             </div>
-        </section>
+            <footer class="card-footer">
+                 <div class="card-links">
+                    <a href="https://en.wikipedia.org/wiki/Priming_(psychology)" target="_blank" rel="noopener noreferrer" class="source-link">Learn More &rarr;</a>
+                    <a href="/index.html?mode=primeMe" class="action-link">🎯 Try Priming Now</a>
+                </div>
+                <div class="share-section">
+                    <p>Know someone with a big moment coming up?</p>
+                    <button class="share-button" onclick="shareCard('priming')">Share Concept</button>
+                </div>
+            </footer>
+        </article>
+        
+        <!-- CARD 4: EMBODIED COGNITION -->
+        <article class="science-card" id="embodied-cognition">
+            <div class="card-content">
+                <h3>Embodied Cognition: The Power of Voice</h3>
+                <p>Thinking a thought is passive. Speaking it is an action. Hearing yourself say "I am worthy" in your own voice creates a powerful feedback loop to your brain, making the statement more believable and emotionally resonant than a silent thought.</p>
+            </div>
+            <footer class="card-footer">
+                 <div class="card-links">
+                    <a href="https://www.youtube.com/watch?v=9z4-nIw_33U" target="_blank" rel="noopener noreferrer" class="source-link">Watch a Talk &rarr;</a>
+                    <a href="/index.html?mode=rewire" class="action-link">🧠 Try Rewiring</a>
+                </div>
+                <div class="share-section">
+                    <p>Share this with a friend who's working on their self-talk.</p>
+                    <button class="share-button" onclick="shareCard('embodied-cognition')">Share Concept</button>
+                </div>
+            </footer>
+        </article>
 
     </main>
 
+    <!-- JAVASCRIPT FOR SHARING AND SCROLLING -->
+    <script>
+        // Function to handle sharing a specific card
+        function shareCard(cardId) {
+            const cardElement = document.getElementById(cardId);
+            const title = cardElement.querySelector('h3').innerText;
+            const text = 'Check out this concept from the Say This With Me mindset engine:';
+            const url = 'https://www.saythiswith.me/resources.html#' + cardId;
+            const shareButton = cardElement.querySelector('.share-button');
+
+            // Use the modern Web Share API if available (on mobile)
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    text: text,
+                    url: url,
+                }).catch(console.error);
+            } else {
+                // Fallback for desktop: copy the link to the clipboard
+                navigator.clipboard.writeText(url).then(() => {
+                    const originalText = shareButton.innerText;
+                    shareButton.innerText = 'Link Copied!';
+                    setTimeout(() => {
+                        shareButton.innerText = originalText;
+                    }, 2000);
+                }).catch(console.error);
+            }
+        }
+
+        // Function to scroll to and highlight a card if its ID is in the URL hash
+        window.addEventListener('load', () => {
+            if (window.location.hash) {
+                const targetId = window.location.hash.substring(1);
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    // Scroll to the element
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Add a temporary highlight class
+                    targetElement.classList.add('highlighted');
+                    setTimeout(() => {
+                        targetElement.classList.remove('highlighted');
+                    }, 2500); // Highlight lasts for 2.5 seconds
+                }
+            }
+        });
+    </script>
 </body>
 </html>
