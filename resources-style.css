@@ -1,16 +1,11 @@
-/* --- Basic Setup for Resources Page --- */
+/* --- Basic Setup --- */
 :root {
     --bg-color: #1a1a2e;
     --card-bg: #1f1f3a;
     --text-color: #e0e0e0;
     --header-color: #ffffff;
-    --section-title-color: #ffffff;
-    
-    /* NEW: Accent colors for each mode */
-    --powerup-color: #007bff;
-    --breakit-color: #ff416c;
-    --primeme-color: #6f42c1; /* A purple to distinguish from dark bg */
-    --rewire-color: #28a745;
+    --action-color: #43e97b; /* Main CTA color */
+    --border-color: rgba(255, 255, 255, 0.1);
 }
 
 body {
@@ -19,14 +14,14 @@ body {
     color: var(--text-color);
     margin: 0;
     padding: 1rem 1rem 4rem 1rem;
-    line-height: 1.7;
+    line-height: 1.6;
 }
 
-/* --- Header & Back Link --- */
+/* --- Header --- */
 .resource-header {
     text-align: center;
     max-width: 800px;
-    margin: 1rem auto 3rem auto;
+    margin: 1rem auto 4rem auto;
 }
 .back-link {
     display: inline-block;
@@ -50,138 +45,108 @@ h1 {
     margin: 0.5rem auto 0 auto;
 }
 
-/* --- General Section Styling --- */
+/* --- Main Content --- */
 .resource-content {
-    max-width: 800px;
+    max-width: 700px;
     margin: 0 auto;
-}
-.section-title {
-    color: var(--section-title-color);
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 2.5rem;
-    border-bottom: 2px solid var(--powerup-color);
-    display: inline-block;
-    padding-bottom: 0.5rem;
-}
-.how-it-works-section, .science-section {
-    margin-bottom: 5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* --- NEW: How It Works - Visual Steps --- */
-.steps-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
-    margin-bottom: 3rem;
-}
-.step-item {
-    flex: 1;
-    text-align: center;
-    padding: 0 1rem;
-}
-.step-number {
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    border-radius: 50%;
-    background-color: var(--card-bg);
-    color: var(--header-color);
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0 auto 1rem auto;
-    border: 2px solid var(--powerup-color);
-}
-.step-item h3 {
-    margin: 0 0 0.5rem 0;
-    color: var(--header-color);
-}
-.step-connector {
-    flex: 0 1 100px;
-    height: 2px;
-    background: rgba(255,255,255,0.2);
-    margin-top: 25px;
-}
-
-/* --- NEW: How It Works - Mode Cards --- */
-.modes-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    width: 100%;
-}
-.mode-card {
-    background: var(--card-bg);
-    border-radius: 10px;
-    padding: 1.5rem;
-    text-decoration: none;
-    color: var(--text-color);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border-left: 5px solid;
-}
-.mode-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-.mode-card h4 {
-    margin: 0 0 0.5rem 0;
-    color: var(--header-color);
-    font-size: 1.2rem;
-}
-.mode-card p {
-    margin: 0;
-    opacity: 0.8;
+    gap: 2rem;
 }
 
-/* Card color-coding */
-.mode-card.powerup { border-color: var(--powerup-color); }
-.mode-card.breakit { border-color: var(--breakit-color); }
-.mode-card.primeme { border-color: var(--primeme-color); }
-.mode-card.rewire { border-color: var(--rewire-color); }
-
-/* --- NEW: The Science Section --- */
-.science-articles {
-    display: grid;
-    gap: 1.5rem;
-}
+/* --- NEW: Science Card Design --- */
 .science-card {
     background: var(--card-bg);
-    border-radius: 10px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Ensures footer border doesn't stick out */
+    border: 2px solid transparent; /* For highlight effect */
+    transition: all 0.5s ease-out; /* Smooth transition for highlight */
+}
+
+.card-content {
     padding: 2rem;
 }
-.science-card h3 {
+.card-content h3 {
     margin-top: 0;
     color: var(--header-color);
+    font-size: 1.5rem;
 }
-.science-card footer {
-    margin-top: 1.5rem;
+
+.card-footer {
+    padding: 1rem 2rem;
+    background: rgba(0,0,0,0.2);
+    border-top: 1px solid var(--border-color);
+}
+.card-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.source-link {
+    color: var(--text-color);
+    opacity: 0.8;
+    text-decoration: none;
+    font-weight: 700;
+    transition: opacity 0.2s ease;
+}
+.source-link:hover {
+    opacity: 1;
+}
+.action-link {
+    background: var(--action-color);
+    color: #1a1a2e;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    border: none;
+    border-radius: 50px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-align: center;
+}
+.action-link:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(67, 233, 123, 0.2);
+}
+
+/* --- NEW: Share Section --- */
+.share-section {
     padding-top: 1rem;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.share-section p {
+    margin: 0;
     font-size: 0.85rem;
     opacity: 0.7;
+    font-style: italic;
 }
-.science-card footer p {
-    margin: 0;
+.share-button {
+    background: rgba(255,255,255,0.1);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 0.4rem 0.8rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.share-button:hover {
+    background: rgba(255,255,255,0.2);
 }
 
-
-/* --- Responsive Adjustments --- */
-@media (max-width: 768px) {
-    .steps-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
-    }
-    .step-connector {
-        transform: rotate(90deg);
-        width: 50px;
-        margin: -10px 0;
-    }
-    .modes-grid {
-        grid-template-columns: 1fr;
-    }
+/* --- NEW: Highlight Effect --- */
+.science-card.highlighted {
+    border-color: var(--action-color);
+    box-shadow: 0 0 30px rgba(67, 233, 123, 0.4);
 }
