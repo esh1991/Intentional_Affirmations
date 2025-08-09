@@ -16,6 +16,21 @@ const homeView = document.getElementById('home-view');
 const winScreenContent = document.getElementById('win-screen-content');
 const winScreenEmailSignup = document.getElementById('win-screen-email-signup');
 
+// ... (your const declarations)
+
+// --- NEW: Google Analytics Event Tracking Helper ---
+function trackEvent(eventName, eventParams) {
+    if (typeof gtag === 'function') {
+        gtag('event', eventName, eventParams);
+    } else {
+        console.log(`Analytics event (not sent): ${eventName}`, eventParams);
+    }
+}
+
+// --- 2. App State ---
+// ... (rest of your file)
+
+
 // --- 2. App State ---
 let allData = {};
 let currentMode = 'powerUp';
@@ -330,4 +345,5 @@ if (recognition) {
 
 // --- 7. App Initialization ---
 document.body.addEventListener('click', () => { hasInteracted = true; }, { once: true });
+
 document.addEventListener('DOMContentLoaded', initializeApp);
