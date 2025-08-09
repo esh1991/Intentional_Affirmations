@@ -142,6 +142,12 @@ function populateCategories(mode) {
         button.textContent = category.name;
         button.addEventListener('click', () => {
             playSound(clickSound);
+
+trackEvent('category_selected', {
+        mode: mode,
+        category: category.name
+    });
+            
             startAffirmation(category.items, category.name);
         });
         categoriesContainer.appendChild(button);
@@ -180,7 +186,11 @@ function handleSuccess() {
     winScreenEmailSignup.style.display = 'none';
 
     const trophyAltText = document.getElementById('win-screen-content').dataset.trophyAlt || 'Trophy';
-
+trackEvent('affirmation_success', {
+        mode: currentMode,
+        category: currentAffirmationData.category,
+        star_level: starCount // Tracks their progress towards a trophy
+    });
     if (starCount >= 3) {
         contentHTML = `
             <img src="mindset-engine-reward-trophy.png" alt="${trophyAltText}" class="trophy-icon">
@@ -255,6 +265,12 @@ document.getElementById('refresh-btn').addEventListener('click', () => {
 
 favoriteBtn.addEventListener('click', (e) => {
     e.currentTarget.classList.toggle('favorited');
+
+    trackEvent('favorite_clicked', {
+        is_favorited: isFavorited, // true if they just favorited it, false if unfavorited
+        affirmation_text: currentAffirmationData.affirmation
+    });    
+    
     tooltip.classList.add('show');
     setTimeout(() => tooltip.classList.remove('show'), 2000);
 });
@@ -275,6 +291,11 @@ async function handleEmailSubmit(email, button, formWrapper, thankYouEl) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email, source: `mindset-engine-${currentMode}` }),
         });
+        
+        trackEvent('email_signup', {
+            signup_location: (formWrapper.id.includes('win')) ? 'win_screen' : 'footer'
+        });
+        
         formWrapper.style.display = 'none';
         thankYouEl.style.display = 'block';
     } catch (error) {
@@ -349,4 +370,5 @@ if (recognition) {
 document.body.addEventListener('click', () => { hasInteracted = true; }, { once: true });
 
 document.addEventListener('DOMContentLoaded', initializeApp);
+
 
