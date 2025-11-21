@@ -278,7 +278,7 @@ favoriteBtn.addEventListener('click', (e) => {
 homeBtnAffirmation.addEventListener('click', goToHomeScreen);
 
 async function handleEmailSubmit(email, button, formWrapper, thankYouEl) {
-    const n8nWebhookUrl = 'https://esh1991.app.n8n.cloud/webhook/4e9ed364-627b-41bd-92fa-d6a36e63fbfc';
+    const n8nWebhookUrl = 'https://n8n.srv1142500.hstgr.cloud/webhook/4e9ed364-627b-41bd-92fa-d6a36e63fbfc';
     if (!n8nWebhookUrl.startsWith('http')) {
         alert('Please update the n8nWebhookUrl in app.js first!');
         return;
@@ -370,5 +370,6 @@ if (recognition) {
 document.body.addEventListener('click', () => { hasInteracted = true; }, { once: true });
 
 document.addEventListener('DOMContentLoaded', initializeApp);
+
 
 
