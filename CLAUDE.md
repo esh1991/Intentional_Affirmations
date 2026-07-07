@@ -1,6 +1,10 @@
 # CLAUDE.md — Say This With Me
 
+@AGENTS.md
+
 Standing brief for Claude Code sessions. **Read `docs/PLAN.md` first** — it holds the vision, strategy, target architecture, and roadmap. This file covers the day-to-day facts.
+
+> **You are on the `rebuild/next` branch** — the Phase 1 Next.js rebuild. Spec: `docs/roadmap/phase-1-rebuild.md`. The old static site is parked in `legacy/` for reference during the port (it still serves production from `main`); don't edit it here. Heed AGENTS.md above: check `node_modules/next/dist/docs/` before using Next.js APIs.
 
 ## What this is
 
@@ -28,7 +32,8 @@ External services: GA4 (`gtag`), n8n webhook for email capture (URL hardcoded in
 ## Running locally
 
 ```
-npx serve .
+npm run dev        # Next.js app (this branch)
+npx serve legacy   # old static site, for reference
 ```
 
 Microphone requires a secure context — `localhost` qualifies; a LAN IP does not.
