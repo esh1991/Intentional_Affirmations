@@ -52,45 +52,99 @@
 }
 
 /*
- * Per-mode theming. A wrapper sets data-mode; everything inside picks up the
- * mode's accent pair via the `mode` / `mode-2` Tailwind color tokens.
- * Palettes are matured versions of the legacy gradients (see legacy/style.css):
- * calmer chroma, same hue identity per mode.
+ * Brand + per-mode theming. The site chrome runs dark-first (the brand logo
+ * is white-on-transparent) with the indigo→blue gradient from the color logo
+ * as the default accent. A wrapper sets data-mode; everything inside picks up
+ * the mode's accent pair via the `mode` / `mode-2` Tailwind color tokens.
+ * Mode hues are matured versions of the legacy gradients (legacy/style.css).
+ * --mode-accent: fills (buttons, active tabs) — white text on top.
+ * --mode-accent-2: lighter partner for text/glows on the dark background.
  */
-[data-mode] {
+:root {
+  --mode-accent: oklch(0.55 0.19 272);
+  --mode-accent-2: oklch(0.7 0.14 262);
   --mode-foreground: oklch(0.985 0 0);
 }
 [data-mode="powerUp"] {
-  --mode-accent: oklch(0.52 0.17 258);
-  --mode-accent-2: oklch(0.62 0.13 230);
+  --mode-accent: oklch(0.55 0.17 255);
+  --mode-accent-2: oklch(0.72 0.12 235);
 }
 [data-mode="breakIt"] {
-  --mode-accent: oklch(0.55 0.18 18);
-  --mode-accent-2: oklch(0.62 0.15 40);
+  --mode-accent: oklch(0.55 0.17 20);
+  --mode-accent-2: oklch(0.72 0.12 35);
 }
 [data-mode="primeMe"] {
-  --mode-accent: oklch(0.48 0.15 294);
-  --mode-accent-2: oklch(0.63 0.11 322);
+  --mode-accent: oklch(0.5 0.16 300);
+  --mode-accent-2: oklch(0.73 0.11 320);
 }
 [data-mode="rewire"] {
   --mode-accent: oklch(0.55 0.12 172);
-  --mode-accent-2: oklch(0.63 0.12 150);
+  --mode-accent-2: oklch(0.74 0.12 165);
 }
 
-/* Soft mode-tinted glow behind the app surface — the calm-premium wash. */
+/* Soft mode-tinted glow behind the page — the calm-premium wash. */
 .mode-glow {
   background:
     radial-gradient(
-      80% 55% at 50% -5%,
-      color-mix(in oklch, var(--mode-accent) 22%, transparent),
+      70% 50% at 50% -5%,
+      color-mix(in oklch, var(--mode-accent) 28%, transparent),
       transparent 70%
     ),
     radial-gradient(
-      60% 40% at 85% 25%,
+      50% 40% at 85% 30%,
       color-mix(in oklch, var(--mode-accent-2) 10%, transparent),
       transparent 70%
     );
   transition: opacity 0.5s ease;
+}
+
+/* Mindvalley-style category card cover. */
+.card-cover {
+  background:
+    radial-gradient(
+      120% 120% at 15% 0%,
+      color-mix(in oklch, var(--mode-accent-2) 55%, transparent),
+      transparent 60%
+    ),
+    linear-gradient(
+      135deg,
+      color-mix(in oklch, var(--mode-accent) 85%, black 10%),
+      color-mix(in oklch, var(--mode-accent) 55%, black 40%)
+    );
+}
+
+/* Live word highlighting — the signature effect. */
+@keyframes word-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.14);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.affirmation-word {
+  display: inline-block;
+  color: color-mix(in oklch, var(--foreground) 30%, transparent);
+  transition: color 0.2s ease;
+}
+.affirmation-word.spoken {
+  color: var(--mode-accent-2);
+  animation: word-pop 0.35s ease;
+}
+
+@keyframes mic-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--mode-accent) 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 26px transparent;
+  }
+}
+.mic-listening {
+  animation: mic-pulse 1.6s ease-out infinite;
 }
 
 :root {
@@ -129,11 +183,12 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  /* Deep blue-black, not pure gray — matches the brand indigo cast */
+  --background: oklch(0.15 0.015 272);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
+  --card: oklch(0.2 0.02 272);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
+  --popover: oklch(0.2 0.02 272);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);

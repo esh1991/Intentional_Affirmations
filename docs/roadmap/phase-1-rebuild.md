@@ -88,10 +88,10 @@ Move the n8n webhook call behind a Next.js route handler (`/api/subscribe`) so t
 
 - [x] M0: Branch + scaffold (Next.js, TS strict, Tailwind, shadcn/ui), old site parked in `legacy/`, `SpeechVerifier` interface committed
 - [x] M1: Content schema + home screen (modes/categories) with new design system; FAQ ported; legacy `.html` URL redirects; `vercel.json` pins the Next.js framework preset
-- [ ] M2: Affirmation flow with `WebSpeechVerifier` + live highlighting
-- [ ] M3: `TypedVerifier` + fallback UX; stars/streaks/win screen; session logging
-- [ ] M4: PWA, `/science` + `/faq` ports, `/api/subscribe`, GA4 events
-- [ ] M5: Playwright smoke test + CI; phone QA; cutover
+- [x] M2: Affirmation flow with `WebSpeechVerifier` + live highlighting; typing fallback (implemented as a UI path over the shared similarity module rather than a `TypedVerifier` class — same scoring, keyboard-drivable in CI); stars/streaks/win screen. Also: dark brand design system (white logo on deep indigo-black, Mindvalley-style category cards, desktop-grade layouts), `/science` port with share buttons
+- [ ] M3: session logging to localStorage (`mindsetEngineSessions`)
+- [ ] M4: PWA, `/api/subscribe`, GA4 events, sounds on click interactions
+- [ ] M5: Playwright smoke test (drive the typing path) + CI; phone QA
 
 ## Open questions
 

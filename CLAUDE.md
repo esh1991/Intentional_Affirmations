@@ -2,57 +2,57 @@
 
 @AGENTS.md
 
-Standing brief for Claude Code sessions. **Read `docs/PLAN.md` first** — it holds the vision, strategy, target architecture, and roadmap. This file covers the day-to-day facts.
-
-> **You are on the `rebuild/next` branch** — the Phase 1 Next.js rebuild. Spec: `docs/roadmap/phase-1-rebuild.md`. The old static site is parked in `legacy/` for reference during the port (it still serves production from `main`); don't edit it here. Heed AGENTS.md above: check `node_modules/next/dist/docs/` before using Next.js APIs.
+Standing brief for Claude Code sessions. **Read `docs/PLAN.md` first** — it holds the vision, strategy, target architecture, and roadmap. This file covers the day-to-day facts. Heed AGENTS.md above: check `node_modules/next/dist/docs/` before using Next.js APIs — this Next version is newer than training data.
 
 ## What this is
 
-Voice-activated affirmation app: the user speaks an affirmation out loud, the Web Speech API verifies the words with live word-by-word highlighting, and stars/streaks/trophies reward completion. Live at **saythiswith.me**.
+Voice-activated affirmation app: the user speaks an affirmation out loud, speech recognition verifies the words with live word-by-word highlighting, and stars/streaks/trophies reward completion. Live at **saythiswith.me**.
 
-## Current stack (pre-rewrite)
+## Stack & structure
 
-Static vanilla HTML/CSS/JS, no build step, no backend, no accounts.
+Next.js 16 (App Router, Turbopack) · TypeScript strict · Tailwind v4 · shadcn/ui · Zod. Deployed on Vercel (`vercel.json` pins the framework preset). `main` = production; pushing deploys.
 
-| File | Role |
+| Path | Role |
 |---|---|
-| `index.html` | The app: 4 mode tabs, category screen, affirmation screen, win screen |
-| `app.js` | All logic: data loading, speech recognition, streaks/stars, GA4 events, email capture |
-| `mindset-data.json` | All content — 4 modes (`powerUp`, `breakIt`, `primeMe`, `rewire`) → categories → affirmations |
-| `style.css` | App styles (per-mode themes via `body.theme-*` classes) |
-| `resources.html` / `faq.html` / `resources-style.css` | Marketing/info pages |
+| `src/app/` | Routes: `/` (modes + category cards), `/practice/[mode]/[category]` (speaking flow), `/science`, `/faq` |
+| `src/components/app/` | App surface: home screen, practice screen, streak badge |
+| `src/components/site/` | Chrome: header, footer, share button |
+| `src/lib/speech/` | `SpeechVerifier` interface, `WebSpeechVerifier`, similarity scoring — the UI never touches the Web Speech API directly |
+| `src/lib/` | `content.ts` (Zod-validated loader), `streak.ts`, `stars.ts` |
+| `src/content/mindset-data.json` | All content: 4 modes → categories → affirmations |
+| `legacy/` | Pre-rewrite static site, reference only — don't edit |
 
-External services: GA4 (`gtag`), n8n webhook for email capture (URL hardcoded in `app.js`), canvas-confetti from CDN.
+## Design system
 
-### localStorage keys
+Dark-first (the brand logo is white-on-transparent; the color variant's indigo→blue gradient is the brand accent). Per-mode theming via `data-mode` attribute + `--mode-accent`/`--mode-accent-2` tokens in `globals.css`, consumed as Tailwind `mode`/`mode-2` colors. Category cards are Mindvalley-style (gradient covers, rounded-3xl, grid) — **the user explicitly wants cards, never plain lists**. Live word highlighting (`.affirmation-word.spoken`) is the signature effect — polish it most. Everything must work desktop and mobile.
+
+### localStorage keys (legacy-compatible — don't rename)
 - `mindsetEngineStarCount` — stars toward the 3-star trophy
-- `mindsetEngineStreakCount` — daily streak count
-- `mindsetEngineLastPractice` — date of last completed affirmation (legacy key `mindsetEngineLastVisit` is read as a fallback for existing users — don't remove that fallback)
+- `mindsetEngineStreakCount` — daily streak
+- `mindsetEngineLastPractice` — date of last completion (legacy `mindsetEngineLastVisit` read as fallback)
+
+Streaks count **completed affirmations**, never page visits; `recordCompletion()` only runs on success.
 
 ## Running locally
 
 ```
-npm run dev        # Next.js app (this branch)
-npx serve legacy   # old static site, for reference
+npm run dev     # mic works on localhost (secure context)
+npm run build   # includes typecheck — run before pushing
+npm run lint
 ```
-
-Microphone requires a secure context — `localhost` qualifies; a LAN IP does not.
 
 ## Gotchas
 
-- **Web Speech API**: solid in Chrome, flaky on iOS Safari, absent in Firefox. Chrome sends audio to Google's servers for recognition — never claim speech is processed locally (see `faq.html` privacy answer; keep it honest).
-- **Streaks count completed affirmations, not visits.** `updateStreak()` must only run from `handleSuccess()`, never on page load.
-- The current codebase is scheduled for a full rewrite in Phase 1 (Next.js + TS + Tailwind, see PLAN.md). Keep changes to the vanilla site surgical — fix bugs, don't refactor.
-- Deployment is Vercel (static preset), serving saythiswith.me. Pushing to `main` deploys the live site — treat `main` as production; PRs get preview deployments.
+- **Web Speech API**: Chrome-quality, flaky iOS Safari, absent Firefox — the typing fallback must stay first-class. Chrome sends audio to Google's servers; never claim on-device processing (see `/faq`).
+- React Compiler lint is strict: no `Math.random`/impure calls in render (hoist to helpers), no setState-in-effect (use `useClientValue` in `src/hooks/` for browser-only reads).
+- n8n email-capture webhook URL must not ship client-side — goes behind `/api/subscribe` (M4).
+- GA4 events go through a `trackEvent()` helper when reintroduced (M4), never raw `gtag()`.
 
 ## Roadmap status
 
-- **Phase 0 — Foundations**: ✅ done (repo in `C:\dev`, Vercel + domain live, live-site bugs fixed, this file + PLAN.md added).
-- **Phase 1 — Rebuild**: next up. Next.js 15 + TS + Tailwind + shadcn/ui, speech behind a `SpeechVerifier` interface, PWA, mobile-first.
-- Phases 2–4: Supabase accounts/data → growth engine → monetization. Details in PLAN.md.
+Phase 1 (rebuild): M0–M2 done — scaffold, home + design system, full practice flow (mic + typing fallback, stars/streak/win screen), `/science` + `/faq`. Remaining: session logging (M3), PWA + `/api/subscribe` + GA4 (M4), Playwright + CI (M5). Then Phase 2: Supabase accounts/data. Details: `docs/roadmap/phase-1-rebuild.md` and `docs/PLAN.md`.
 
 ## Conventions
 
-- Specs for larger pieces of work go in `docs/roadmap/`.
-- Workflow: GitHub issue → branch → PR → preview deploy → merge. No direct-to-`main` pushes once Vercel previews exist.
-- GA4 events go through the `trackEvent()` helper, never raw `gtag()`.
+- Specs in `docs/roadmap/`; update milestone checkboxes as work lands.
+- Commit to `main` deploys production — build + lint must pass first.

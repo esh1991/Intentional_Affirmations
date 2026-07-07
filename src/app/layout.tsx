@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { SiteHeader } from "@/components/site/site-header";
+import { SiteFooter } from "@/components/site/site-footer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,7 +16,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.saythiswith.me"),
-  title: "Say This With Me: Voice-Activated Mindset Engine",
+  title: {
+    default: "Say This With Me: Voice-Activated Mindset Engine",
+    template: "%s — Say This With Me",
+  },
   description:
     "Rewire your brain with our Voice-Activated Mindset Engine. Speak new habits and identities into existence with daily affirmations for Powering Up, Breaking Habits, Priming for events, and Rewiring your thoughts.",
   openGraph: {
@@ -35,9 +40,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`dark ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <SiteHeader />
+        <div className="flex flex-1 flex-col">{children}</div>
+        <SiteFooter />
+      </body>
     </html>
   );
 }
