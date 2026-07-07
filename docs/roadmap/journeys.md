@@ -1,6 +1,6 @@
 # Journeys — 7/14/21-day commitment arcs
 
-*Spec agreed 2026-07-07 (pulled forward from PLAN.md Phase 3). Status: **content-first** — the feature does not ship until progressive per-day content exists and is approved by the owner.*
+*Spec agreed 2026-07-07 (pulled forward from PLAN.md Phase 3). Status: **pilot live** — the mechanic shipped with the owner-approved "Mindless Scrolling" arc as the production pilot; remaining 12 category arcs pending owner feedback on the pilot, then drafting + approval.*
 
 ## Decisions (owner-approved)
 

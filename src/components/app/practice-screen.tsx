@@ -18,6 +18,21 @@ import {
 import { matchedWordIndices, similarityScore } from "@/lib/speech/similarity";
 import { addStar } from "@/lib/stars";
 import { recordCompletion } from "@/lib/streak";
+import {
+  JOURNEY_DURATIONS,
+  type JourneyDuration,
+  type JourneyState,
+  arcIndexForDay,
+  completeJourneyDay,
+  isCompletedToday,
+  isFinished,
+  journeyKey,
+  nextDay,
+  parseJourneys,
+  readJourneysRaw,
+  startJourney,
+} from "@/lib/journeys";
+import { JourneyDots } from "@/components/app/journey-dots";
 import { useClientValue } from "@/hooks/use-client-value";
 
 type Phase = "ready" | "listening" | "retry" | "success";
@@ -26,7 +41,14 @@ interface CompletionState {
   stars: number;
   trophy: boolean;
   streak: number;
+  journey: { day: number; duration: number; completed: number } | null;
 }
+
+const DURATION_LABELS: Record<JourneyDuration, string> = {
+  7: "Kickstart",
+  14: "Momentum",
+  21: "Deep practice",
+};
 
 function StarRow({ count }: { count: number }) {
   return (
@@ -55,7 +77,7 @@ function Shell({
 }: {
   mode: ModeKey;
   categoryName: string;
-  onNext: () => void;
+  onNext?: () => void;
   children: React.ReactNode;
 }) {
   return (
@@ -69,14 +91,16 @@ function Shell({
           <ArrowLeft className="size-4" aria-hidden />
           {MODE_META[mode].label} / {categoryName}
         </Link>
-        <button
-          type="button"
-          onClick={onNext}
-          className="flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
-        >
-          <RefreshCw className="size-4" aria-hidden />
-          New one
-        </button>
+        {onNext && (
+          <button
+            type="button"
+            onClick={onNext}
+            className="flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+          >
+            <RefreshCw className="size-4" aria-hidden />
+            New one
+          </button>
+        )}
       </div>
       <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col justify-center px-5 py-16 sm:py-24">
         {children}
@@ -90,11 +114,13 @@ export function PracticeScreen({
   categoryName,
   items,
   initialIndex,
+  journey,
 }: {
   mode: ModeKey;
   categoryName: string;
   items: Affirmation[];
   initialIndex: number;
+  journey: Affirmation[] | null;
 }) {
   const [index, setIndex] = useState(initialIndex);
   const [phase, setPhase] = useState<Phase>("ready");
@@ -103,15 +129,52 @@ export function PracticeScreen({
   const [matched, setMatched] = useState<ReadonlySet<number>>(new Set());
   const [statusNote, setStatusNote] = useState<string | null>(null);
   const [completion, setCompletion] = useState<CompletionState | null>(null);
+  const [freeSession, setFreeSession] = useState(false);
+  const [pickerOverride, setPickerOverride] = useState(false);
+
+  // Journey state, hydration-safe: null while server-rendering, then the raw
+  // localStorage value; mutations set the override so React re-renders.
+  const rawFromStorage = useClientValue(readJourneysRaw);
+  const [rawOverride, setRawOverride] = useState<string | null>(null);
+  const raw = rawOverride ?? rawFromStorage;
+  const journeyState: JourneyState | null | undefined = useMemo(() => {
+    if (!journey) return null;
+    if (raw === null) return undefined; // still hydrating
+    return parseJourneys(raw)[journeyKey(mode, categoryName)] ?? null;
+  }, [journey, raw, mode, categoryName]);
+
+  const journeyLoading = journey !== null && journeyState === undefined;
+  const journeyActive = journey !== null && journeyState != null;
+  const journeyDoneToday =
+    journeyActive && isCompletedToday(journeyState as JourneyState);
+  const journeyComplete =
+    journeyActive && isFinished(journeyState as JourneyState);
+  const showPicker =
+    journey !== null &&
+    !journeyLoading &&
+    !freeSession &&
+    (journeyState === null || pickerOverride);
+  const journeySession =
+    journeyActive &&
+    !freeSession &&
+    !pickerOverride &&
+    !journeyDoneToday &&
+    !journeyComplete;
+  const journeyDay = journeySession ? nextDay(journeyState as JourneyState) : null;
 
   const speechAvailable = useClientValue(isSpeechRecognitionAvailable);
   const verifierRef = useRef<WebSpeechVerifier | null>(null);
-  const current = items[index];
+
+  const current: Affirmation =
+    journeySession && journey && journeyDay
+      ? journey[arcIndexForDay((journeyState as JourneyState).duration, journeyDay)]
+      : items[index];
   const words = useMemo(() => current.affirmation.split(" "), [current]);
 
   const stopVerifier = useCallback(() => {
     verifierRef.current?.stop();
   }, []);
+  // Release the mic if the user navigates away mid-listen
   useEffect(() => stopVerifier, [stopVerifier]);
 
   const succeed = useCallback(() => {
@@ -119,13 +182,22 @@ export function PracticeScreen({
     setMatched(new Set(words.map((_, i) => i)));
     const streak = recordCompletion();
     const { stars, trophy } = addStar();
-    setCompletion({ stars, trophy, streak });
+    let journeyResult: CompletionState["journey"] = null;
+    if (journeySession && journeyState) {
+      setRawOverride(completeJourneyDay(mode, categoryName));
+      journeyResult = {
+        day: journeyDay as number,
+        duration: journeyState.duration,
+        completed: journeyState.completedDays.length + 1,
+      };
+    }
+    setCompletion({ stars, trophy, streak, journey: journeyResult });
     setPhase("success");
     new Audio("/success.mp3").play().catch(() => {});
-    if (trophy) {
+    if (trophy || journeyResult?.completed === journeyResult?.duration) {
       confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
     }
-  }, [stopVerifier, words]);
+  }, [stopVerifier, words, journeySession, journeyState, journeyDay, mode, categoryName]);
 
   const reset = useCallback(
     (nextIndex?: number) => {
@@ -165,7 +237,8 @@ export function PracticeScreen({
     setPhase("listening");
     verifierRef.current ??= new WebSpeechVerifier();
     verifierRef.current.start(current.affirmation, {
-      onWordMatched: (i) => setMatched((prev) => (prev.has(i) ? prev : new Set(prev).add(i))),
+      onWordMatched: (i) =>
+        setMatched((prev) => (prev.has(i) ? prev : new Set(prev).add(i))),
       onResult: ({ matchScore }) => {
         if (matchScore >= MATCH_SCORE_THRESHOLD) {
           succeed();
@@ -185,38 +258,106 @@ export function PracticeScreen({
     }
   }, [current.affirmation, typedText, succeed]);
 
-  if (phase === "success" && completion) {
+  // --- Journey pre-screens ---
+
+  if (journeyLoading) {
     return (
-      <Shell mode={mode} categoryName={categoryName} onNext={nextAffirmation}>
+      <Shell mode={mode} categoryName={categoryName}>
+        <div className="min-h-64" aria-hidden />
+      </Shell>
+    );
+  }
+
+  if (showPicker) {
+    return (
+      <Shell mode={mode} categoryName={categoryName}>
         <div className="flex flex-col items-center text-center">
-          {completion.trophy ? (
-            <Image
-              src="/mindset-engine-reward-trophy.png"
-              alt="Trophy for completing three affirmations"
-              width={160}
-              height={160}
-              className="size-32 sm:size-40"
-            />
-          ) : (
-            <StarRow count={completion.stars} />
-          )}
-          <h1 className="font-display mt-6 text-balance text-3xl font-bold tracking-tight sm:text-4xl">
-            {completion.trophy ? "You did it!" : "Success!"}
-          </h1>
-          <p className="mt-3 max-w-md text-pretty text-lg text-muted-foreground">
-            {current.successMessage}
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            Make it a journey
           </p>
-          <p className="mt-5 flex items-center gap-1.5 rounded-full border border-border bg-card/70 px-4 py-2 text-sm font-medium">
-            <Zap className="size-4 text-mode-2" fill="currentColor" aria-hidden />
-            Day {completion.streak} streak
+          <h1 className="font-display mt-4 max-w-2xl text-balance text-3xl font-bold tracking-tight sm:text-5xl">
+            How long do you want to commit?
+          </h1>
+          <p className="mt-4 max-w-lg text-pretty text-muted-foreground">
+            One affirmation a day, building from noticing the pattern to
+            becoming someone new. Miss a day? Your progress waits for you —
+            it never resets.
+          </p>
+          <div className="mt-10 grid w-full max-w-2xl gap-4 sm:grid-cols-3">
+            {JOURNEY_DURATIONS.map((duration) => (
+              <button
+                key={duration}
+                type="button"
+                onClick={() => {
+                  setRawOverride(startJourney(mode, categoryName, duration));
+                  setPickerOverride(false);
+                  setFreeSession(false);
+                  reset();
+                }}
+                className="group flex flex-col items-center rounded-3xl border border-border/60 bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-mode/50 hover:shadow-xl"
+              >
+                <span className="font-display text-4xl font-bold text-mode-2">
+                  {duration}
+                </span>
+                <span className="mt-1 text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+                  days
+                </span>
+                <span className="mt-3 font-medium">{DURATION_LABELS[duration]}</span>
+                <JourneyDots total={duration} completed={0} className="mt-4" />
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => setFreeSession(true)}
+            className="mt-8 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            Skip for now — just practice freely
+          </button>
+        </div>
+      </Shell>
+    );
+  }
+
+  if ((journeyDoneToday || journeyComplete) && !freeSession && phase !== "success") {
+    const state = journeyState as JourneyState;
+    return (
+      <Shell mode={mode} categoryName={categoryName}>
+        <div className="flex flex-col items-center text-center">
+          <JourneyDots total={state.duration} completed={state.completedDays.length} />
+          <h1 className="font-display mt-6 text-balance text-3xl font-bold tracking-tight sm:text-4xl">
+            {journeyComplete
+              ? `Journey complete — ${state.duration} days!`
+              : `Day ${state.completedDays.length} of ${state.duration} done`}
+          </h1>
+          <p className="mt-3 max-w-md text-pretty text-muted-foreground">
+            {journeyComplete
+              ? "You practiced your way to a new default. That's not magic — that's reps."
+              : "Today's rep is in the bank. Come back tomorrow to light the next dot."}
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            {journeyComplete && (
+              <button
+                type="button"
+                onClick={() => setPickerOverride(true)}
+                className="rounded-full bg-mode px-7 py-3 font-semibold text-mode-foreground shadow-lg transition-transform hover:-translate-y-0.5"
+              >
+                Start a new journey
+              </button>
+            )}
             <button
               type="button"
-              onClick={nextAffirmation}
-              className="rounded-full bg-mode px-7 py-3 font-semibold text-mode-foreground shadow-lg transition-transform hover:-translate-y-0.5"
+              onClick={() => {
+                setFreeSession(true);
+                reset();
+              }}
+              className={
+                journeyComplete
+                  ? "rounded-full border border-border bg-card/60 px-7 py-3 font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+                  : "rounded-full bg-mode px-7 py-3 font-semibold text-mode-foreground shadow-lg transition-transform hover:-translate-y-0.5"
+              }
             >
-              Do another one
+              Practice freely anyway
             </button>
             <Link
               href={`/?mode=${mode}`}
@@ -230,18 +371,118 @@ export function PracticeScreen({
     );
   }
 
+  // --- Success ---
+
+  if (phase === "success" && completion) {
+    return (
+      <Shell
+        mode={mode}
+        categoryName={categoryName}
+        onNext={completion.journey ? undefined : nextAffirmation}
+      >
+        <div className="flex flex-col items-center text-center">
+          {completion.trophy ? (
+            <Image
+              src="/mindset-engine-reward-trophy.png"
+              alt="Trophy for completing three affirmations"
+              width={160}
+              height={160}
+              className="size-32 sm:size-40"
+            />
+          ) : (
+            <StarRow count={completion.stars} />
+          )}
+          <h1 className="font-display mt-6 text-balance text-3xl font-bold tracking-tight sm:text-4xl">
+            {completion.journey
+              ? completion.journey.completed >= completion.journey.duration
+                ? "Journey complete!"
+                : `Day ${completion.journey.day} complete!`
+              : completion.trophy
+                ? "You did it!"
+                : "Success!"}
+          </h1>
+          <p className="mt-3 max-w-md text-pretty text-lg text-muted-foreground">
+            {current.successMessage}
+          </p>
+          {completion.journey && (
+            <JourneyDots
+              total={completion.journey.duration}
+              completed={completion.journey.completed}
+              className="mt-6"
+            />
+          )}
+          <p className="mt-5 flex items-center gap-1.5 rounded-full border border-border bg-card/70 px-4 py-2 text-sm font-medium">
+            <Zap className="size-4 text-mode-2" fill="currentColor" aria-hidden />
+            Day {completion.streak} streak
+          </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            {!completion.journey && (
+              <button
+                type="button"
+                onClick={nextAffirmation}
+                className="rounded-full bg-mode px-7 py-3 font-semibold text-mode-foreground shadow-lg transition-transform hover:-translate-y-0.5"
+              >
+                Do another one
+              </button>
+            )}
+            <Link
+              href={`/?mode=${mode}`}
+              className={
+                completion.journey
+                  ? "rounded-full bg-mode px-7 py-3 font-semibold text-mode-foreground shadow-lg transition-transform hover:-translate-y-0.5"
+                  : "rounded-full border border-border bg-card/60 px-7 py-3 font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+              }
+            >
+              All categories
+            </Link>
+            {completion.journey && (
+              <button
+                type="button"
+                onClick={() => {
+                  setFreeSession(true);
+                  reset();
+                }}
+                className="rounded-full border border-border bg-card/60 px-7 py-3 font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+              >
+                Keep practicing
+              </button>
+            )}
+          </div>
+        </div>
+      </Shell>
+    );
+  }
+
+  // --- Practice ---
+
   return (
-    <Shell mode={mode} categoryName={categoryName} onNext={nextAffirmation}>
+    <Shell
+      mode={mode}
+      categoryName={categoryName}
+      onNext={journeySession ? undefined : nextAffirmation}
+    >
       <div className="flex flex-col items-center text-center">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-          Say this out loud
-        </p>
+        {journeySession && journeyState && journeyDay ? (
+          <div className="flex flex-col items-center gap-3">
+            <span className="rounded-full border border-border bg-card/70 px-4 py-1.5 text-sm font-semibold">
+              Day {journeyDay} of {journeyState.duration}
+            </span>
+            <JourneyDots
+              total={journeyState.duration}
+              completed={journeyState.completedDays.length}
+            />
+          </div>
+        ) : (
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            Say this out loud
+          </p>
+        )}
 
         <p className="font-display mt-6 max-w-3xl text-balance text-3xl font-bold leading-snug tracking-tight sm:text-5xl sm:leading-snug">
           {words.map((word, i) => (
             <span key={i} className={`affirmation-word ${matched.has(i) ? "spoken" : ""}`}>
               {word}
-              {i < words.length - 1 ? " " : ""}{" "}
+              {i < words.length - 1 ? " " : ""}{" "}
             </span>
           ))}
         </p>

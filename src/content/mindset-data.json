@@ -53,6 +53,29 @@
         "items": [
           { "affirmation": "My attention is mine to control.", "successMessage": "You chose presence over distraction. That is power." },
           { "affirmation": "I am choosing the real world over the digital one.", "successMessage": "You are grounded in reality. Well done." }
+        ],
+        "journey": [
+          { "affirmation": "I notice when my thumb starts to wander.", "successMessage": "Awareness is the first win. You caught it." },
+          { "affirmation": "I pause before I pick up my phone.", "successMessage": "That pause is where your power lives." },
+          { "affirmation": "I am allowed to be bored sometimes.", "successMessage": "Boredom is where ideas are born." },
+          { "affirmation": "I put my phone down without finishing the feed.", "successMessage": "You proved the feed doesn't own you." },
+          { "affirmation": "I choose one real thing over the scroll.", "successMessage": "The real world felt that." },
+          { "affirmation": "My attention is mine and I spend it on purpose.", "successMessage": "Spent like it matters — because it does." },
+          { "affirmation": "One week in, I control the reflex.", "successMessage": "Seven days of showing up. Feel that." },
+          { "affirmation": "I start my morning without a screen.", "successMessage": "You gave the morning back to yourself." },
+          { "affirmation": "I leave my phone in another room when I work.", "successMessage": "Distance creates freedom." },
+          { "affirmation": "I scroll with intention or not at all.", "successMessage": "Intention turns habit into choice." },
+          { "affirmation": "I am present with the people in front of me.", "successMessage": "They noticed. Presence shows." },
+          { "affirmation": "I trade ten scrolled minutes for ten lived ones.", "successMessage": "Ten minutes of real life, banked." },
+          { "affirmation": "I end my day with a book, not a feed.", "successMessage": "Your mind will thank you at sunrise." },
+          { "affirmation": "Two weeks strong, my focus is coming home.", "successMessage": "Fourteen days. The fog is lifting." },
+          { "affirmation": "I am no longer someone who scrolls on autopilot.", "successMessage": "That identity is yours now." },
+          { "affirmation": "My mind creates more than it consumes.", "successMessage": "Creator mode: engaged." },
+          { "affirmation": "I protect my attention like it is my future.", "successMessage": "Because it is — and you're proving it." },
+          { "affirmation": "Stillness feels natural to me now.", "successMessage": "You've made peace with the quiet." },
+          { "affirmation": "I choose depth over distraction.", "successMessage": "Deep beats shallow, every time." },
+          { "affirmation": "My phone is a tool and I am the one holding it.", "successMessage": "Exactly right. Tools serve you." },
+          { "affirmation": "I am present, focused, and free.", "successMessage": "Twenty-one days. This is who you are now." }
         ]
       },
       {

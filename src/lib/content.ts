@@ -18,6 +18,9 @@ const affirmationSchema = z.object({
 const categorySchema = z.object({
   name: z.string().min(1),
   items: z.array(affirmationSchema).min(1),
+  // Progressive 21-day journey arc (docs/roadmap/journeys.md). Categories
+  // gain journeys as owner-approved content lands; always exactly 21 entries.
+  journey: z.array(affirmationSchema).length(21).optional(),
 });
 
 const modeSchema = z.object({

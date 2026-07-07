@@ -24,6 +24,7 @@ export default async function PracticePage({
       categoryName={categoryData.name}
       items={categoryData.items}
       initialIndex={randomIndex(categoryData.items.length)}
+      journey={categoryData.journey ?? null}
     />
   );
 }

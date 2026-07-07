@@ -6,6 +6,8 @@ import { ArrowRight, Zap, CircleOff, Target, RefreshCw } from "lucide-react";
 import type { Content, ModeKey } from "@/lib/content";
 import { MODE_KEYS, MODE_META, isModeKey } from "@/lib/content";
 import { CategoryArt } from "@/components/illustrations";
+import { JourneyDots } from "@/components/app/journey-dots";
+import { journeyKey, parseJourneys, readJourneysRaw } from "@/lib/journeys";
 import { useClientValue } from "@/hooks/use-client-value";
 
 const MODE_ICONS: Record<ModeKey, typeof Zap> = {
@@ -26,6 +28,8 @@ export function HomeScreen({ content }: { content: Content }) {
     selectedMode ?? (urlMode && isModeKey(urlMode) ? urlMode : "powerUp");
 
   const current = content[mode];
+  const journeysRaw = useClientValue(readJourneysRaw);
+  const journeys = parseJourneys(journeysRaw);
 
   return (
     <div data-mode={mode} className="relative isolate flex-1">
@@ -80,38 +84,56 @@ export function HomeScreen({ content }: { content: Content }) {
             {current.prompt}
           </h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {current.categories.map((category) => (
-              <Link
-                key={category.name}
-                href={`/practice/${mode}/${encodeURIComponent(category.name)}`}
-                className="group flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-card shadow-sm transition-all hover:-translate-y-1 hover:border-mode/50 hover:shadow-xl"
-              >
-                <div className="card-cover relative flex h-36 items-center justify-center sm:h-40">
-                  <CategoryArt
-                    name={category.name}
-                    className="size-20 text-white/95 drop-shadow transition-transform duration-500 group-hover:scale-110 sm:size-24"
-                  />
-                </div>
-                <div className="flex flex-1 flex-col px-5 pb-4 pt-5">
-                  <h3 className="font-display text-balance text-xl font-semibold leading-snug">
-                    {category.name}
-                  </h3>
-                  <div className="mt-3 flex items-center justify-between pt-1">
-                    <span className="text-sm text-muted-foreground">
-                      {category.items.length} affirmation
-                      {category.items.length === 1 ? "" : "s"}
-                    </span>
-                    <span className="flex items-center gap-1.5 text-sm font-semibold text-mode-2">
-                      Start
-                      <ArrowRight
-                        className="size-4 transition-transform group-hover:translate-x-1"
-                        aria-hidden
-                      />
-                    </span>
+            {current.categories.map((category) => {
+              const journeyState = journeys[journeyKey(mode, category.name)];
+              return (
+                <Link
+                  key={category.name}
+                  href={`/practice/${mode}/${encodeURIComponent(category.name)}`}
+                  className="group flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-card shadow-sm transition-all hover:-translate-y-1 hover:border-mode/50 hover:shadow-xl"
+                >
+                  <div className="card-cover relative flex h-36 items-center justify-center sm:h-40">
+                    <CategoryArt
+                      name={category.name}
+                      className="size-20 text-white/95 drop-shadow transition-transform duration-500 group-hover:scale-110 sm:size-24"
+                    />
                   </div>
-                </div>
-              </Link>
-            ))}
+                  <div className="flex flex-1 flex-col px-5 pb-4 pt-5">
+                    <h3 className="font-display text-balance text-xl font-semibold leading-snug">
+                      {category.name}
+                    </h3>
+                    <div className="mt-3 flex items-center justify-between gap-3 pt-1">
+                      {journeyState ? (
+                        <>
+                          <span className="text-sm font-medium text-muted-foreground">
+                            Day {Math.min(journeyState.completedDays.length + 1, journeyState.duration)} of {journeyState.duration}
+                          </span>
+                          <JourneyDots
+                            total={journeyState.duration}
+                            completed={journeyState.completedDays.length}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-sm text-muted-foreground">
+                            {category.journey
+                              ? "7–21 day journey"
+                              : `${category.items.length} affirmation${category.items.length === 1 ? "" : "s"}`}
+                          </span>
+                          <span className="flex items-center gap-1.5 text-sm font-semibold text-mode-2">
+                            Start
+                            <ArrowRight
+                              className="size-4 transition-transform group-hover:translate-x-1"
+                              aria-hidden
+                            />
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
       </main>
