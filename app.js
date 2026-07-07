@@ -37,7 +37,8 @@ let currentMode = 'powerUp';
 let currentAffirmationData = {};
 let starCount = parseInt(localStorage.getItem('mindsetEngineStarCount') || '0');
 let streakCount = parseInt(localStorage.getItem('mindsetEngineStreakCount') || '0');
-let lastVisitDate = localStorage.getItem('mindsetEngineLastVisit');
+// Legacy key 'mindsetEngineLastVisit' kept as a read fallback so existing users keep their streak
+let lastPracticeDate = localStorage.getItem('mindsetEngineLastPractice') || localStorage.getItem('mindsetEngineLastVisit');
 let hasInteracted = false;
 
 // --- 3. Speech Recognition & Sounds ---
@@ -72,7 +73,8 @@ async function initializeApp() {
         }
         setupTabs();
         switchMode(currentMode, true);
-        updateStreak();
+        resetStreakIfBroken();
+        updateStreakUI();
     } catch (error) {
         console.error("Failed to load initial data:", error);
         categoriesContainer.innerHTML = '<p>Could not load content. Check your `mindset-data.json` file and the console.</p>';
@@ -181,6 +183,7 @@ function handleSuccess() {
     playSound(successSound);
     starCount++;
     localStorage.setItem('mindsetEngineStarCount', starCount);
+    updateStreak();
 
     let contentHTML;
     winScreenEmailSignup.style.display = 'none';
@@ -219,19 +222,32 @@ trackEvent('affirmation_success', {
 }
 
 // --- 5. Helper Functions ---
+// Called on affirmation completion (not page load) — the streak rewards the action.
 function updateStreak() {
     const today = new Date().toDateString();
-    if (lastVisitDate !== today) {
+    if (lastPracticeDate !== today) {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
-        streakCount = (lastVisitDate === yesterday.toDateString()) ? streakCount + 1 : 1;
-        localStorage.setItem('mindsetEngineLastVisit', today);
+        streakCount = (lastPracticeDate === yesterday.toDateString()) ? streakCount + 1 : 1;
+        lastPracticeDate = today;
+        localStorage.setItem('mindsetEngineLastPractice', today);
         localStorage.setItem('mindsetEngineStreakCount', streakCount);
     }
     updateStreakUI();
 }
 
 function updateStreakUI() { streakCountEl.textContent = `Day ${streakCount}`; }
+
+// On load: if the last completion was before yesterday, the streak is over — don't show a stale count.
+function resetStreakIfBroken() {
+    const today = new Date().toDateString();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (streakCount !== 0 && lastPracticeDate !== today && lastPracticeDate !== yesterday.toDateString()) {
+        streakCount = 0;
+        localStorage.setItem('mindsetEngineStreakCount', streakCount);
+    }
+}
 
 function checkSimilarity(spokenText) {
     const stopWords = ['i', 'a', 'an', 'the', 'is', 'am', 'are', 'will', 'to', 'and', 'my', 'of', 'for', 'this'];
@@ -264,15 +280,17 @@ document.getElementById('refresh-btn').addEventListener('click', () => {
 });
 
 favoriteBtn.addEventListener('click', (e) => {
-    e.currentTarget.classList.toggle('favorited');
+    const isFavorited = e.currentTarget.classList.toggle('favorited');
 
     trackEvent('favorite_clicked', {
         is_favorited: isFavorited, // true if they just favorited it, false if unfavorited
         affirmation_text: currentAffirmationData.affirmation
-    });    
-    
-    tooltip.classList.add('show');
-    setTimeout(() => tooltip.classList.remove('show'), 2000);
+    });
+
+    if (isFavorited) {
+        tooltip.classList.add('show');
+        setTimeout(() => tooltip.classList.remove('show'), 2000);
+    }
 });
 
 homeBtnAffirmation.addEventListener('click', goToHomeScreen);
