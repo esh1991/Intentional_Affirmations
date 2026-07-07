@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Pre-rewrite static site, kept for reference during the Phase 1 port
+    "legacy/**",
   ]),
 ]);
 

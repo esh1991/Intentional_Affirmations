@@ -87,7 +87,7 @@ Move the n8n webhook call behind a Next.js route handler (`/api/subscribe`) so t
 ## Milestones
 
 - [x] M0: Branch + scaffold (Next.js, TS strict, Tailwind, shadcn/ui), old site parked in `legacy/`, `SpeechVerifier` interface committed
-- [ ] M1: Content schema + home screen (modes/categories) with new design system
+- [x] M1: Content schema + home screen (modes/categories) with new design system; FAQ ported; legacy `.html` URL redirects; `vercel.json` pins the Next.js framework preset
 - [ ] M2: Affirmation flow with `WebSpeechVerifier` + live highlighting
 - [ ] M3: `TypedVerifier` + fallback UX; stars/streaks/win screen; session logging
 - [ ] M4: PWA, `/science` + `/faq` ports, `/api/subscribe`, GA4 events

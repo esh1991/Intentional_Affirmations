@@ -46,6 +46,51 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-mode: var(--mode-accent);
+  --color-mode-2: var(--mode-accent-2);
+  --color-mode-foreground: var(--mode-foreground);
+}
+
+/*
+ * Per-mode theming. A wrapper sets data-mode; everything inside picks up the
+ * mode's accent pair via the `mode` / `mode-2` Tailwind color tokens.
+ * Palettes are matured versions of the legacy gradients (see legacy/style.css):
+ * calmer chroma, same hue identity per mode.
+ */
+[data-mode] {
+  --mode-foreground: oklch(0.985 0 0);
+}
+[data-mode="powerUp"] {
+  --mode-accent: oklch(0.52 0.17 258);
+  --mode-accent-2: oklch(0.62 0.13 230);
+}
+[data-mode="breakIt"] {
+  --mode-accent: oklch(0.55 0.18 18);
+  --mode-accent-2: oklch(0.62 0.15 40);
+}
+[data-mode="primeMe"] {
+  --mode-accent: oklch(0.48 0.15 294);
+  --mode-accent-2: oklch(0.63 0.11 322);
+}
+[data-mode="rewire"] {
+  --mode-accent: oklch(0.55 0.12 172);
+  --mode-accent-2: oklch(0.63 0.12 150);
+}
+
+/* Soft mode-tinted glow behind the app surface — the calm-premium wash. */
+.mode-glow {
+  background:
+    radial-gradient(
+      80% 55% at 50% -5%,
+      color-mix(in oklch, var(--mode-accent) 22%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      60% 40% at 85% 25%,
+      color-mix(in oklch, var(--mode-accent-2) 10%, transparent),
+      transparent 70%
+    );
+  transition: opacity 0.5s ease;
 }
 
 :root {
