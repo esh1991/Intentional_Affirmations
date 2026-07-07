@@ -66,9 +66,15 @@ Day N of a journey = `completedDays.length + 1`. Completing the day's affirmatio
 | 20 | My phone is a tool and I am the one holding it. | Exactly right. Tools serve you. |
 | 21 | I am present, focused, and free. | Twenty-one days. This is who you are now. |
 
-## Build order (after content approval)
+## Build status
 
-1. Extend `content.ts` schema: `journey: Affirmation[]` (21 entries) per category, validated at build.
-2. `src/lib/journeys.ts`: read/start/complete + duration sampling.
-3. Card UI: duration picker on first tap ("How long do you want to commit?"), dots row(s) on cards + practice win screen.
-4. New habit-flavored categories (e.g. drink water regularly — `WaterGlassArt` illustration already exists) once the mechanic proves out.
+1. ✅ `content.ts` schema: `journey: Affirmation[]` (exactly 21, Zod-enforced at build) — all 13 categories populated with owner-approved-voice arcs.
+2. ✅ `src/lib/journeys.ts`: read/start/complete + duration sampling (26-check node test in session scratchpad, re-derivable).
+3. ✅ UI: duration picker (7 Kickstart / 14 Momentum / 21 Deep practice + free-practice skip), day-N practice with dots + day chip, done-today / journey-complete / restart states, dots on win screen and home cards.
+
+## Open items
+
+- Duration-neutral variants for the day-7/14/21 milestone lines ("One week in…") — slightly off when 7/14-day journeys sample those arc days on different calendar days. Owner accepted for now.
+- New habit-flavored categories (e.g. drink water regularly — `WaterGlassArt` illustration already exists) once the mechanic proves out with real users.
+- Richer generated cover imagery may layer over the SVG line art later (owner chose "both, layered").
+- Phase 2: journeys move to Supabase alongside streaks; localStorage schema above is the migration source.

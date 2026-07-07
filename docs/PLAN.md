@@ -4,16 +4,17 @@
 ## Vision
 Voice-activated mindset engine: users speak affirmations out loud, the app verifies the exact words via speech recognition with live on-screen feedback, and gamification (stars, streaks, trophies) rewards the action. Thesis: change requires action, not consumption. Long-term: Mindvalley-style journeys, voice-energy feedback, eventually AR/VR embodied practice. Goal: 100k active users.
 
-## Current state (as of July 2026)
-Static vanilla HTML/CSS/JS site on GitHub Pages at saythiswith.me. Content in `mindset-data.json` (4 modes: powerUp, breakIt, primeMe, rewire). Web Speech API for recognition, localStorage for streaks/stars, n8n webhook for email capture, GA4 analytics. No backend, no accounts.
+## Current state (updated 2026-07-08 — read CLAUDE.md for day-to-day facts)
+**The rebuild is live in production.** Next.js 16 (App Router) + TS strict + Tailwind v4 + shadcn/ui on Vercel at saythiswith.me; `main` = production, every push deploys. The old static site is parked in `legacy/` for reference only.
 
-### Known bugs / issues to fix (Phase 0)
-1. **`app.js` favorite-button handler references undefined `isFavorited`** → ReferenceError on every heart click; tooltip and analytics event never fire. Favorites also aren't persisted anywhere.
-2. **`affirmations.json` is dead code** — never loaded (app only fetches `mindset-data.json`). Delete it.
-3. **`faq.html` privacy claim is inaccurate** — says speech "happens directly in your browser… never sent to our servers or stored anywhere." Chrome's Web Speech API sends audio to Google servers. Reword honestly.
-4. **Streak counts page visits, not completed affirmations** (`updateStreak()` runs on load). Should reward the action.
-5. Web Speech API: good in Chrome, flaky on iOS Safari, absent in Firefox. Biggest technical risk for a mobile-first product.
-6. Duplicate CSS blocks and patchwork comments throughout — Phase 1 is a rewrite, not a refactor.
+Shipped and live:
+- Full practice flow behind the `SpeechVerifier` interface: mic verification with live word highlighting, typing fallback (auto-offered when mic unavailable/denied), stars/trophy/confetti, completion-based streaks (legacy localStorage keys preserved).
+- **Journeys** (pulled forward from Phase 3): 7/14/21-day commitment arcs on **all 13 categories**, owner-approved progressive content (Notice→Act→Become), advance-only progress dots. See `docs/roadmap/journeys.md`.
+- Brand design system: light/dark themes (dark default), CSS-masked logo (white in dark, brand gradient in light), Bricolage Grotesque + Plus Jakarta Sans, Mindvalley-style category cards with custom outline SVG illustrations, desktop + mobile layouts.
+- `/science` and `/faq` pages (honest speech-privacy wording), legacy `.html` URL redirects.
+
+### Phase 0 bug list — all resolved 2026-07-07
+Favorite-button ReferenceError (fixed, then superseded by the rebuild), dead `affirmations.json` (deleted), FAQ privacy claim (reworded honestly), visit-based streak (now completion-based). Still-true risks: Web Speech API is Chrome-quality only — the typing fallback is the mitigation; favorites are not yet reimplemented in the new app (Phase 2, persistent).
 
 ## Target architecture
 - **Next.js 15 (App Router) + TypeScript + Tailwind CSS + shadcn/ui**
@@ -48,13 +49,13 @@ Content moves from JSON into Postgres → unlocks personalization, A/B testing, 
 - **Don't forget**: retention (D1/D7/D30 via PostHog) is the whole game; mic privacy transparency; ToS/privacy policy/"not therapy" disclaimer; accessibility (fuzzy matching for accents, typing fallback); lifecycle email (Resend/Loops) replacing raw n8n; move email capture to accounts.
 
 ## Roadmap
-- **Phase 0 — Foundations (days)**: repo → `C:\dev`, Vercel + domain migration, fix live-site bugs (favorite button, FAQ wording), add this file + CLAUDE.md.
-- **Phase 1 — Rebuild (2–4 wks)**: Next.js + Tailwind + shadcn, new design system, port 4-mode experience behind `SpeechVerifier`, PWA, mobile-first. Content still file-based. Ship.
-- **Phase 2 — Accounts & data (2–3 wks)**: Supabase auth + schema, content in Postgres, completion-based server-side streaks, persistent favorites, anon→account merge, PostHog, admin content page.
-- **Phase 3 — Growth engine (ongoing)**: programmatic SEO, blog/science hub, shareable result cards, custom/AI affirmations, daily reminders, first Journey.
+- **Phase 0 — Foundations**: ✅ done 2026-07-07 (repo in `C:\dev`, Vercel + domain live, bugs fixed, PLAN.md + CLAUDE.md).
+- **Phase 1 — Rebuild**: 🟡 mostly done (2026-07-08) — Next.js rebuild live with design system, full practice flow, journeys, science/FAQ. Remaining (see `docs/roadmap/phase-1-rebuild.md`): session logging to localStorage, PWA, `/api/subscribe` (email capture is currently absent from the new app — the n8n form didn't carry over), GA4 events, Playwright smoke test + CI.
+- **Phase 2 — Accounts & data (2–3 wks)**: Supabase auth + schema, content in Postgres, server-side streaks + journeys, persistent favorites, anon→account merge, PostHog, admin content page.
+- **Phase 3 — Growth engine (ongoing)**: programmatic SEO, blog/science hub, shareable result cards, custom/AI affirmations, daily reminders. (First journeys shipped early, in Phase 1.)
 - **Phase 4 — Monetization & beyond**: Stripe premium once D30 retention is healthy; native wrapper if needed; voice-energy experiments; coach/B2B pilot. AR/VR stays a design constraint via the speech interface.
 
-## Migration checklist (Part 4 — dev workflow)
+## Migration checklist (Part 4 — dev workflow) — ✅ completed 2026-07-07; kept for reference
 1. `mkdir C:\dev` and `git clone <github-repo-url> C:\dev\saythiswithme` (never work inside OneDrive — it corrupts `.git`).
 2. Diff the OneDrive copy against the clone; copy over any newer edits + this PLAN.md (as `docs/PLAN.md`); commit + push.
 3. Open in VS Code (`code C:\dev\saythiswithme`); local dev server via `npx serve .` (mic works on localhost — it's a secure context).

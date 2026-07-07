@@ -26,7 +26,7 @@ Next.js 16 (App Router, Turbopack) · TypeScript strict · Tailwind v4 · shadcn
 
 Light + dark themes via next-themes (class attribute, default dark — the brand look). The logo renders via CSS mask (`.brand-logo`): white in dark mode, brand indigo→blue gradient in light mode. Per-mode theming via `data-mode` attribute + `--mode-accent`/`--mode-accent-2` tokens in `globals.css` (accent-2 has per-theme values — darker on light, lighter under `.dark`), consumed as Tailwind `mode`/`mode-2` colors. Type: **Bricolage Grotesque** (`font-display`) for headlines/affirmations, **Plus Jakarta Sans** body. Outline SVG illustrations per category live in `src/components/illustrations.tsx` (stroke = currentColor, theme/mode-tintable) — richer generated imagery may layer in later. Category cards are Mindvalley-style (gradient covers, rounded-3xl, grid) — **the user explicitly wants cards, never plain lists**. Live word highlighting (`.affirmation-word.spoken`) is the signature effect — polish it most. Everything must work desktop and mobile.
 
-**Journeys (next big feature)**: 7/14/21-day commitment arcs per category — spec + owner decisions in `docs/roadmap/journeys.md`. Content-first: blocked on owner-approved progressive per-day affirmations. Never claim "21 days rewires the brain" — framing is "practice window" (honest-science brand rule).
+**Journeys (live on all 13 categories)**: 7/14/21-day commitment arcs — spec, decisions, and open items in `docs/roadmap/journeys.md`. State in localStorage (`mindsetEngineJourneys`), logic in `src/lib/journeys.ts`, progressive 21-entry arcs in `mindset-data.json` (Zod-enforced). Journey content is owner-approved — don't rewrite arcs without approval. Never claim "21 days rewires the brain" — framing is "practice window" (honest-science brand rule).
 
 ### localStorage keys (legacy-compatible — don't rename)
 - `mindsetEngineStarCount` — stars toward the 3-star trophy
@@ -50,9 +50,11 @@ npm run lint
 - n8n email-capture webhook URL must not ship client-side — goes behind `/api/subscribe` (M4).
 - GA4 events go through a `trackEvent()` helper when reintroduced (M4), never raw `gtag()`.
 
-## Roadmap status
+## Roadmap status (as of 2026-07-08)
 
-Phase 1 (rebuild): M0–M2 done — scaffold, home + design system, full practice flow (mic + typing fallback, stars/streak/win screen), `/science` + `/faq`. Remaining: session logging (M3), PWA + `/api/subscribe` + GA4 (M4), Playwright + CI (M5). Then Phase 2: Supabase accounts/data. Details: `docs/roadmap/phase-1-rebuild.md` and `docs/PLAN.md`.
+Phase 1 (rebuild): M0–M2.5 done — scaffold, design system (light/dark, brand type, illustrations), full practice flow (mic + typing fallback, stars/streak/win screen), journeys on all categories, `/science` + `/faq`. **Remaining: session logging (M3), PWA + `/api/subscribe` + GA4 (M4) — note email capture is currently absent from the new app — and Playwright + CI (M5).** Then Phase 2: Supabase accounts/data. Details + resume notes: `docs/roadmap/phase-1-rebuild.md`, `docs/roadmap/journeys.md`, `docs/PLAN.md`.
+
+Owner working style: ships straight to `main` (zero users, tests in production), wants discussion + approval before big features and before content changes, gives design direction by reference (Duolingo/Mindvalley) and reacts fast to what's live.
 
 ## Conventions
 

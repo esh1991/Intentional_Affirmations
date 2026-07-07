@@ -89,9 +89,22 @@ Move the n8n webhook call behind a Next.js route handler (`/api/subscribe`) so t
 - [x] M0: Branch + scaffold (Next.js, TS strict, Tailwind, shadcn/ui), old site parked in `legacy/`, `SpeechVerifier` interface committed
 - [x] M1: Content schema + home screen (modes/categories) with new design system; FAQ ported; legacy `.html` URL redirects; `vercel.json` pins the Next.js framework preset
 - [x] M2: Affirmation flow with `WebSpeechVerifier` + live highlighting; typing fallback (implemented as a UI path over the shared similarity module rather than a `TypedVerifier` class — same scoring, keyboard-drivable in CI); stars/streaks/win screen. Also: dark brand design system (white logo on deep indigo-black, Mindvalley-style category cards, desktop-grade layouts), `/science` port with share buttons
+- [x] M2.5 (owner-driven additions, 2026-07-07/08):
+  - Light + dark themes via next-themes (dark default); CSS-masked logo (white ↔ brand gradient)
+  - Typography: Bricolage Grotesque display + Plus Jakarta Sans body
+  - 16 custom outline SVG illustrations (per-category card art, science steps/concepts)
+  - **Journeys live on all 13 categories** — see `journeys.md` for spec, decisions, and status
+  - Fixed affirmation word-spacing bug (space was inside the inline-block word span)
 - [ ] M3: session logging to localStorage (`mindsetEngineSessions`)
-- [ ] M4: PWA, `/api/subscribe`, GA4 events, sounds on click interactions
-- [ ] M5: Playwright smoke test (drive the typing path) + CI; phone QA
+- [ ] M4: PWA, `/api/subscribe` (email capture is currently absent from the new app), GA4 events via `trackEvent()` helper, click sounds
+- [ ] M5: Playwright smoke test (drive the typing path; cover journey picker → day 1 → dots) + CI; phone QA
+
+## Resume notes for a fresh session (2026-07-08)
+
+- `main` = production; every push deploys via Vercel. Build + lint must pass before pushing (`npm run build; npm run lint`).
+- Owner workflow so far: ships straight to main (zero users), tests in production, wants discussion/approval **before** big product features and content (journeys content was approved via a sample arc first).
+- Next up by plan: M3 (session logging) → M4 → M5, then Phase 2 (Supabase). Owner may reprioritize — ask.
+- Open polish item: day-7/14/21 arc entries say "One week in…" etc., which is slightly off for 7/14-day journeys that sample those days early; owner said acceptable for now, duration-neutral variants are the fix if it comes up.
 
 ## Open questions
 
