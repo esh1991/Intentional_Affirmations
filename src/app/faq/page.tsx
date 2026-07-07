@@ -35,7 +35,7 @@ export default function FaqPage() {
       <div className="mode-glow pointer-events-none fixed inset-0 -z-10" aria-hidden />
       <main className="mx-auto w-full max-w-3xl px-5 pb-20">
         <div className="pt-14 text-center sm:pt-20">
-          <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+          <h1 className="font-display text-balance text-4xl font-bold tracking-tight sm:text-5xl">
             Frequently Asked Questions
           </h1>
         </div>
@@ -45,7 +45,7 @@ export default function FaqPage() {
               key={faq.question}
               className="rounded-3xl border border-border/60 bg-card p-6 sm:p-8"
             >
-              <h2 className="text-lg font-semibold">{faq.question}</h2>
+              <h2 className="font-display text-lg font-semibold">{faq.question}</h2>
               <p className="mt-2 leading-relaxed text-muted-foreground">
                 {faq.answer}
               </p>

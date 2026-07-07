@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Zap, CircleOff, Target, RefreshCw } from "lucide-react";
 import type { Content, ModeKey } from "@/lib/content";
 import { MODE_KEYS, MODE_META, isModeKey } from "@/lib/content";
+import { CategoryArt } from "@/components/illustrations";
 import { useClientValue } from "@/hooks/use-client-value";
 
 const MODE_ICONS: Record<ModeKey, typeof Zap> = {
@@ -33,7 +34,7 @@ export function HomeScreen({ content }: { content: Content }) {
       <main className="mx-auto w-full max-w-6xl px-5 pb-20">
         {/* Hero */}
         <section className="mx-auto max-w-3xl pt-14 text-center sm:pt-20">
-          <h1 className="text-balance text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
+          <h1 className="font-display text-balance text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
             {MODE_META[mode].tagline}
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-pretty text-base text-muted-foreground sm:text-lg">
@@ -79,24 +80,23 @@ export function HomeScreen({ content }: { content: Content }) {
             {current.prompt}
           </h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {current.categories.map((category) => {
-              const Icon = MODE_ICONS[mode];
-              return (
-                <Link
-                  key={category.name}
-                  href={`/practice/${mode}/${encodeURIComponent(category.name)}`}
-                  className="group flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-card shadow-sm transition-all hover:-translate-y-1 hover:border-mode/50 hover:shadow-xl"
-                >
-                  <div className="card-cover relative flex h-36 items-end p-5 sm:h-40">
-                    <Icon
-                      className="absolute -right-4 -top-4 size-28 text-white/10 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110"
-                      aria-hidden
-                    />
-                    <h3 className="relative text-balance text-xl font-semibold leading-snug text-white">
-                      {category.name}
-                    </h3>
-                  </div>
-                  <div className="flex items-center justify-between px-5 py-4">
+            {current.categories.map((category) => (
+              <Link
+                key={category.name}
+                href={`/practice/${mode}/${encodeURIComponent(category.name)}`}
+                className="group flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-card shadow-sm transition-all hover:-translate-y-1 hover:border-mode/50 hover:shadow-xl"
+              >
+                <div className="card-cover relative flex h-36 items-center justify-center sm:h-40">
+                  <CategoryArt
+                    name={category.name}
+                    className="size-20 text-white/95 drop-shadow transition-transform duration-500 group-hover:scale-110 sm:size-24"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col px-5 pb-4 pt-5">
+                  <h3 className="font-display text-balance text-xl font-semibold leading-snug">
+                    {category.name}
+                  </h3>
+                  <div className="mt-3 flex items-center justify-between pt-1">
                     <span className="text-sm text-muted-foreground">
                       {category.items.length} affirmation
                       {category.items.length === 1 ? "" : "s"}
@@ -109,9 +109,9 @@ export function HomeScreen({ content }: { content: Content }) {
                       />
                     </span>
                   </div>
-                </Link>
-              );
-            })}
+                </div>
+              </Link>
+            ))}
           </div>
         </section>
       </main>

@@ -24,7 +24,9 @@ Next.js 16 (App Router, Turbopack) · TypeScript strict · Tailwind v4 · shadcn
 
 ## Design system
 
-Dark-first (the brand logo is white-on-transparent; the color variant's indigo→blue gradient is the brand accent). Per-mode theming via `data-mode` attribute + `--mode-accent`/`--mode-accent-2` tokens in `globals.css`, consumed as Tailwind `mode`/`mode-2` colors. Category cards are Mindvalley-style (gradient covers, rounded-3xl, grid) — **the user explicitly wants cards, never plain lists**. Live word highlighting (`.affirmation-word.spoken`) is the signature effect — polish it most. Everything must work desktop and mobile.
+Light + dark themes via next-themes (class attribute, default dark — the brand look). The logo renders via CSS mask (`.brand-logo`): white in dark mode, brand indigo→blue gradient in light mode. Per-mode theming via `data-mode` attribute + `--mode-accent`/`--mode-accent-2` tokens in `globals.css` (accent-2 has per-theme values — darker on light, lighter under `.dark`), consumed as Tailwind `mode`/`mode-2` colors. Type: **Bricolage Grotesque** (`font-display`) for headlines/affirmations, **Plus Jakarta Sans** body. Outline SVG illustrations per category live in `src/components/illustrations.tsx` (stroke = currentColor, theme/mode-tintable) — richer generated imagery may layer in later. Category cards are Mindvalley-style (gradient covers, rounded-3xl, grid) — **the user explicitly wants cards, never plain lists**. Live word highlighting (`.affirmation-word.spoken`) is the signature effect — polish it most. Everything must work desktop and mobile.
+
+**Journeys (next big feature)**: 7/14/21-day commitment arcs per category — spec + owner decisions in `docs/roadmap/journeys.md`. Content-first: blocked on owner-approved progressive per-day affirmations. Never claim "21 days rewires the brain" — framing is "practice window" (honest-science brand rule).
 
 ### localStorage keys (legacy-compatible — don't rename)
 - `mindsetEngineStarCount` — stars toward the 3-star trophy

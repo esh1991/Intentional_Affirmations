@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { BrandLogo } from "@/components/site/brand-logo";
 
 export function SiteFooter() {
   return (
@@ -7,13 +7,7 @@ export function SiteFooter() {
       <div className="mx-auto w-full max-w-6xl px-5 py-12">
         <div className="flex flex-col gap-10 sm:flex-row sm:justify-between">
           <div className="max-w-xs">
-            <Image
-              src="/say-this-with-me-logo.png"
-              alt="Say This With Me"
-              width={152}
-              height={56}
-              className="h-8 w-auto"
-            />
+            <BrandLogo className="h-9" />
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Change requires action, not consumption. Speak it out loud — we
               verify every word.

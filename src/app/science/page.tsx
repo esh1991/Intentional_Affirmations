@@ -2,6 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ShareButton } from "@/components/site/share-button";
+import {
+  ChooseArt,
+  SpeakArt,
+  LockInArt,
+  SpiralArt,
+  FlipArrowArt,
+  SunriseArt,
+} from "@/components/illustrations";
 
 export const metadata: Metadata = {
   title: "How It Works & The Science",
@@ -13,14 +21,17 @@ const STEPS = [
   {
     title: "Choose your focus",
     body: "Select the mental task you want to perform, from building an identity to breaking a habit.",
+    art: ChooseArt,
   },
   {
     title: "Speak your intention",
     body: "Using your voice actively engages your brain, making the new thought pattern more powerful.",
+    art: SpeakArt,
   },
   {
     title: "Lock in your progress",
     body: "Instant feedback rewards your brain, strengthening the new pathway and making change last.",
+    art: LockInArt,
   },
 ];
 
@@ -31,6 +42,7 @@ const CONCEPTS = [
     body: "Your brain is not fixed. Every thought reinforces a neural pathway. When you consistently speak a new thought (“I am confident”), you physically build a new, stronger path, making that thought your new default.",
     sourceHref: "https://www.youtube.com/watch?v=LNHBMFCzznE",
     practiceMode: "powerUp",
+    art: FlipArrowArt,
   },
   {
     id: "habit-loop",
@@ -38,6 +50,7 @@ const CONCEPTS = [
     body: "Destructive habits run on a simple loop: cue, routine, reward. “Break It” works by consciously inserting a new routine — speaking a powerful truth — to overwrite the old one and build a healthier response.",
     sourceHref: "https://charlesduhigg.com/the-power-of-habit/",
     practiceMode: "breakIt",
+    art: SpiralArt,
   },
   {
     id: "priming",
@@ -45,6 +58,7 @@ const CONCEPTS = [
     body: "“Prime Me” is based on the proven concept that exposing your brain to specific ideas (like “calm” or “focus”) makes those states more accessible. You are pre-loading your desired mindset right before you need it most.",
     sourceHref: "https://en.wikipedia.org/wiki/Priming_(psychology)",
     practiceMode: "primeMe",
+    art: SunriseArt,
   },
 ];
 
@@ -54,7 +68,7 @@ export default function SciencePage() {
       <div className="mode-glow pointer-events-none fixed inset-0 -z-10" aria-hidden />
       <main className="mx-auto w-full max-w-6xl px-5 pb-20">
         <section className="mx-auto max-w-3xl pt-14 text-center sm:pt-20">
-          <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+          <h1 className="font-display text-balance text-4xl font-bold tracking-tight sm:text-5xl">
             The Mindset Engine
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-pretty text-muted-foreground sm:text-lg">
@@ -71,12 +85,13 @@ export default function SciencePage() {
             {STEPS.map((step, i) => (
               <div
                 key={step.title}
-                className="rounded-3xl border border-border/60 bg-card p-6"
+                className="flex flex-col items-center rounded-3xl border border-border/60 bg-card p-6 text-center"
               >
-                <span className="flex size-10 items-center justify-center rounded-full bg-mode text-lg font-semibold text-mode-foreground">
+                <step.art className="size-20 text-mode-2" />
+                <span className="mt-4 flex size-8 items-center justify-center rounded-full bg-mode text-sm font-semibold text-mode-foreground">
                   {i + 1}
                 </span>
-                <h3 className="mt-4 text-lg font-semibold">{step.title}</h3>
+                <h3 className="font-display mt-3 text-lg font-semibold">{step.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {step.body}
                 </p>
@@ -96,10 +111,15 @@ export default function SciencePage() {
                 id={concept.id}
                 className="scroll-mt-24 rounded-3xl border border-border/60 bg-card p-6 sm:p-8"
               >
-                <h3 className="text-xl font-semibold">{concept.title}</h3>
-                <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">
-                  {concept.body}
-                </p>
+                <div className="flex items-start gap-5">
+                  <concept.art className="hidden size-16 shrink-0 text-mode-2 sm:block" />
+                  <div>
+                    <h3 className="font-display text-xl font-semibold">{concept.title}</h3>
+                    <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">
+                      {concept.body}
+                    </p>
+                  </div>
+                </div>
                 <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
                   <a
                     href={concept.sourceHref}

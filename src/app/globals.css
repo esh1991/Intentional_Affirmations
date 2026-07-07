@@ -8,8 +8,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-display: var(--font-display);
+  --font-heading: var(--font-display);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -52,34 +52,69 @@
 }
 
 /*
- * Brand + per-mode theming. The site chrome runs dark-first (the brand logo
- * is white-on-transparent) with the indigo→blue gradient from the color logo
- * as the default accent. A wrapper sets data-mode; everything inside picks up
- * the mode's accent pair via the `mode` / `mode-2` Tailwind color tokens.
+ * Brand + per-mode theming, both themes. The brand accent is the indigo→blue
+ * gradient from the color logo. A wrapper sets data-mode; everything inside
+ * picks up the mode's accent pair via the `mode` / `mode-2` Tailwind tokens.
  * Mode hues are matured versions of the legacy gradients (legacy/style.css).
- * --mode-accent: fills (buttons, active tabs) — white text on top.
- * --mode-accent-2: lighter partner for text/glows on the dark background.
+ * --mode-accent: fills (buttons, active tabs, card covers) — white text on
+ *   top; same value in both themes.
+ * --mode-accent-2: text/glow partner — dark enough for white surfaces in
+ *   light mode, lifted lighter under `.dark`.
  */
 :root {
   --mode-accent: oklch(0.55 0.19 272);
-  --mode-accent-2: oklch(0.7 0.14 262);
+  --mode-accent-2: oklch(0.48 0.17 268);
   --mode-foreground: oklch(0.985 0 0);
 }
 [data-mode="powerUp"] {
   --mode-accent: oklch(0.55 0.17 255);
-  --mode-accent-2: oklch(0.72 0.12 235);
+  --mode-accent-2: oklch(0.47 0.15 252);
 }
 [data-mode="breakIt"] {
   --mode-accent: oklch(0.55 0.17 20);
-  --mode-accent-2: oklch(0.72 0.12 35);
+  --mode-accent-2: oklch(0.5 0.16 25);
 }
 [data-mode="primeMe"] {
   --mode-accent: oklch(0.5 0.16 300);
-  --mode-accent-2: oklch(0.73 0.11 320);
+  --mode-accent-2: oklch(0.47 0.15 302);
 }
 [data-mode="rewire"] {
   --mode-accent: oklch(0.55 0.12 172);
+  --mode-accent-2: oklch(0.46 0.11 172);
+}
+.dark {
+  --mode-accent-2: oklch(0.7 0.14 262);
+}
+.dark [data-mode="powerUp"] {
+  --mode-accent-2: oklch(0.72 0.12 235);
+}
+.dark [data-mode="breakIt"] {
+  --mode-accent-2: oklch(0.72 0.12 35);
+}
+.dark [data-mode="primeMe"] {
+  --mode-accent-2: oklch(0.73 0.11 320);
+}
+.dark [data-mode="rewire"] {
   --mode-accent-2: oklch(0.74 0.12 165);
+}
+
+/*
+ * Brand logo via CSS mask: the white-on-transparent PNG's alpha shapes the
+ * fill — brand gradient in light mode, solid white in dark mode.
+ */
+.brand-logo {
+  mask-image: url("/say-this-with-me-logo.png");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-image: url("/say-this-with-me-logo.png");
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  background: linear-gradient(105deg, oklch(0.55 0.19 278), oklch(0.6 0.17 252));
+}
+.dark .brand-logo {
+  background: oklch(0.985 0 0);
 }
 
 /* Soft mode-tinted glow behind the page — the calm-premium wash. */
@@ -148,8 +183,9 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* Faint indigo cast to match the brand, not clinical white */
+  --background: oklch(0.98 0.005 272);
+  --foreground: oklch(0.16 0.01 272);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);

@@ -200,7 +200,7 @@ export function PracticeScreen({
           ) : (
             <StarRow count={completion.stars} />
           )}
-          <h1 className="mt-6 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h1 className="font-display mt-6 text-balance text-3xl font-bold tracking-tight sm:text-4xl">
             {completion.trophy ? "You did it!" : "Success!"}
           </h1>
           <p className="mt-3 max-w-md text-pretty text-lg text-muted-foreground">
@@ -237,7 +237,7 @@ export function PracticeScreen({
           Say this out loud
         </p>
 
-        <p className="mt-6 max-w-3xl text-balance text-3xl font-semibold leading-snug tracking-tight sm:text-5xl sm:leading-snug">
+        <p className="font-display mt-6 max-w-3xl text-balance text-3xl font-bold leading-snug tracking-tight sm:text-5xl sm:leading-snug">
           {words.map((word, i) => (
             <span key={i} className={`affirmation-word ${matched.has(i) ? "spoken" : ""}`}>
               {word}
