@@ -38,11 +38,11 @@ Microphone requires a secure context — `localhost` qualifies; a LAN IP does no
 - **Web Speech API**: solid in Chrome, flaky on iOS Safari, absent in Firefox. Chrome sends audio to Google's servers for recognition — never claim speech is processed locally (see `faq.html` privacy answer; keep it honest).
 - **Streaks count completed affirmations, not visits.** `updateStreak()` must only run from `handleSuccess()`, never on page load.
 - The current codebase is scheduled for a full rewrite in Phase 1 (Next.js + TS + Tailwind, see PLAN.md). Keep changes to the vanilla site surgical — fix bugs, don't refactor.
-- Deployment is GitHub Pages (moving to Vercel per PLAN.md Part 4). Pushing to `main` deploys the live site — treat `main` as production.
+- Deployment is Vercel (static preset), serving saythiswith.me. Pushing to `main` deploys the live site — treat `main` as production; PRs get preview deployments.
 
 ## Roadmap status
 
-- **Phase 0 — Foundations**: ✅ done (repo in `C:\dev`, live-site bugs fixed, this file + PLAN.md added). Vercel/domain migration per PLAN.md checklist may still be pending.
+- **Phase 0 — Foundations**: ✅ done (repo in `C:\dev`, Vercel + domain live, live-site bugs fixed, this file + PLAN.md added).
 - **Phase 1 — Rebuild**: next up. Next.js 15 + TS + Tailwind + shadcn/ui, speech behind a `SpeechVerifier` interface, PWA, mobile-first.
 - Phases 2–4: Supabase accounts/data → growth engine → monetization. Details in PLAN.md.
 
