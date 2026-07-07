@@ -1,6 +1,6 @@
 # Journeys — 7/14/21-day commitment arcs
 
-*Spec agreed 2026-07-07 (pulled forward from PLAN.md Phase 3). Status: **pilot live** — the mechanic shipped with the owner-approved "Mindless Scrolling" arc as the production pilot; remaining 12 category arcs pending owner feedback on the pilot, then drafting + approval.*
+*Spec agreed 2026-07-07 (pulled forward from PLAN.md Phase 3). Status: **live for all 13 categories** (2026-07-08) — pilot arc approved by owner, remaining 12 arcs written in the same voice and shipped. Word-spacing display bug in the practice affirmation fixed same day.*
 
 ## Decisions (owner-approved)
 

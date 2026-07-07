@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import confetti from "canvas-confetti";
@@ -480,10 +480,14 @@ export function PracticeScreen({
 
         <p className="font-display mt-6 max-w-3xl text-balance text-3xl font-bold leading-snug tracking-tight sm:text-5xl sm:leading-snug">
           {words.map((word, i) => (
-            <span key={i} className={`affirmation-word ${matched.has(i) ? "spoken" : ""}`}>
-              {word}
-              {i < words.length - 1 ? " " : ""}{" "}
-            </span>
+            // Space lives OUTSIDE the span: inline-block collapses its own
+            // trailing whitespace, which glued the words together.
+            <Fragment key={i}>
+              <span className={`affirmation-word ${matched.has(i) ? "spoken" : ""}`}>
+                {word}
+              </span>
+              {i < words.length - 1 ? " " : null}
+            </Fragment>
           ))}
         </p>
 

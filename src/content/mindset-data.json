@@ -9,6 +9,29 @@
           { "affirmation": "I am a clear and confident leader.", "successMessage": "You are leading with purpose. Feel that certainty." },
           { "affirmation": "I make sound decisions with ease and conviction.", "successMessage": "Your judgment is sharp. Trust your instincts." },
           { "affirmation": "I inspire my team to achieve greatness.", "successMessage": "You are a catalyst for success. Well done." }
+        ],
+        "journey": [
+          { "affirmation": "I notice when I hesitate instead of decide.", "successMessage": "Seeing the stall is the first act of leadership." },
+          { "affirmation": "I gather what I need and I choose.", "successMessage": "Information served you. You stayed in charge." },
+          { "affirmation": "I can make good calls without every answer.", "successMessage": "Certainty is earned by moving, not waiting." },
+          { "affirmation": "I speak my decisions out loud and own them.", "successMessage": "Spoken like someone worth following." },
+          { "affirmation": "I ask for input without handing over the wheel.", "successMessage": "Listening isn't losing control. Well led." },
+          { "affirmation": "I let small decisions be fast.", "successMessage": "Speed on the small stuff buys focus for the big." },
+          { "affirmation": "One week in, deciding feels lighter.", "successMessage": "Seven days of choosing. It shows." },
+          { "affirmation": "I make the call I have been putting off.", "successMessage": "That one was heavy. You lifted it." },
+          { "affirmation": "I stand behind my choice when it is questioned.", "successMessage": "Steady under pressure. That's the job." },
+          { "affirmation": "I correct course without calling it failure.", "successMessage": "Adjusting is leading. Nicely done." },
+          { "affirmation": "I protect time to think before I choose.", "successMessage": "Clear space makes clear calls." },
+          { "affirmation": "I delegate without hovering.", "successMessage": "Trust given is leadership multiplied." },
+          { "affirmation": "I say no cleanly and without guilt.", "successMessage": "A clean no protects every yes." },
+          { "affirmation": "Two weeks in, my team feels my steadiness.", "successMessage": "Fourteen days. People can lean on that." },
+          { "affirmation": "I am the calm center when stakes are high.", "successMessage": "That calm is yours now — not luck." },
+          { "affirmation": "Decisiveness is my default, not my effort.", "successMessage": "What you practiced became how you are." },
+          { "affirmation": "I trust my judgment because I train it daily.", "successMessage": "Trained judgment. Earned trust." },
+          { "affirmation": "People follow me because I am clear.", "successMessage": "Clarity is magnetic. Keep shining it." },
+          { "affirmation": "I lead with conviction and stay open.", "successMessage": "Strong spine, open mind. Rare and real." },
+          { "affirmation": "Hard calls are where I do my best work.", "successMessage": "You go where others stall. Leader." },
+          { "affirmation": "I am a clear and confident leader.", "successMessage": "Twenty-one days. This is who you are now." }
         ]
       },
       {
@@ -17,6 +40,29 @@
           { "affirmation": "I respond with patience and love.", "successMessage": "You are creating a peaceful home. Well done." },
           { "affirmation": "I am a safe harbor for my children's feelings.", "successMessage": "Your presence is a gift. You are their rock." },
           { "affirmation": "I find joy in the small moments of parenthood.", "successMessage": "You are present and engaged. Beautiful." }
+        ],
+        "journey": [
+          { "affirmation": "I notice the heat rising before I react.", "successMessage": "You caught the spark before the fire." },
+          { "affirmation": "I take one breath before I respond.", "successMessage": "One breath changed the whole moment." },
+          { "affirmation": "My child's big feelings are not an emergency.", "successMessage": "You stayed the adult in the room." },
+          { "affirmation": "I lower my voice when I want to raise it.", "successMessage": "Quiet is stronger than loud. You proved it." },
+          { "affirmation": "I repair quickly when I get it wrong.", "successMessage": "The repair teaches more than the mistake." },
+          { "affirmation": "I see the need behind the behavior.", "successMessage": "You looked deeper. That's real parenting." },
+          { "affirmation": "One week of choosing calm, and it is working.", "successMessage": "Seven days steadier. Your home feels it." },
+          { "affirmation": "I put my phone down when my child speaks.", "successMessage": "Full attention is the loudest love." },
+          { "affirmation": "I make space for feelings without fixing them.", "successMessage": "A safe harbor, exactly as promised." },
+          { "affirmation": "I set limits with warmth, not anger.", "successMessage": "Firm and kind can share a sentence." },
+          { "affirmation": "I find one small joy in the chaos today.", "successMessage": "You caught it. Most people miss those." },
+          { "affirmation": "I forgive myself for yesterday and show up today.", "successMessage": "Grace for you is grace for them." },
+          { "affirmation": "I am teaching calm by living it.", "successMessage": "They are watching — and learning peace." },
+          { "affirmation": "Two weeks in, patience is my reflex.", "successMessage": "Fourteen days. The reflex is rewiring." },
+          { "affirmation": "I am a steady place my children can land.", "successMessage": "Their rock. That's you now." },
+          { "affirmation": "Calm is how I lead my family.", "successMessage": "Leading quietly, changing everything." },
+          { "affirmation": "I respond with patience and love.", "successMessage": "That response is your signature now." },
+          { "affirmation": "My presence is the gift, and I give it daily.", "successMessage": "Presence over perfection, every time." },
+          { "affirmation": "I handle hard moments without losing myself.", "successMessage": "Grounded even in the storm. Well done." },
+          { "affirmation": "My home is calmer because I am.", "successMessage": "You set the weather in the house." },
+          { "affirmation": "I am a calm and present parent.", "successMessage": "Twenty-one days. This is who you are now." }
         ]
       },
       {
@@ -25,6 +71,29 @@
           { "affirmation": "I make choices that nourish my body and mind.", "successMessage": "You are honoring your body. Keep it up." },
           { "affirmation": "I am full of energy and vitality.", "successMessage": "Feel that power surging through you. Excellent." },
           { "affirmation": "I treat my body with respect and kindness.", "successMessage": "You are your own best caretaker. Great job." }
+        ],
+        "journey": [
+          { "affirmation": "I notice what my body is asking for.", "successMessage": "Listening is the first act of health." },
+          { "affirmation": "I drink water before I reach for anything else.", "successMessage": "Small choice, real care." },
+          { "affirmation": "I eat one meal today slowly, with attention.", "successMessage": "You tasted it. Bodies love that." },
+          { "affirmation": "I move for ten minutes without negotiating.", "successMessage": "Ten minutes beats zero, every single time." },
+          { "affirmation": "I notice how good movement actually feels.", "successMessage": "That feeling is your body saying thanks." },
+          { "affirmation": "I choose sleep over one more episode.", "successMessage": "Rest is a decision. You made it." },
+          { "affirmation": "One week of listening to my body.", "successMessage": "Seven days of care. Momentum is building." },
+          { "affirmation": "I plan one healthy choice before the day starts.", "successMessage": "Deciding early beats deciding tired." },
+          { "affirmation": "I move my body even when motivation is low.", "successMessage": "Showing up without the mood — that's training." },
+          { "affirmation": "I fuel myself like someone with plans.", "successMessage": "Food as fuel for a full life. Yes." },
+          { "affirmation": "I take a real break instead of pushing through.", "successMessage": "Recovery is part of the work." },
+          { "affirmation": "I speak to my body with respect.", "successMessage": "It hears you. It always has." },
+          { "affirmation": "I celebrate what my body can do today.", "successMessage": "Gratitude grows capability. Banked." },
+          { "affirmation": "Two weeks of choices that add up.", "successMessage": "Fourteen days. Your body is keeping score — kindly." },
+          { "affirmation": "I am someone who takes care of themselves.", "successMessage": "Not a phase. An identity." },
+          { "affirmation": "Healthy choices feel like mine now, not rules.", "successMessage": "Rules became rhythm. Beautiful." },
+          { "affirmation": "I am full of energy and vitality.", "successMessage": "Feel it surge. You built that." },
+          { "affirmation": "I treat my body with respect and kindness.", "successMessage": "Your own best caretaker, confirmed." },
+          { "affirmation": "My health is a promise I keep daily.", "successMessage": "Kept promises compound. So does health." },
+          { "affirmation": "I make choices that nourish my body and mind.", "successMessage": "Nourished and steady. Keep going." },
+          { "affirmation": "I am my healthiest self, and I built this.", "successMessage": "Twenty-one days. This is who you are now." }
         ]
       },
       {
@@ -32,6 +101,29 @@
         "items": [
           { "affirmation": "Ideas flow to me and through me effortlessly.", "successMessage": "Your channel is open. You're ready to create." },
           { "affirmation": "I embrace my unique perspective and share it boldly.", "successMessage": "Your voice is valuable. Let it be heard." }
+        ],
+        "journey": [
+          { "affirmation": "I notice ideas instead of dismissing them.", "successMessage": "You caught one. They come more when welcomed." },
+          { "affirmation": "I write down one idea today, however small.", "successMessage": "Captured. Ideas trust people who write them down." },
+          { "affirmation": "I am allowed to make bad first drafts.", "successMessage": "Permission granted. Now the good stuff can come." },
+          { "affirmation": "I create for ten minutes before I judge anything.", "successMessage": "Ten judgment-free minutes. That's where flow lives." },
+          { "affirmation": "I follow my curiosity without needing a reason.", "successMessage": "Curiosity is the compass. You followed it." },
+          { "affirmation": "I share one small piece of my work.", "successMessage": "Shared. Your voice just got braver." },
+          { "affirmation": "One week of showing up to create.", "successMessage": "Seven days. The channel is opening." },
+          { "affirmation": "I start before I feel ready.", "successMessage": "Starting is the talent. You have it." },
+          { "affirmation": "I finish one thing instead of starting three.", "successMessage": "Finished beats perfect. Momentum banked." },
+          { "affirmation": "I protect my creative time like a meeting.", "successMessage": "The calendar respects what you respect." },
+          { "affirmation": "I let inspiration find me working.", "successMessage": "It did. It always finds the workers." },
+          { "affirmation": "I learn from work I love and make it mine.", "successMessage": "Influence in, originality out. That's the craft." },
+          { "affirmation": "I embrace my unique perspective and share it boldly.", "successMessage": "Your voice is valuable. Let it be heard." },
+          { "affirmation": "Two weeks of creating, and the resistance is quieter.", "successMessage": "Fourteen days. Resistance lost this round." },
+          { "affirmation": "I am a person who makes things.", "successMessage": "Maker. Say it plainly, because it's true." },
+          { "affirmation": "Ideas flow to me and through me effortlessly.", "successMessage": "Your channel is open. You're ready to create." },
+          { "affirmation": "My creativity grows every time I use it.", "successMessage": "Used daily, it compounds. You're rich." },
+          { "affirmation": "I trust my instincts on the page.", "successMessage": "Instinct earned through reps. Trust away." },
+          { "affirmation": "Blocks are just doors I have not opened yet.", "successMessage": "You have the keys now. All of them." },
+          { "affirmation": "I create boldly and edit kindly.", "successMessage": "Bold maker, kind editor. Perfect pairing." },
+          { "affirmation": "I am a creative powerhouse.", "successMessage": "Twenty-one days. This is who you are now." }
         ]
       }
     ]
@@ -46,6 +138,29 @@
           { "affirmation": "I release this thought and return to the present.", "successMessage": "You broke the cycle. You are in control." },
           { "affirmation": "Done is better than perfect. I choose action.", "successMessage": "You've chosen progress. Momentum is yours." },
           { "affirmation": "I trust my ability to handle what comes next.", "successMessage": "You are capable and resilient. Move forward." }
+        ],
+        "journey": [
+          { "affirmation": "I notice when thinking becomes spinning.", "successMessage": "You saw the loop. That's the exit sign." },
+          { "affirmation": "I name the thought and let it pass.", "successMessage": "Named and released. The grip loosens." },
+          { "affirmation": "I give this decision a deadline.", "successMessage": "A deadline is a door out of the loop." },
+          { "affirmation": "I choose done over perfect today.", "successMessage": "Progress shipped. Perfection can wait forever." },
+          { "affirmation": "I act on one small thing I was overthinking.", "successMessage": "Action broke the spell. It always does." },
+          { "affirmation": "I return to my breath when my mind races.", "successMessage": "Back in the room. Back in your body." },
+          { "affirmation": "One week of catching the spin early.", "successMessage": "Seven days sharper. The loop is weakening." },
+          { "affirmation": "I make the decision with the information I have.", "successMessage": "Decided. The rest reveals itself in motion." },
+          { "affirmation": "I trust my ability to handle what comes next.", "successMessage": "You are capable and resilient. Move forward." },
+          { "affirmation": "I release this thought and return to the present.", "successMessage": "You broke the cycle. You are in control." },
+          { "affirmation": "I let good enough be good enough.", "successMessage": "Good enough shipped beats perfect stuck." },
+          { "affirmation": "I schedule my worry and end it on time.", "successMessage": "Contained worry can't run the day." },
+          { "affirmation": "Done is better than perfect. I choose action.", "successMessage": "You've chosen progress. Momentum is yours." },
+          { "affirmation": "Two weeks in, my mind spins less.", "successMessage": "Fourteen days. Quieter up there, isn't it?" },
+          { "affirmation": "I am a person who decides and moves.", "successMessage": "Decider. Mover. That's the new default." },
+          { "affirmation": "Clarity comes to me through action.", "successMessage": "Motion made it clear. It always does." },
+          { "affirmation": "I think just enough, then I act.", "successMessage": "The thinking serves the doing now." },
+          { "affirmation": "My mind is a tool I direct.", "successMessage": "You hold the wheel. Drive." },
+          { "affirmation": "I am comfortable with uncertainty.", "successMessage": "Comfortable in the fog — that's mastery." },
+          { "affirmation": "Peace is my default, not analysis.", "successMessage": "The loop lost. Peace won." },
+          { "affirmation": "I am present, decisive, and free.", "successMessage": "Twenty-one days. This is who you are now." }
         ]
       },
       {
@@ -83,6 +198,29 @@
         "items": [
           { "affirmation": "I am my own strongest ally.", "successMessage": "You are on your own side. That's a winning team." },
           { "affirmation": "I replace self-criticism with self-compassion.", "successMessage": "You chose kindness. You deserve it." }
+        ],
+        "journey": [
+          { "affirmation": "I notice the harsh voice when it starts.", "successMessage": "Heard it. Naming it takes its power." },
+          { "affirmation": "I would not say that to a friend.", "successMessage": "Exactly. So it doesn't get said to you." },
+          { "affirmation": "I ask if the harsh thought is even true.", "successMessage": "Cross-examined. Most of them collapse." },
+          { "affirmation": "I answer criticism with one kind fact.", "successMessage": "One true kindness beats ten false attacks." },
+          { "affirmation": "I speak to myself by name, gently.", "successMessage": "Distance made it kinder. Science agrees." },
+          { "affirmation": "I catch the spiral before it gathers speed.", "successMessage": "Caught early. That's the skill." },
+          { "affirmation": "One week of answering back with kindness.", "successMessage": "Seven days. The inner critic is losing ground." },
+          { "affirmation": "I start my day with one true, kind sentence.", "successMessage": "The tone was set — by you." },
+          { "affirmation": "I treat mistakes as information, not verdicts.", "successMessage": "Data, not doom. Well handled." },
+          { "affirmation": "I am my own strongest ally.", "successMessage": "You are on your own side. That's a winning team." },
+          { "affirmation": "I speak about myself with respect.", "successMessage": "They heard respect. So did you." },
+          { "affirmation": "I forgive myself out loud.", "successMessage": "Forgiveness spoken is forgiveness felt." },
+          { "affirmation": "I collect evidence of what I do well.", "successMessage": "The case for you is getting strong." },
+          { "affirmation": "Two weeks in, the kind voice speaks first.", "successMessage": "Fourteen days. The default is flipping." },
+          { "affirmation": "I am not my worst thoughts.", "successMessage": "Never were. Now you know it." },
+          { "affirmation": "My inner voice works for me now.", "successMessage": "New management. Better culture." },
+          { "affirmation": "I speak to myself with patience and love.", "successMessage": "That's the voice you deserved all along." },
+          { "affirmation": "Confidence grows where criticism used to live.", "successMessage": "New tenant. Better neighbor." },
+          { "affirmation": "I am worthy of my own kindness.", "successMessage": "Worthy, confirmed daily." },
+          { "affirmation": "My self-talk builds me, brick by brick.", "successMessage": "Builder's hands. Kind words. Strong walls." },
+          { "affirmation": "I am my own strongest ally, always.", "successMessage": "Twenty-one days. This is who you are now." }
         ]
       }
     ]
@@ -96,6 +234,29 @@
         "items": [
           { "affirmation": "I bring clarity and calm into this conversation.", "successMessage": "You are primed and ready. Go make an impact." },
           { "affirmation": "My contributions are valuable and insightful.", "successMessage": "You are prepared. Your voice will be heard." }
+        ],
+        "journey": [
+          { "affirmation": "I notice the nerves and name them energy.", "successMessage": "Same fuel, better label." },
+          { "affirmation": "I know my first sentence cold.", "successMessage": "Strong openings settle everything after." },
+          { "affirmation": "I breathe slowly and my body follows.", "successMessage": "Calm is trainable. You just trained it." },
+          { "affirmation": "I prepare the point, not the script.", "successMessage": "Points flex. Scripts crack. Well prepped." },
+          { "affirmation": "I picture the room going well.", "successMessage": "Your brain just rehearsed the win." },
+          { "affirmation": "I speak slowly and let silence work.", "successMessage": "Silence made you sound certain." },
+          { "affirmation": "One week of priming. I walk in calmer.", "successMessage": "Seven days. The room feels smaller now." },
+          { "affirmation": "I bring one clear idea worth their time.", "successMessage": "Value in hand. Walk in tall." },
+          { "affirmation": "I ask questions as confidently as I answer.", "successMessage": "Curiosity reads as command." },
+          { "affirmation": "My presence arrives before my slides do.", "successMessage": "They felt you before slide one." },
+          { "affirmation": "I am ready for the question I fear.", "successMessage": "Feared it, prepped it, own it." },
+          { "affirmation": "I hold my ground with grace.", "successMessage": "Grounded and gracious. Rare combo." },
+          { "affirmation": "I belong in every room I enter.", "successMessage": "The room agrees." },
+          { "affirmation": "Two weeks in, big moments feel familiar.", "successMessage": "Fourteen days. Familiar breeds calm." },
+          { "affirmation": "I am calm, clear, and prepared.", "successMessage": "Your walk-in state, on demand." },
+          { "affirmation": "Pressure sharpens me.", "successMessage": "Diamonds agree." },
+          { "affirmation": "I speak with confidence and clarity.", "successMessage": "Heard, understood, remembered." },
+          { "affirmation": "My ideas deserve the space they take.", "successMessage": "Take the space. Your ideas earned it." },
+          { "affirmation": "I perform best when it matters most.", "successMessage": "Clutch. Proven daily." },
+          { "affirmation": "Rooms feel easier because I am ready.", "successMessage": "Readiness rewrote the stakes." },
+          { "affirmation": "I am ready for every big moment.", "successMessage": "Twenty-one days. This is who you are now." }
         ]
       },
       {
@@ -103,6 +264,29 @@
         "items": [
           { "affirmation": "I am focused and ready to create value.", "successMessage": "Your mind is sharp. You're ready for a productive day." },
           { "affirmation": "I will tackle today's challenges with energy and skill.", "successMessage": "You are capable and ready. Let's begin." }
+        ],
+        "journey": [
+          { "affirmation": "I notice how I begin my mornings.", "successMessage": "Seen clearly. Beginnings can now change." },
+          { "affirmation": "I choose my first task before I open anything.", "successMessage": "You aimed before firing. Different day already." },
+          { "affirmation": "I start with three deep breaths, not three apps.", "successMessage": "Air before algorithms. Well begun." },
+          { "affirmation": "I do the important thing first.", "successMessage": "The day's spine is set." },
+          { "affirmation": "I set one clear intention for today.", "successMessage": "Intention set. The day has a direction." },
+          { "affirmation": "I protect my first hour.", "successMessage": "The golden hour, spent on gold." },
+          { "affirmation": "One week of starting on purpose.", "successMessage": "Seven mornings aimed. Feel the difference." },
+          { "affirmation": "I begin before I feel like beginning.", "successMessage": "Motivation follows motion. You led." },
+          { "affirmation": "I greet the day with energy I chose.", "successMessage": "Chosen energy beats caught mood." },
+          { "affirmation": "I make my hardest call before lunch.", "successMessage": "Heavy thing, morning muscles. Smart." },
+          { "affirmation": "I focus on one thing for my first ninety minutes.", "successMessage": "One thing, done deep. That's rare output." },
+          { "affirmation": "I decide what today will be about.", "successMessage": "Author of the day, not a character in it." },
+          { "affirmation": "I bring focus, and the day organizes around it.", "successMessage": "Focus is gravity. Things fell in line." },
+          { "affirmation": "Two weeks of strong starts.", "successMessage": "Fourteen mornings. Momentum compounds at dawn." },
+          { "affirmation": "I am the kind of person who starts well.", "successMessage": "Starter. Finisher follows." },
+          { "affirmation": "My mornings belong to me.", "successMessage": "Reclaimed, owned, invested." },
+          { "affirmation": "I am focused and energized from the first hour.", "successMessage": "First-hour fire. It carries." },
+          { "affirmation": "I set the tone and the day follows it.", "successMessage": "Conductor, not passenger." },
+          { "affirmation": "Strong starts are my signature.", "successMessage": "Signed another one today." },
+          { "affirmation": "I begin each day ready and clear.", "successMessage": "Ready and clear — your factory settings now." },
+          { "affirmation": "I own my mornings and my momentum.", "successMessage": "Twenty-one days. This is who you are now." }
         ]
       },
       {
@@ -110,6 +294,29 @@
         "items": [
           { "affirmation": "I release the day and welcome restful sleep.", "successMessage": "Your mind is calm. Sweet dreams." },
           { "affirmation": "I am grateful for today and peaceful about tomorrow.", "successMessage": "You are at peace. Rest well." }
+        ],
+        "journey": [
+          { "affirmation": "I notice when my body asks for rest.", "successMessage": "Heard. Rest requests granted tonight." },
+          { "affirmation": "I set a time when the day ends.", "successMessage": "Endings make room for sleep." },
+          { "affirmation": "I put my phone to bed before myself.", "successMessage": "The feed sleeps first. You win." },
+          { "affirmation": "I slow my breath and my thoughts follow.", "successMessage": "Breath led, mind followed. That's the trick." },
+          { "affirmation": "I write tomorrow down and set it aside.", "successMessage": "Parked on paper, not in your head." },
+          { "affirmation": "I let the day be finished.", "successMessage": "Finished. Not perfect — finished." },
+          { "affirmation": "One week of gentler nights.", "successMessage": "Seven evenings softened. Sleep is noticing." },
+          { "affirmation": "I dim the lights and my mind takes the hint.", "successMessage": "Darkness is a lullaby. Well played." },
+          { "affirmation": "I trade one scrolled hour for one slept hour.", "successMessage": "Traded up. Your morning will pay you back." },
+          { "affirmation": "I release what I cannot solve tonight.", "successMessage": "Set down. It'll be lighter tomorrow." },
+          { "affirmation": "I make my room a place for sleep.", "successMessage": "Sanctuary status: achieved." },
+          { "affirmation": "I thank my body for carrying today.", "successMessage": "Gratitude relaxes what tension held." },
+          { "affirmation": "I end the day with a quiet mind.", "successMessage": "Quiet earned, not found." },
+          { "affirmation": "Two weeks of better nights.", "successMessage": "Fourteen sunsets done right." },
+          { "affirmation": "I am someone who rests well.", "successMessage": "Rester. Recoverer. Ready-maker." },
+          { "affirmation": "Sleep comes easily because I prepare for it.", "successMessage": "Prepared sleep is deep sleep." },
+          { "affirmation": "I deserve rest, and I take it.", "successMessage": "Deserved and taken. No guilt attached." },
+          { "affirmation": "My evenings restore me.", "successMessage": "Restored nightly, renewed daily." },
+          { "affirmation": "I protect my sleep like it protects me.", "successMessage": "Mutual defense pact, honored." },
+          { "affirmation": "I wind down with ease and wake with energy.", "successMessage": "The cycle works because you do." },
+          { "affirmation": "I am rested, calm, and ready for tomorrow.", "successMessage": "Twenty-one days. This is who you are now." }
         ]
       }
     ]
@@ -123,6 +330,29 @@
         "items": [
           { "affirmation": "I am worthy of success and happiness right now.", "successMessage": "You are rewriting your story. Believe this new truth." },
           { "affirmation": "My worth is inherent and does not need to be earned.", "successMessage": "You are enough, exactly as you are. Own it." }
+        ],
+        "journey": [
+          { "affirmation": "I notice when 'not enough' starts talking.", "successMessage": "Spotted. It only wins unnoticed." },
+          { "affirmation": "I ask: enough for what, says who?", "successMessage": "Interrogated. The claim has no author." },
+          { "affirmation": "I list one thing I did well today.", "successMessage": "Evidence entered. Case building." },
+          { "affirmation": "I am learning, and learning counts.", "successMessage": "Growth is worth. You're accruing." },
+          { "affirmation": "I compare myself to yesterday, not to others.", "successMessage": "The only fair race. You're winning it." },
+          { "affirmation": "I accept a compliment without deflecting.", "successMessage": "Received. It was true, you know." },
+          { "affirmation": "One week in, the evidence favors me.", "successMessage": "Seven days of proof, stacked and counted." },
+          { "affirmation": "I do the thing I felt unqualified for.", "successMessage": "Qualified by doing. The credential that lasts." },
+          { "affirmation": "I speak up even when doubt whispers.", "successMessage": "Your voice outranked the whisper." },
+          { "affirmation": "I ask for help without shame.", "successMessage": "Asking is competence, not weakness." },
+          { "affirmation": "I own my wins out loud.", "successMessage": "Owned. Wins unclaimed help no one." },
+          { "affirmation": "My worth is not up for debate today.", "successMessage": "Debate cancelled. Worth stands." },
+          { "affirmation": "I am more capable than my doubt says.", "successMessage": "Doubt lowballs. Reality doesn't." },
+          { "affirmation": "Two weeks in, 'not enough' sounds like a lie.", "successMessage": "Fourteen days. Because it is one." },
+          { "affirmation": "I have always been enough.", "successMessage": "The fact predates the feeling." },
+          { "affirmation": "I am good enough, and I am still growing.", "successMessage": "Both true. That's the whole secret." },
+          { "affirmation": "Enough is my starting line, not my finish.", "successMessage": "Start there. Go anywhere." },
+          { "affirmation": "The room is better with me in it.", "successMessage": "Confirmed by everyone paying attention." },
+          { "affirmation": "My worth does not require anyone's permission.", "successMessage": "It never did. Now you live like it." },
+          { "affirmation": "I am enough, and I act like it now.", "successMessage": "Acting like it made it visible." },
+          { "affirmation": "I am enough, exactly as I am.", "successMessage": "Twenty-one days. This is who you are now." }
         ]
       },
       {
@@ -130,6 +360,29 @@
         "items": [
           { "affirmation": "Every experience is a lesson that helps me grow.", "successMessage": "You are embracing growth over fear. This is how you win." },
           { "affirmation": "I choose courage over comfort.", "successMessage": "You are brave and expanding. Feel your strength." }
+        ],
+        "journey": [
+          { "affirmation": "I notice when fear is making my choices.", "successMessage": "Seen. Fear drives worse than you do." },
+          { "affirmation": "I name the worst case and its actual odds.", "successMessage": "Measured, the monster shrinks." },
+          { "affirmation": "Failure is information, not identity.", "successMessage": "Data received. Identity intact." },
+          { "affirmation": "I do one small thing that might not work.", "successMessage": "It counted either way. That's the point." },
+          { "affirmation": "I have survived every failure so far.", "successMessage": "Perfect record of getting back up." },
+          { "affirmation": "Fear means I am close to something that matters.", "successMessage": "Follow that signal. It knows the way." },
+          { "affirmation": "One week of acting anyway.", "successMessage": "Seven days brave. Fear noticed." },
+          { "affirmation": "I start the thing I have been avoiding.", "successMessage": "Started. Avoidance lost its job." },
+          { "affirmation": "I ask, knowing the answer might be no.", "successMessage": "A no survived is confidence earned." },
+          { "affirmation": "I share my work before it feels safe.", "successMessage": "Shipped scared. Still counts. Especially counts." },
+          { "affirmation": "I treat every miss as tuition.", "successMessage": "Paid and learned. Nothing wasted." },
+          { "affirmation": "I would rather try than wonder.", "successMessage": "Wondering was heavier. Feel the difference?" },
+          { "affirmation": "Each attempt makes me braver.", "successMessage": "Reps of nerve. You're getting strong." },
+          { "affirmation": "Two weeks in, fear has quieted.", "successMessage": "Fourteen days. It whispers now — it used to shout." },
+          { "affirmation": "I am someone who tries.", "successMessage": "Tryer. The rarest, best kind." },
+          { "affirmation": "Failing forward is my superpower.", "successMessage": "Forward is the only direction you fail." },
+          { "affirmation": "I take smart risks with a steady heart.", "successMessage": "Steady and bold. Unstoppable pairing." },
+          { "affirmation": "My courage is bigger than my fear.", "successMessage": "Measured daily. Courage keeps winning." },
+          { "affirmation": "I chase what matters, not what is safe.", "successMessage": "Mattering over safety. Every time." },
+          { "affirmation": "Fear rides along, but I drive.", "successMessage": "Passenger seat. Buckled. You drive." },
+          { "affirmation": "I am bold, brave, and unafraid to fail.", "successMessage": "Twenty-one days. This is who you are now." }
         ]
       },
       {
@@ -137,6 +390,29 @@
         "items": [
           { "affirmation": "I am open and ready to receive abundance.", "successMessage": "The universe is abundant, and you are part of it." },
           { "affirmation": "I welcome all the good things life has to offer me.", "successMessage": "You are deserving. Accept the good that comes your way." }
+        ],
+        "journey": [
+          { "affirmation": "I notice when I shrink from good things.", "successMessage": "Caught the flinch. Now we work." },
+          { "affirmation": "I ask where 'undeserving' came from.", "successMessage": "Old voice, wrong century. You can hang up." },
+          { "affirmation": "I accept one good thing today without apology.", "successMessage": "Accepted, unapologized. Progress." },
+          { "affirmation": "Good things happen to people like me.", "successMessage": "They just did. Take note." },
+          { "affirmation": "I say thank you instead of 'you shouldn't have'.", "successMessage": "Received in full. That's the skill." },
+          { "affirmation": "I let myself enjoy this without earning it twice.", "successMessage": "Once was enough. Enjoying is allowed." },
+          { "affirmation": "One week of receiving. It is getting easier.", "successMessage": "Seven days more open. It shows." },
+          { "affirmation": "I ask for what I actually want.", "successMessage": "Asked plainly. Answers follow clarity." },
+          { "affirmation": "I take up space without apologizing.", "successMessage": "The space fits. It always did." },
+          { "affirmation": "I celebrate my wins without shrinking them.", "successMessage": "Full-sized wins. As deserved." },
+          { "affirmation": "I receive help as gladly as I give it.", "successMessage": "Both directions open now. Balanced." },
+          { "affirmation": "I am allowed to want more.", "successMessage": "Wanting is not greed. It's aliveness." },
+          { "affirmation": "I treat myself like someone I love.", "successMessage": "Because you are." },
+          { "affirmation": "Two weeks in, receiving feels natural.", "successMessage": "Fourteen days. The door stays open now." },
+          { "affirmation": "I deserve good things, full stop.", "successMessage": "Full stop. No footnotes." },
+          { "affirmation": "Abundance fits me.", "successMessage": "Tailored, actually." },
+          { "affirmation": "I welcome joy without checking for the catch.", "successMessage": "No catch. Just yours." },
+          { "affirmation": "I am worthy of the life I am building.", "successMessage": "Worthy of it — and building it anyway." },
+          { "affirmation": "Deserving was never the question.", "successMessage": "It was the wrong question all along." },
+          { "affirmation": "I receive with open hands and a full heart.", "successMessage": "Open hands hold more." },
+          { "affirmation": "I deserve every good thing coming my way.", "successMessage": "Twenty-one days. This is who you are now." }
         ]
       }
     ]
