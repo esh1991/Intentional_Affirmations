@@ -95,7 +95,7 @@ Move the n8n webhook call behind a Next.js route handler (`/api/subscribe`) so t
   - 16 custom outline SVG illustrations (per-category card art, science steps/concepts)
   - **Journeys live on all 13 categories** — see `journeys.md` for spec, decisions, and status
   - Fixed affirmation word-spacing bug (space was inside the inline-block word span)
-- [ ] M3: session logging to localStorage (`mindsetEngineSessions`)
+- [x] M3: session logging to localStorage (`mindsetEngineSessions`) — append-only, capped at 500; entries log affirmation text (content has no IDs — Phase 2 maps text → row), mode, category, matchScore, attempts, input (voice/typed), completedAt, and journey day/duration when applicable
 - [ ] M4: PWA, `/api/subscribe` (email capture is currently absent from the new app), GA4 events via `trackEvent()` helper, click sounds
 - [ ] M5: Playwright smoke test (drive the typing path; cover journey picker → day 1 → dots) + CI; phone QA
 

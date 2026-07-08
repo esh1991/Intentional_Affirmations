@@ -17,6 +17,7 @@ import {
 } from "@/lib/speech/web-speech-verifier";
 import { matchedWordIndices, similarityScore } from "@/lib/speech/similarity";
 import { addStar } from "@/lib/stars";
+import { recordSession } from "@/lib/sessions";
 import { recordCompletion } from "@/lib/streak";
 import {
   JOURNEY_DURATIONS,
@@ -164,6 +165,9 @@ export function PracticeScreen({
 
   const speechAvailable = useClientValue(isSpeechRecognitionAvailable);
   const verifierRef = useRef<WebSpeechVerifier | null>(null);
+  // Verification attempts on the current affirmation (voice results + typed
+  // submissions), logged with the session on success.
+  const attemptsRef = useRef(0);
 
   const current: Affirmation =
     journeySession && journey && journeyDay
@@ -177,32 +181,57 @@ export function PracticeScreen({
   // Release the mic if the user navigates away mid-listen
   useEffect(() => stopVerifier, [stopVerifier]);
 
-  const succeed = useCallback(() => {
-    stopVerifier();
-    setMatched(new Set(words.map((_, i) => i)));
-    const streak = recordCompletion();
-    const { stars, trophy } = addStar();
-    let journeyResult: CompletionState["journey"] = null;
-    if (journeySession && journeyState) {
-      setRawOverride(completeJourneyDay(mode, categoryName));
-      journeyResult = {
-        day: journeyDay as number,
-        duration: journeyState.duration,
-        completed: journeyState.completedDays.length + 1,
-      };
-    }
-    setCompletion({ stars, trophy, streak, journey: journeyResult });
-    setPhase("success");
-    new Audio("/success.mp3").play().catch(() => {});
-    if (trophy || journeyResult?.completed === journeyResult?.duration) {
-      confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
-    }
-  }, [stopVerifier, words, journeySession, journeyState, journeyDay, mode, categoryName]);
+  const succeed = useCallback(
+    (matchScore: number, input: "voice" | "typed") => {
+      stopVerifier();
+      setMatched(new Set(words.map((_, i) => i)));
+      const streak = recordCompletion();
+      const { stars, trophy } = addStar();
+      let journeyResult: CompletionState["journey"] = null;
+      if (journeySession && journeyState) {
+        setRawOverride(completeJourneyDay(mode, categoryName));
+        journeyResult = {
+          day: journeyDay as number,
+          duration: journeyState.duration,
+          completed: journeyState.completedDays.length + 1,
+        };
+      }
+      recordSession({
+        affirmation: current.affirmation,
+        mode,
+        category: categoryName,
+        matchScore,
+        attempts: attemptsRef.current,
+        input,
+        completedAt: new Date().toISOString(),
+        ...(journeyResult
+          ? { journeyDay: journeyResult.day, journeyDuration: journeyResult.duration }
+          : {}),
+      });
+      setCompletion({ stars, trophy, streak, journey: journeyResult });
+      setPhase("success");
+      new Audio("/success.mp3").play().catch(() => {});
+      if (trophy || journeyResult?.completed === journeyResult?.duration) {
+        confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+      }
+    },
+    [
+      stopVerifier,
+      words,
+      journeySession,
+      journeyState,
+      journeyDay,
+      mode,
+      categoryName,
+      current.affirmation,
+    ],
+  );
 
   const reset = useCallback(
     (nextIndex?: number) => {
       stopVerifier();
       if (nextIndex !== undefined) setIndex(nextIndex);
+      attemptsRef.current = 0;
       setPhase("ready");
       setMatched(new Set());
       setTypedText("");
@@ -240,8 +269,9 @@ export function PracticeScreen({
       onWordMatched: (i) =>
         setMatched((prev) => (prev.has(i) ? prev : new Set(prev).add(i))),
       onResult: ({ matchScore }) => {
+        attemptsRef.current += 1;
         if (matchScore >= MATCH_SCORE_THRESHOLD) {
-          succeed();
+          succeed(matchScore, "voice");
         } else {
           setPhase("retry");
         }
@@ -251,8 +281,10 @@ export function PracticeScreen({
   }, [current.affirmation, succeed, handleError]);
 
   const submitTyped = useCallback(() => {
-    if (similarityScore(current.affirmation, typedText) >= MATCH_SCORE_THRESHOLD) {
-      succeed();
+    attemptsRef.current += 1;
+    const score = similarityScore(current.affirmation, typedText);
+    if (score >= MATCH_SCORE_THRESHOLD) {
+      succeed(score, "typed");
     } else {
       setPhase("retry");
     }
