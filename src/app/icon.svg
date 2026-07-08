@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Speech-bubble brand mark on the brand indigo→blue gradient tile.
+       Regenerate PNG sizes (apple-icon, PWA icons) from this geometry. -->
+  <defs>
+    <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="512" y2="512">
+      <stop offset="0" stop-color="#5B55D6"/>
+      <stop offset="1" stop-color="#477BDC"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#g)"/>
+  <g fill="#fff">
+    <circle cx="256" cy="246" r="150"/>
+    <path d="M150 350 L98 428 L232 388 Z"/>
+  </g>
+  <g fill="url(#g)">
+    <rect x="170" y="196" width="40" height="100" rx="20"/>
+    <rect x="236" y="156" width="40" height="180" rx="20"/>
+    <rect x="302" y="196" width="40" height="100" rx="20"/>
+  </g>
+</svg>

@@ -16,6 +16,7 @@ import {
   isSpeechRecognitionAvailable,
 } from "@/lib/speech/web-speech-verifier";
 import { matchedWordIndices, similarityScore } from "@/lib/speech/similarity";
+import { trackEvent } from "@/lib/analytics";
 import { addStar } from "@/lib/stars";
 import { recordSession } from "@/lib/sessions";
 import { recordCompletion } from "@/lib/streak";
@@ -86,7 +87,7 @@ function Shell({
       <div className="mode-glow pointer-events-none fixed inset-0 -z-10" aria-hidden />
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 pt-6">
         <Link
-          href={`/?mode=${mode}`}
+          href={`/practice?mode=${mode}`}
           className="flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="size-4" aria-hidden />
@@ -207,6 +208,12 @@ export function PracticeScreen({
         ...(journeyResult
           ? { journeyDay: journeyResult.day, journeyDuration: journeyResult.duration }
           : {}),
+      });
+      trackEvent("affirmation_success", {
+        mode,
+        category: categoryName,
+        match_score: matchScore,
+        input,
       });
       setCompletion({ stars, trophy, streak, journey: journeyResult });
       setPhase("success");
@@ -392,7 +399,7 @@ export function PracticeScreen({
               Practice freely anyway
             </button>
             <Link
-              href={`/?mode=${mode}`}
+              href={`/practice?mode=${mode}`}
               className="rounded-full border border-border bg-card/60 px-7 py-3 font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
             >
               All categories
@@ -458,7 +465,7 @@ export function PracticeScreen({
               </button>
             )}
             <Link
-              href={`/?mode=${mode}`}
+              href={`/practice?mode=${mode}`}
               className={
                 completion.journey
                   ? "rounded-full bg-mode px-7 py-3 font-semibold text-mode-foreground shadow-lg transition-transform hover:-translate-y-0.5"

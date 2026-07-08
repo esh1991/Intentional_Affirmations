@@ -131,7 +131,7 @@ export default function SciencePage() {
                     <ArrowRight className="size-4" aria-hidden />
                   </a>
                   <Link
-                    href={`/?mode=${concept.practiceMode}`}
+                    href={`/practice?mode=${concept.practiceMode}`}
                     className="flex items-center gap-1.5 text-sm font-semibold text-mode-2 underline-offset-4 hover:underline"
                   >
                     Put it to practice

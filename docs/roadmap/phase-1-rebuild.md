@@ -71,7 +71,7 @@ Per PLAN.md: calm-premium, mobile-first, dark mode, 4-mode theming via CSS custo
 
 ### Email capture
 
-Move the n8n webhook call behind a Next.js route handler (`/api/subscribe`) so the webhook URL is no longer public client-side. Same n8n destination for now.
+~~Move the n8n webhook call behind `/api/subscribe`, same n8n destination.~~ **Superseded (owner decision, 2026-07-08): n8n retired.** `/api/subscribe` writes to a Supabase `subscribers` table with the server-only secret key — the first Phase 2 pull-forward. One capture point: the marketing home. Setup: `docs/supabase.md`.
 
 ## Testing / guardrails
 
@@ -96,7 +96,8 @@ Move the n8n webhook call behind a Next.js route handler (`/api/subscribe`) so t
   - **Journeys live on all 13 categories** — see `journeys.md` for spec, decisions, and status
   - Fixed affirmation word-spacing bug (space was inside the inline-block word span)
 - [x] M3: session logging to localStorage (`mindsetEngineSessions`) — append-only, capped at 500; entries log affirmation text (content has no IDs — Phase 2 maps text → row), mode, category, matchScore, attempts, input (voice/typed), completedAt, and journey day/duration when applicable
-- [ ] M4: PWA, `/api/subscribe` (email capture is currently absent from the new app), GA4 events via `trackEvent()` helper, click sounds
+- [x] M4a (2026-07-08, owner-approved structure): **site split** — marketing home at `/` (self-playing word-highlight hero demo, how-it-works with Choose/Speak/LockIn art, 4-mode use-case cards, science strip, email capture, welcome-back streak banner) and the app hub moved to `/practice` (`/?mode=` redirects follow it). **GA4 restored** via `@next/third-parties`, prod-only, same property `G-8GYK2VZBW9`, legacy event names, all calls through `trackEvent()`. **Email capture** → `/api/subscribe` → Supabase `subscribers` (n8n retired; owner must create the project + set `SUPABASE_URL`/`SUPABASE_SECRET_KEY` in Vercel — `docs/supabase.md`; endpoint 503s gracefully until then). **Brand favicon/icon set** (bubble mark on gradient tile: `icon.svg`, `apple-icon.png`, `public/icon-192/512.png` — the PWA icons).
+- [ ] M4b: PWA (`app/manifest.ts` + minimal `public/sw.js` — Serwist needs webpack, we're on Turbopack), click sounds (reuse legacy `click.mp3`, owner-approved)
 - [ ] M5: Playwright smoke test (drive the typing path; cover journey picker → day 1 → dots) + CI; phone QA
 
 ## Resume notes for a fresh session (2026-07-08)

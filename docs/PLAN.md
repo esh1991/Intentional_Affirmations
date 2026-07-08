@@ -50,7 +50,7 @@ Content moves from JSON into Postgres → unlocks personalization, A/B testing, 
 
 ## Roadmap
 - **Phase 0 — Foundations**: ✅ done 2026-07-07 (repo in `C:\dev`, Vercel + domain live, bugs fixed, PLAN.md + CLAUDE.md).
-- **Phase 1 — Rebuild**: 🟡 mostly done (2026-07-08) — Next.js rebuild live with design system, full practice flow, journeys, science/FAQ. Remaining (see `docs/roadmap/phase-1-rebuild.md`): session logging to localStorage, PWA, `/api/subscribe` (email capture is currently absent from the new app — the n8n form didn't carry over), GA4 events, Playwright smoke test + CI.
+- **Phase 1 — Rebuild**: 🟡 mostly done (2026-07-08) — Next.js rebuild live with design system, full practice flow, journeys, science/FAQ, session logging, marketing home at `/` + app hub at `/practice`, GA4 restored, email capture → Supabase (n8n retired; owner must create the project — `docs/supabase.md`). Remaining (see `docs/roadmap/phase-1-rebuild.md`): PWA + click sounds, Playwright smoke test + CI.
 - **Phase 2 — Accounts & data (2–3 wks)**: Supabase auth + schema, content in Postgres, server-side streaks + journeys, persistent favorites, anon→account merge, PostHog, admin content page.
 - **Phase 3 — Growth engine (ongoing)**: programmatic SEO, blog/science hub, shareable result cards, custom/AI affirmations, daily reminders. (First journeys shipped early, in Phase 1.)
 - **Phase 4 — Monetization & beyond**: Stripe premium once D30 retention is healthy; native wrapper if needed; voice-energy experiments; coach/B2B pilot. AR/VR stays a design constraint via the speech interface.

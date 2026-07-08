@@ -14,11 +14,12 @@ Next.js 16 (App Router, Turbopack) · TypeScript strict · Tailwind v4 · shadcn
 
 | Path | Role |
 |---|---|
-| `src/app/` | Routes: `/` (modes + category cards), `/practice/[mode]/[category]` (speaking flow), `/science`, `/faq` |
-| `src/components/app/` | App surface: home screen, practice screen, streak badge |
+| `src/app/` | Routes: `/` (marketing home), `/practice` (modes + category cards hub), `/practice/[mode]/[category]` (speaking flow), `/science`, `/faq`, `/api/subscribe` (email → Supabase) |
+| `src/components/app/` | App surface: home screen (the /practice hub), practice screen, streak badge |
+| `src/components/home/` | Marketing home: self-playing hero demo, welcome-back banner, email signup |
 | `src/components/site/` | Chrome: header, footer, share button |
 | `src/lib/speech/` | `SpeechVerifier` interface, `WebSpeechVerifier`, similarity scoring — the UI never touches the Web Speech API directly |
-| `src/lib/` | `content.ts` (Zod-validated loader), `streak.ts`, `stars.ts` |
+| `src/lib/` | `content.ts` (Zod-validated loader), `streak.ts`, `stars.ts`, `sessions.ts`, `analytics.ts` (`trackEvent()`) |
 | `src/content/mindset-data.json` | All content: 4 modes → categories → affirmations |
 | `legacy/` | Pre-rewrite static site, reference only — don't edit |
 
@@ -32,6 +33,7 @@ Light + dark themes via next-themes (class attribute, default dark — the brand
 - `mindsetEngineStarCount` — stars toward the 3-star trophy
 - `mindsetEngineStreakCount` — daily streak
 - `mindsetEngineLastPractice` — date of last completion (legacy `mindsetEngineLastVisit` read as fallback)
+- `mindsetEngineSessions` — append-only completion log (last 500), the Phase 2 `sessions` table seed
 
 Streaks count **completed affirmations**, never page visits; `recordCompletion()` only runs on success.
 
@@ -47,12 +49,12 @@ npm run lint
 
 - **Web Speech API**: Chrome-quality, flaky iOS Safari, absent Firefox — the typing fallback must stay first-class. Chrome sends audio to Google's servers; never claim on-device processing (see `/faq`).
 - React Compiler lint is strict: no `Math.random`/impure calls in render (hoist to helpers), no setState-in-effect (use `useClientValue` in `src/hooks/` for browser-only reads).
-- n8n email-capture webhook URL must not ship client-side — goes behind `/api/subscribe` (M4).
-- GA4 events go through a `trackEvent()` helper when reintroduced (M4), never raw `gtag()`.
+- Email capture writes to the Supabase `subscribers` table via `/api/subscribe` (n8n retired). `SUPABASE_SECRET_KEY` is server-only — never client-side or `NEXT_PUBLIC_`. Setup: `docs/supabase.md`.
+- GA4 (`G-8GYK2VZBW9`, prod-only) loads via `@next/third-parties` in the root layout; events go through `trackEvent()` in `src/lib/analytics.ts`, never raw `gtag()`. Legacy event names kept: `tab_switched`, `category_selected`, `affirmation_success`, `email_signup`.
 
 ## Roadmap status (as of 2026-07-08)
 
-Phase 1 (rebuild): M0–M2.5 done — scaffold, design system (light/dark, brand type, illustrations), full practice flow (mic + typing fallback, stars/streak/win screen), journeys on all categories, `/science` + `/faq`. **Remaining: session logging (M3), PWA + `/api/subscribe` + GA4 (M4) — note email capture is currently absent from the new app — and Playwright + CI (M5).** Then Phase 2: Supabase accounts/data. Details + resume notes: `docs/roadmap/phase-1-rebuild.md`, `docs/roadmap/journeys.md`, `docs/PLAN.md`.
+Phase 1 (rebuild): M0–M3 and most of M4 done — scaffold, design system (light/dark, brand type, illustrations), full practice flow (mic + typing fallback, stars/streak/win screen), journeys on all categories, `/science` + `/faq`, session logging, marketing home at `/` with app hub at `/practice`, GA4 restored, email capture → Supabase (owner must create the project + set env vars, `docs/supabase.md`), brand favicon/icon set. **Remaining: PWA + click sounds (M4b), Playwright + CI (M5).** Then Phase 2: Supabase accounts/data. Details + resume notes: `docs/roadmap/phase-1-rebuild.md`, `docs/roadmap/journeys.md`, `docs/PLAN.md`.
 
 Owner working style: ships straight to `main` (zero users, tests in production), wants discussion + approval before big features and before content changes, gives design direction by reference (Duolingo/Mindvalley) and reacts fast to what's live.
 
