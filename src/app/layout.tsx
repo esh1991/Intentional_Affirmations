@@ -4,7 +4,9 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
+import { AnalyticsProvider } from "@/components/site/analytics-provider";
 import { ServiceWorkerRegistration } from "@/components/site/service-worker";
+import { SyncManager } from "@/components/auth/sync-manager";
 import { ThemeProvider } from "@/components/site/theme-provider";
 import "./globals.css";
 
@@ -54,6 +56,8 @@ export default function RootLayout({
           <SiteFooter />
         </ThemeProvider>
         <ServiceWorkerRegistration />
+        <AnalyticsProvider />
+        <SyncManager />
         {process.env.NODE_ENV === "production" && (
           <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />
         )}

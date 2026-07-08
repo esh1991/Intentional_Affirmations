@@ -4,7 +4,7 @@ import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "rea
 import Image from "next/image";
 import Link from "next/link";
 import confetti from "canvas-confetti";
-import { ArrowLeft, Keyboard, Mic, MicOff, RefreshCw, Zap } from "lucide-react";
+import { ArrowLeft, Heart, Keyboard, Mic, MicOff, RefreshCw, Zap } from "lucide-react";
 import type { Affirmation, ModeKey } from "@/lib/content";
 import { MODE_META } from "@/lib/content";
 import {
@@ -19,8 +19,10 @@ import { matchedWordIndices, similarityScore } from "@/lib/speech/similarity";
 import { trackEvent } from "@/lib/analytics";
 import { playClick } from "@/lib/sound";
 import { addStar } from "@/lib/stars";
-import { recordSession } from "@/lib/sessions";
+import { isFavorite, toggleFavorite } from "@/lib/favorites";
+import { recordSession, type SessionEntry } from "@/lib/sessions";
 import { recordCompletion } from "@/lib/streak";
+import { syncCompletion, syncFavorite } from "@/lib/sync";
 import {
   JOURNEY_DURATIONS,
   type JourneyDuration,
@@ -177,6 +179,30 @@ export function PracticeScreen({
       : items[index];
   const words = useMemo(() => current.affirmation.split(" "), [current]);
 
+  const favoritedFromStorage = useClientValue(() => isFavorite(current.affirmation));
+  const [favOverride, setFavOverride] = useState<Record<string, boolean>>({});
+  const favorited =
+    favOverride[current.affirmation] ?? favoritedFromStorage ?? false;
+
+  const toggleFav = useCallback(() => {
+    const now = toggleFavorite(current.affirmation, mode, categoryName);
+    setFavOverride((prev) => ({ ...prev, [current.affirmation]: now }));
+    void syncFavorite(
+      {
+        affirmation: current.affirmation,
+        mode,
+        category: categoryName,
+        addedAt: new Date().toISOString(),
+      },
+      now,
+    );
+    trackEvent("favorite_clicked", {
+      is_favorited: now,
+      mode,
+      category: categoryName,
+    });
+  }, [current.affirmation, mode, categoryName]);
+
   const stopVerifier = useCallback(() => {
     verifierRef.current?.stop();
   }, []);
@@ -198,7 +224,7 @@ export function PracticeScreen({
           completed: journeyState.completedDays.length + 1,
         };
       }
-      recordSession({
+      const entry: SessionEntry = {
         affirmation: current.affirmation,
         mode,
         category: categoryName,
@@ -209,7 +235,9 @@ export function PracticeScreen({
         ...(journeyResult
           ? { journeyDay: journeyResult.day, journeyDuration: journeyResult.duration }
           : {}),
-      });
+      };
+      recordSession(entry);
+      void syncCompletion(entry);
       trackEvent("affirmation_success", {
         mode,
         category: categoryName,
@@ -532,6 +560,21 @@ export function PracticeScreen({
             </Fragment>
           ))}
         </p>
+
+        <button
+          type="button"
+          onClick={toggleFav}
+          aria-pressed={favorited}
+          className="mt-5 flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <Heart
+            className={`size-4 transition-colors ${
+              favorited ? "fill-mode-2 text-mode-2" : ""
+            }`}
+            aria-hidden
+          />
+          {favorited ? "Saved to favorites" : "Save this one"}
+        </button>
 
         {phase === "retry" && (
           <p className="mt-6 font-medium text-mode-2">

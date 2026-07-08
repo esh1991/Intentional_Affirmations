@@ -39,6 +39,17 @@ export function readStreak(): number {
   return stored;
 }
 
+/** Last practice day as stored (toDateString format), for cloud sync. */
+export function readLastPractice(): string | null {
+  return lastPracticeDate();
+}
+
+/** Overwrite local streak state (cloud merge write-back). */
+export function restoreStreak(count: number, lastPractice: string | null): void {
+  localStorage.setItem(STREAK_KEY, String(count));
+  if (lastPractice) localStorage.setItem(LAST_PRACTICE_KEY, lastPractice);
+}
+
 /**
  * Call on affirmation completion (never on page load — the streak rewards the
  * action). Increments at most once per local day. Returns the new streak.

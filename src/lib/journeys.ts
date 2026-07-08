@@ -20,7 +20,7 @@ export interface JourneyState {
   completedDays: string[]; // toDateString() values, max one per local day
 }
 
-type JourneyMap = Record<string, JourneyState>;
+export type JourneyMap = Record<string, JourneyState>;
 
 const KEY = "mindsetEngineJourneys";
 
@@ -75,6 +75,11 @@ function save(map: JourneyMap): string {
   const raw = JSON.stringify(map);
   localStorage.setItem(KEY, raw);
   return raw;
+}
+
+/** Overwrite local journeys (cloud merge write-back). Returns the raw value. */
+export function restoreJourneys(map: JourneyMap): string {
+  return save(map);
 }
 
 /** Starts (or restarts) a journey. Returns the new raw storage value. */

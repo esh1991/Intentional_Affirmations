@@ -10,6 +10,11 @@ export function readStars(): number {
   return parseInt(localStorage.getItem(STAR_KEY) ?? "0", 10) || 0;
 }
 
+/** Overwrite local stars (cloud merge write-back). */
+export function restoreStars(count: number): void {
+  localStorage.setItem(STAR_KEY, String(count));
+}
+
 export function addStar(): { stars: number; trophy: boolean } {
   const stars = readStars() + 1;
   if (stars >= 3) {
