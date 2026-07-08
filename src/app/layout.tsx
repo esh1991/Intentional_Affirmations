@@ -4,6 +4,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
+import { ServiceWorkerRegistration } from "@/components/site/service-worker";
 import { ThemeProvider } from "@/components/site/theme-provider";
 import "./globals.css";
 
@@ -52,6 +53,7 @@ export default function RootLayout({
           <div className="flex flex-1 flex-col">{children}</div>
           <SiteFooter />
         </ThemeProvider>
+        <ServiceWorkerRegistration />
         {process.env.NODE_ENV === "production" && (
           <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />
         )}

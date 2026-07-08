@@ -17,6 +17,7 @@ import {
 } from "@/lib/speech/web-speech-verifier";
 import { matchedWordIndices, similarityScore } from "@/lib/speech/similarity";
 import { trackEvent } from "@/lib/analytics";
+import { playClick } from "@/lib/sound";
 import { addStar } from "@/lib/stars";
 import { recordSession } from "@/lib/sessions";
 import { recordCompletion } from "@/lib/streak";
@@ -268,6 +269,7 @@ export function PracticeScreen({
   }, []);
 
   const startListening = useCallback(() => {
+    playClick();
     setMatched(new Set());
     setStatusNote(null);
     setPhase("listening");
@@ -328,6 +330,7 @@ export function PracticeScreen({
                 key={duration}
                 type="button"
                 onClick={() => {
+                  playClick();
                   setRawOverride(startJourney(mode, categoryName, duration));
                   setPickerOverride(false);
                   setFreeSession(false);

@@ -8,6 +8,7 @@ import { MODE_KEYS, MODE_META, isModeKey } from "@/lib/content";
 import { CategoryArt } from "@/components/illustrations";
 import { JourneyDots } from "@/components/app/journey-dots";
 import { trackEvent } from "@/lib/analytics";
+import { playClick } from "@/lib/sound";
 import { journeyKey, parseJourneys, readJourneysRaw } from "@/lib/journeys";
 import { useClientValue } from "@/hooks/use-client-value";
 
@@ -66,6 +67,7 @@ export function HomeScreen({ content }: { content: Content }) {
                 type="button"
                 onClick={() => {
                   setSelectedMode(key);
+                  playClick();
                   trackEvent("tab_switched", { mode: key });
                 }}
                 aria-pressed={active}
@@ -94,9 +96,10 @@ export function HomeScreen({ content }: { content: Content }) {
                 <Link
                   key={category.name}
                   href={`/practice/${mode}/${encodeURIComponent(category.name)}`}
-                  onClick={() =>
-                    trackEvent("category_selected", { mode, category: category.name })
-                  }
+                  onClick={() => {
+                    playClick();
+                    trackEvent("category_selected", { mode, category: category.name });
+                  }}
                   className="group flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-card shadow-sm transition-all hover:-translate-y-1 hover:border-mode/50 hover:shadow-xl"
                 >
                   <div className="card-cover relative flex h-36 items-center justify-center sm:h-40">
