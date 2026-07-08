@@ -40,9 +40,10 @@ Streaks count **completed affirmations**, never page visits; `recordCompletion()
 ## Running locally
 
 ```
-npm run dev     # mic works on localhost (secure context)
-npm run build   # includes typecheck — run before pushing
+npm run dev       # mic works on localhost (secure context)
+npm run build     # includes typecheck — run before pushing
 npm run lint
+npm run test:e2e  # Playwright smoke test — run build first (starts `npm start`, doesn't build)
 ```
 
 ## Gotchas
@@ -54,7 +55,7 @@ npm run lint
 
 ## Roadmap status (as of 2026-07-08)
 
-Phase 1 (rebuild): M0–M3 and most of M4 done — scaffold, design system (light/dark, brand type, illustrations), full practice flow (mic + typing fallback, stars/streak/win screen), journeys on all categories, `/science` + `/faq`, session logging, marketing home at `/` with app hub at `/practice`, GA4 restored, email capture → Supabase (owner must create the project + set env vars, `docs/supabase.md`), brand favicon/icon set. **Remaining: PWA + click sounds (M4b), Playwright + CI (M5).** Then Phase 2: Supabase accounts/data. Details + resume notes: `docs/roadmap/phase-1-rebuild.md`, `docs/roadmap/journeys.md`, `docs/PLAN.md`.
+**Phase 1 (rebuild) is complete (2026-07-08)**: scaffold, design system (light/dark, brand type, illustrations), full practice flow (mic + typing fallback, stars/streak/win screen), journeys on all categories, `/science` + `/faq`, session logging, marketing home at `/` with app hub at `/practice`, GA4 restored, email capture → Supabase (**owner action outstanding: create the project + set env vars**, `docs/supabase.md`), brand favicon/icon set, PWA + click sounds, Playwright smoke test + GitHub Actions CI (CI signals but doesn't gate — Vercel deploys on push). Next: Phase 2 Supabase accounts/data. Details + resume notes: `docs/roadmap/phase-1-rebuild.md`, `docs/roadmap/journeys.md`, `docs/PLAN.md`.
 
 Owner working style: ships straight to `main` (zero users, tests in production), wants discussion + approval before big features and before content changes, gives design direction by reference (Duolingo/Mindvalley) and reacts fast to what's live.
 

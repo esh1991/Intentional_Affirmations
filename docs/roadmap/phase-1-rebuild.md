@@ -98,13 +98,14 @@ Per PLAN.md: calm-premium, mobile-first, dark mode, 4-mode theming via CSS custo
 - [x] M3: session logging to localStorage (`mindsetEngineSessions`) — append-only, capped at 500; entries log affirmation text (content has no IDs — Phase 2 maps text → row), mode, category, matchScore, attempts, input (voice/typed), completedAt, and journey day/duration when applicable
 - [x] M4a (2026-07-08, owner-approved structure): **site split** — marketing home at `/` (self-playing word-highlight hero demo, how-it-works with Choose/Speak/LockIn art, 4-mode use-case cards, science strip, email capture, welcome-back streak banner) and the app hub moved to `/practice` (`/?mode=` redirects follow it). **GA4 restored** via `@next/third-parties`, prod-only, same property `G-8GYK2VZBW9`, legacy event names, all calls through `trackEvent()`. **Email capture** → `/api/subscribe` → Supabase `subscribers` (n8n retired; owner must create the project + set `SUPABASE_URL`/`SUPABASE_SECRET_KEY` in Vercel — `docs/supabase.md`; endpoint 503s gracefully until then). **Brand favicon/icon set** (bubble mark on gradient tile: `icon.svg`, `apple-icon.png`, `public/icon-192/512.png` — the PWA icons).
 - [x] M4b (2026-07-08): PWA — `app/manifest.ts` (installed app opens `/practice`, dark brand theme color) + minimal `public/sw.js` (caches only small static assets, never HTML — deploys can't be masked by a stale cache; Serwist skipped, needs webpack and we're on Turbopack). Click sounds on mode tabs, category cards, mic start, journey picker (legacy `click.mp3` via `playClick()` in `src/lib/sound.ts`)
-- [ ] M5: Playwright smoke test (drive the typing path; cover journey picker → day 1 → dots) + CI; phone QA
+- [x] M5 (2026-07-08): Playwright smoke test (`e2e/smoke.spec.ts` — home → hub → journey picker → 7-day day 1 → typing path with live-highlight assertion → win screen → dots + streak + hub card progress) + GitHub Actions CI (`.github/workflows/ci.yml`: lint, build, Playwright on push/PR). Note: Vercel deploys on push regardless — CI is a signal, not a gate. Run locally: `npm run build` then `npm run test:e2e`. Phone QA stays with the owner (tests in production).
 
 ## Resume notes for a fresh session (2026-07-08)
 
-- `main` = production; every push deploys via Vercel. Build + lint must pass before pushing (`npm run build; npm run lint`).
-- Owner workflow so far: ships straight to main (zero users), tests in production, wants discussion/approval **before** big product features and content (journeys content was approved via a sample arc first).
-- Next up by plan: M3 (session logging) → M4 → M5, then Phase 2 (Supabase). Owner may reprioritize — ask.
+- `main` = production; every push deploys via Vercel. Build + lint must pass before pushing (`npm run build; npm run lint`); the smoke test is `npm run test:e2e` (build first).
+- Owner workflow so far: ships straight to main (zero users), tests in production, wants discussion/approval **before** big product features and content (journeys content was approved via a sample arc first; the / vs /practice site split and Supabase email capture were approved 2026-07-08).
+- **Phase 1 is complete (2026-07-08).** Next: Phase 2 (Supabase accounts/data — the project already exists once the owner creates it for email capture, `docs/supabase.md`). Owner may reprioritize — ask.
+- Owner action outstanding: create the Supabase project + set `SUPABASE_URL`/`SUPABASE_SECRET_KEY` in Vercel, or the home-page email form errors politely.
 - Open polish item: day-7/14/21 arc entries say "One week in…" etc., which is slightly off for 7/14-day journeys that sample those days early; owner said acceptable for now, duration-neutral variants are the fix if it comes up.
 
 ## Open questions
