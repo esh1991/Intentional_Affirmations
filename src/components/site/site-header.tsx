@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { StreakBadge } from "@/components/app/streak-badge";
+import { AuthButton } from "@/components/auth/auth-button";
 import { BrandLogo } from "@/components/site/brand-logo";
 import { ThemeToggle } from "@/components/site/theme-toggle";
 
@@ -32,6 +33,7 @@ export function SiteHeader() {
           <div className="ml-1 flex items-center gap-2 sm:ml-2">
             <StreakBadge />
             <ThemeToggle />
+            <AuthButton />
           </div>
         </nav>
       </div>

@@ -1,6 +1,6 @@
 # Supabase setup
 
-*Started 2026-07-08 with email capture (the first Phase 2 pull-forward). The full Phase 2 schema lives in `docs/PLAN.md`.*
+*Started 2026-07-08 with email capture; Phase 2 (accounts) builds on the same project — spec in `docs/roadmap/phase-2-accounts.md`. SQL lives in `supabase/migrations/` (numbered; run them in order in the SQL editor — no CLI needed).*
 
 ## Project
 
@@ -16,9 +16,13 @@ Set in Vercel (Project → Settings → Environment Variables) **and** locally i
 ```
 SUPABASE_URL=https://<ref>.supabase.co
 SUPABASE_SECRET_KEY=sb_secret_...
+
+# Phase 2 (client-side auth; the publishable key is browser-safe, RLS guards data)
+NEXT_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 ```
 
-Until these are set, `/api/subscribe` returns 503 and the home-page form shows a friendly error — nothing else breaks.
+Until the server pair is set, `/api/subscribe` returns 503 and the home-page form shows a friendly error; until the `NEXT_PUBLIC_` pair is set, all auth UI hides itself — nothing else breaks. `NEXT_PUBLIC_` values are inlined at build time, so Vercel needs a redeploy after adding them.
 
 ## Tables
 
