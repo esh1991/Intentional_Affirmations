@@ -13,21 +13,14 @@
 ## Milestones
 
 - [x] **P2-M0 — Auth foundation** (2026-07-08): `@supabase/supabase-js`, env-driven client (auth UI hidden when env vars absent), `/signin` (Google button + email code flow), header session state (sign in ↔ avatar menu with sign out), `profiles` table + signup trigger (migration `supabase/migrations/0002_profiles.sql`). Ships before owner actions 1–3 land — auth simply activates as they do.
-- [ ] **P2-M1 — User data + merge**: `sessions`, `streaks`, `journeys`, `stars` tables (RLS owner-only). On first sign-in: one-time upload/merge of localStorage state (sessions appended, streak = max, journey days unioned, stars = max). While signed in: writes go to localStorage *and* Supabase (localStorage stays the offline/anon truth).
-- [ ] **P2-M2 — Favorites**: reintroduced from legacy — heart on the practice screen; localStorage for anon, table + merge for accounts.
-- [ ] **P2-M3 — PostHog**: `posthog-js` behind `trackEvent()` fan-out (GA4 + PostHog), pageviews, `identify()` on login, retention dashboards. Needs owner to create the PostHog project + provide the key.
-- [ ] **P2-M4 — Account page**: `/account` — display name, signed-in email, sign out, delete account (server route with the secret key removes auth user + data). ToS/privacy links land here too.
+- [x] **P2-M1 — User data + merge** (2026-07-10): `sessions`/`streaks`/`stars`/`journeys`/`favorites` tables (migration 0003, RLS owner-only — verified: anon denied, cross-user inserts rejected). `src/lib/sync.ts`: two-way merge on sign-in via `SyncManager` (streak = freshest/max, stars = max, journey days = union, favorites = union; session log uploaded once per user/device), dual-write per completion. localStorage stays the UI's source of truth.
+- [x] **P2-M2 — Favorites** (2026-07-10): heart on the practice screen ("Save this one"), `mindsetEngineFavorites` locally, synced + merged for accounts. No list view yet — backlog.
+- [x] **P2-M3 — PostHog** (2026-07-10): behind `trackEvent()` fan-out, SPA pageviews, identify/reset on sign-in/out. **Inert until the owner creates a PostHog project and sets `NEXT_PUBLIC_POSTHOG_KEY` (+ optional `NEXT_PUBLIC_POSTHOG_HOST`).**
+- [x] **P2-M4 — Account page** (2026-07-10): `/account` — email, display name (profiles upsert), sign out, two-step delete account via `/api/account/delete` (token-verified, admin delete, FK cascade — verified e2e with a test user). ToS/privacy pages still to come (backlog).
 
-## Resume state (session paused 2026-07-08)
+## Status (2026-07-10)
 
-**P2-M1 + M2 + M3 code is written and committed locally but NOT pushed** (push = production deploy; it builds + lints but hasn't been verified end-to-end because the migrations aren't applied yet). What exists on this commit:
-
-- `supabase/migrations/0003_user_data.sql` — sessions/streaks/stars/journeys/favorites tables + profiles insert policy. **Not yet run by owner.**
-- `src/lib/sync.ts` — two-way merge (`syncNow`, run by `SyncManager` in the layout on sign-in), per-completion dual-write (`syncCompletion`, wired into the practice screen), `syncFavorite`.
-- `src/lib/favorites.ts` + heart button on the practice screen ("Save this one"); `restore*` write-back helpers added to streak/stars/journeys libs.
-- PostHog in `src/lib/analytics.ts` (env-gated on `NEXT_PUBLIC_POSTHOG_KEY`, inert until set) + `AnalyticsProvider` pageviews + identify/reset via `SyncManager`.
-
-**Next session**: (1) owner runs 0002 + 0003 in the SQL editor; (2) verify sync e2e — create a test user via the auth admin API with the secret key (no email needed), sign in with password grant, exercise RLS writes/merge; (3) then push, and continue with P2-M4 (account page + delete-account route — not yet started). Owner also still owes the Vercel `NEXT_PUBLIC_*` env vars (auth is invisible in prod until then) and deferred the Google OAuth provider setup mid-flow (email codes work).
+**Phase 2 core is complete and verified.** Migrations 0001–0003 applied; Google provider enabled (owner set up the Google Cloud OAuth client); Vercel has all four Supabase env vars. E2E verified with a throwaway user: password sign-in, profile trigger, all RLS write/read paths, anon + cross-user denial, account deletion with full cascade. Remaining backlog: favorites list view, ToS/privacy pages, PostHog key (owner), swap Supabase built-in SMTP for a real provider before real traffic.
 
 ## Owner actions (as they come due)
 

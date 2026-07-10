@@ -14,12 +14,12 @@ Next.js 16 (App Router, Turbopack) · TypeScript strict · Tailwind v4 · shadcn
 
 | Path | Role |
 |---|---|
-| `src/app/` | Routes: `/` (marketing home), `/practice` (modes + category cards hub), `/practice/[mode]/[category]` (speaking flow), `/science`, `/faq`, `/api/subscribe` (email → Supabase) |
+| `src/app/` | Routes: `/` (marketing home), `/practice` (modes + category cards hub), `/practice/[mode]/[category]` (speaking flow), `/science`, `/faq`, `/signin`, `/account`, `/api/subscribe`, `/api/account/delete` |
 | `src/components/app/` | App surface: home screen (the /practice hub), practice screen, streak badge |
 | `src/components/home/` | Marketing home: self-playing hero demo, welcome-back banner, email signup |
 | `src/components/site/` | Chrome: header, footer, share button |
 | `src/lib/speech/` | `SpeechVerifier` interface, `WebSpeechVerifier`, similarity scoring — the UI never touches the Web Speech API directly |
-| `src/lib/` | `content.ts` (Zod-validated loader), `streak.ts`, `stars.ts`, `sessions.ts`, `analytics.ts` (`trackEvent()`) |
+| `src/lib/` | `content.ts` (Zod-validated loader), `streak.ts`, `stars.ts`, `sessions.ts`, `favorites.ts`, `sync.ts` (cloud merge/dual-write), `supabase/client.ts`, `analytics.ts` (`trackEvent()` → GA4 + PostHog) |
 | `src/content/mindset-data.json` | All content: 4 modes → categories → affirmations |
 | `legacy/` | Pre-rewrite static site, reference only — don't edit |
 
@@ -55,7 +55,7 @@ npm run test:e2e  # Playwright smoke test — run build first (starts `npm start
 
 ## Roadmap status (as of 2026-07-08)
 
-**Phase 1 (rebuild) is complete (2026-07-08)**: scaffold, design system (light/dark, brand type, illustrations), full practice flow (mic + typing fallback, stars/streak/win screen), journeys on all categories, `/science` + `/faq`, session logging, marketing home at `/` with app hub at `/practice`, GA4 restored, email capture → Supabase (**owner action outstanding: create the project + set env vars**, `docs/supabase.md`), brand favicon/icon set, PWA + click sounds, Playwright smoke test + GitHub Actions CI (CI signals but doesn't gate — Vercel deploys on push). Next: Phase 2 Supabase accounts/data. Details + resume notes: `docs/roadmap/phase-1-rebuild.md`, `docs/roadmap/journeys.md`, `docs/PLAN.md`.
+**Phase 1 (rebuild) complete 2026-07-08**; **Phase 2 (accounts) core complete 2026-07-10** — Supabase auth (Google + email codes, no login wall ever), client-side-only auth (no SSR auth plumbing, decision log in `docs/roadmap/phase-2-accounts.md`), user data tables with owner-only RLS (`supabase/migrations/`), two-way sync/merge (`src/lib/sync.ts` — localStorage stays the UI's source of truth), favorites heart, `/account` with delete-account cascade, PostHog env-gated (key still owed by owner). Backlog: favorites list view, ToS/privacy, real SMTP before traffic. Next: Phase 3 growth engine (`docs/PLAN.md`).
 
 Owner working style: ships straight to `main` (zero users, tests in production), wants discussion + approval before big features and before content changes, gives design direction by reference (Duolingo/Mindvalley) and reacts fast to what's live.
 

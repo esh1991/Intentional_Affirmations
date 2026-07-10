@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { LogOut } from "lucide-react";
+import { LogOut, UserRound } from "lucide-react";
 import { authEnabled, getSupabase } from "@/lib/supabase/client";
 import { useSession } from "@/hooks/use-session";
 
@@ -48,6 +48,14 @@ export function AuthButton() {
       {open && (
         <div className="absolute right-0 top-11 z-50 w-56 rounded-2xl border border-border bg-popover p-2 shadow-xl">
           <p className="truncate px-3 py-2 text-sm text-muted-foreground">{email}</p>
+          <Link
+            href="/account"
+            onClick={() => setOpen(false)}
+            className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-colors hover:bg-card"
+          >
+            <UserRound className="size-4" aria-hidden />
+            Account
+          </Link>
           <button
             type="button"
             onClick={async () => {
