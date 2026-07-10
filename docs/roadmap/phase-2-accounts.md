@@ -20,15 +20,15 @@
 
 ## Status (2026-07-10)
 
-**Phase 2 core is complete and verified.** Migrations 0001–0003 applied; Google provider enabled (owner set up the Google Cloud OAuth client); Vercel has all four Supabase env vars. E2E verified with a throwaway user: password sign-in, profile trigger, all RLS write/read paths, anon + cross-user denial, account deletion with full cascade. Remaining backlog: favorites list view, ToS/privacy pages, PostHog key (owner), swap Supabase built-in SMTP for a real provider before real traffic.
+**Phase 2 core is complete, live, and verified — including Google sign-in confirmed working by the owner on production (publishable key confirmed inlined in the prod bundle).** Migrations 0001–0003 applied. E2E verified with a throwaway user: password sign-in, profile trigger, all RLS write/read paths, anon + cross-user denial, account deletion with full cascade. Remaining backlog: favorites list view, ToS/privacy pages, PostHog key (owner), swap Supabase built-in SMTP for a real provider before real traffic.
 
-## Owner actions (as they come due)
+## Owner actions
 
-1. **Now (P2-M0)**: add to Vercel env vars — `NEXT_PUBLIC_SUPABASE_URL` (same value as `SUPABASE_URL`) and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (the `sb_publishable_...` key). Run `supabase/migrations/0002_profiles.sql` in the SQL editor.
-2. **Now (P2-M0)**: Supabase Dashboard → Authentication → URL Configuration: Site URL `https://www.saythiswith.me`, add `http://localhost:3000` to Redirect URLs.
-3. **For Google sign-in**: create a Google Cloud OAuth client (Supabase Dashboard → Authentication → Providers → Google shows the exact callback URL to paste) and enter its client ID + secret in that provider screen. Until then the Google button errors politely; email codes work out of the box.
-4. **Email note**: Supabase's built-in SMTP is rate-limited (~2 auth emails/hour) — fine for testing; swap in a real SMTP provider (Resend) before real traffic.
-5. **P2-M3**: create a PostHog project, provide `NEXT_PUBLIC_POSTHOG_KEY` (+ host region).
+1. ~~Vercel `NEXT_PUBLIC_*` env vars + migrations 0002/0003~~ ✅ done 2026-07-10
+2. ~~Auth URL configuration~~ ✅ done 2026-07-10
+3. ~~Google Cloud OAuth client + Supabase provider config~~ ✅ done 2026-07-10 — **owner confirmed Google sign-in works on production**
+4. **Still open — before real traffic**: swap Supabase's built-in SMTP (~2 auth emails/hour) for a real provider (Resend); rotate the secret key that was pasted into chat on 2026-07-08 (update Vercel + `.env.local`).
+5. **Still open — when retention dashboards are wanted**: create a PostHog project and set `NEXT_PUBLIC_POSTHOG_KEY` (+ optional `NEXT_PUBLIC_POSTHOG_HOST`) — the integration is live but dormant without it.
 
 ## Non-goals
 
