@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LogOut, Trash2 } from "lucide-react";
-import { getSupabase } from "@/lib/supabase/client";
+import { getSupabase, platformDb } from "@/lib/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { trackEvent } from "@/lib/analytics";
 
@@ -21,13 +21,15 @@ export function AccountPanel() {
 
   useEffect(() => {
     if (!userId) return;
-    const supabase = getSupabase();
-    if (!supabase) return;
+    // Profiles are shared with every app on this project, so they live in
+    // `platform`, keyed on user_id (the old public.profiles used `id`).
+    const platform = platformDb();
+    if (!platform) return;
     let cancelled = false;
-    supabase
+    platform
       .from("profiles")
       .select("display_name")
-      .eq("id", userId)
+      .eq("user_id", userId)
       .maybeSingle()
       .then(({ data }) => {
         if (!cancelled && data?.display_name) setDisplayName(data.display_name);
@@ -57,12 +59,12 @@ export function AccountPanel() {
 
   async function saveName(event: React.FormEvent) {
     event.preventDefault();
-    const supabase = getSupabase();
-    if (!supabase || !userId || nameStatus === "saving") return;
+    const platform = platformDb();
+    if (!platform || !userId || nameStatus === "saving") return;
     setNameStatus("saving");
     setError(null);
-    const { error: err } = await supabase.from("profiles").upsert({
-      id: userId,
+    const { error: err } = await platform.from("profiles").upsert({
+      user_id: userId,
       display_name: displayName.trim() || null,
     });
     if (err) {

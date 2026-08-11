@@ -38,6 +38,12 @@ export async function POST(request: Request) {
       apikey: supabaseKey,
       Authorization: `Bearer ${supabaseKey}`,
       "Content-Type": "application/json",
+      /* This route speaks to PostgREST directly rather than through
+         supabase-js, so it doesn't inherit the client's schema pinning. Since
+         the 2026-08-11 consolidation the table is `saythiswith.subscribers`;
+         without this header PostgREST looks in `public` and 404s. Writes use
+         Content-Profile (Accept-Profile is the read-side equivalent). */
+      "Content-Profile": "saythiswith",
       Prefer: "resolution=merge-duplicates",
     },
     body: JSON.stringify({

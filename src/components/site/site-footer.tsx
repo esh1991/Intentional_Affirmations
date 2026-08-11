@@ -26,6 +26,15 @@ export function SiteFooter() {
                 FAQ
               </Link>
             </nav>
+            <nav aria-label="Legal" className="flex flex-col gap-3 text-sm">
+              <span className="font-semibold">Legal</span>
+              <Link href="/legal/privacy" className="text-muted-foreground hover:text-foreground">
+                Privacy
+              </Link>
+              <Link href="/legal/terms" className="text-muted-foreground hover:text-foreground">
+                Terms
+              </Link>
+            </nav>
             <nav aria-label="Connect" className="flex flex-col gap-3 text-sm">
               <span className="font-semibold">Connect</span>
               <a
