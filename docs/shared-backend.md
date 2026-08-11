@@ -1,5 +1,9 @@
 # The shared backend — read this before touching auth, schemas or billing
 
+**Adding a THIRD app?** Start here: <https://claude.ai/code/artifact/76897cf2-7333-471d-94eb-88718439066a>
+— a step-by-step runbook for joining a new app to this project (schema, grants, Google
+project, client wiring, entitlements). This file is the reference for the apps already here.
+
 _Established 2026-08-11. This file is duplicated in `c:\dev\saythiswithme\docs\shared-backend.md`;
 keep them in sync._
 
