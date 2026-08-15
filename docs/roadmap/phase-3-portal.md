@@ -44,9 +44,60 @@ of two versions of you speaking together.
    `normalizeDuration()` keeps journeys already stored at 14 rendering, coerced to 21.
 7. **fal for MVP, not Higgsfield.** See providers below.
 8. **The premise animation is code, not generated video.** See providers below.
+10. **The guide is under restriction** — they may send instructions, never outcomes. Replaces
+    "say it with them" with a read-back handshake. See the section below.
+11. **Real generated imagery on the marketing demo, and no card around it.** One generated
+    identity carried across five lives, plus a generated doorway; the demo bleeds into the page
+    as a full-width night surface instead of sitting in a bordered box.
 9. **Quantum Jumping is the lineage, not the label.** Take Goldman's threshold ritual and
    alter-ego framing; refuse the name, the physics and the skill-download claim. Anchor the
    science on future-self continuity instead. See the two sections below.
+
+## Decision 10: the guide is under restriction
+
+*Owner reframe, 2026-08-15: move off "say it with them" — the future self should act as a guide.
+The owner supplied the constraint: "the space/time governing body won't allow those details."*
+
+**The restriction is the product, not set dressing.** It does three jobs at once:
+
+1. **It makes the app structurally honest.** We genuinely cannot know anyone's future. If the
+   guide is *forbidden* from specifics, the fiction and the truth are the same shape — the app
+   never has to fabricate a prophecy, because prophecy is against the rules.
+2. **It enforces mental contrasting for free.** The finding that most threatens this app is that
+   positive fantasy alone drains effort. A guide who *cannot* show you the trophy, the money or
+   the applause is structurally incapable of serving that fantasy. All they can hand over is an
+   action. The censorship enforces the science.
+3. **It gives them a voice.** A guide operating under restriction speaks in a specific, wry,
+   elliptical register. That is a character, not a fortune cookie — and it is far easier to
+   write consistently than generic encouragement.
+
+### Why you still speak out loud
+
+The old framing made the future self a chant partner ("say it with them"), which is not what a
+guide does. The replacement is stronger: **they send an instruction, and you read it back to
+confirm it arrived.** That is literal radio and aviation read-back procedure — and it means the
+word-for-word verification already built stops being a gimmick and becomes the handshake. The
+mechanic is unchanged; the reason for it is much better.
+
+The product name survives intact: "say this with me" is what a *coach* says. The guide is the
+"me".
+
+### Rules
+
+- **Never name the authority.** No agency, no acronym, no lore. "Those are not the rules" and
+  "they will not let me send that" carry it. A named body invites lore bloat, drifts toward
+  existing franchises, and moves attention off the user.
+- **Redaction is shown, not described** — a struck block, never a blur. Blur reads as "loading";
+  a bar reads as "withheld". Use it sparingly: one per conversation, not per sentence.
+- **What they are cleared to send is always an action**, never an outcome.
+- The existing Notice→Act→Become arcs survive the reframe unchanged — they are already
+  first-person instructions, which is exactly what a guide would send.
+
+### Open: trust as progression
+
+The natural retention mechanic is that they are cleared to tell you *more* the longer you keep
+showing up. It is honest as long as the unlocks deepen guidance rather than reveal outcomes —
+they can never give specifics, so there is nothing to falsely promise. Not built; flagged.
 
 ## Lineage: Burt Goldman's Quantum Jumping
 

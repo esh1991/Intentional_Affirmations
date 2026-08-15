@@ -376,6 +376,14 @@
   pointer-events: none;
   opacity: 0.16;
   mix-blend-mode: overlay;
+  /*
+   * The tile is a rectangle. Without a mask its straight edges read as a hard
+   * seam across the page, and on any rotating parent they sweep around as a
+   * moving diagonal — so it is masked to fade out, and it never sits on a
+   * layer that rotates.
+   */
+  mask-image: radial-gradient(70% 60% at 50% 50%, black, transparent 85%);
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 50%, black, transparent 85%);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -385,16 +393,30 @@
  * door carrying what you were given. The same doorway every time is what
  * turns a feature into a practice.
  */
-.doorway {
-  width: 4.5rem;
-  height: 9rem;
-  border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklch, var(--mode-accent-2) 80%, white 20%),
-    color-mix(in oklch, var(--mode-accent) 65%, transparent)
-  );
-  box-shadow: 0 0 70px 12px color-mix(in oklch, var(--mode-accent) 50%, transparent);
+/*
+ * The portal is always night, in both site themes. The doorway art is lit on
+ * black and composites with screen blend, and the scan photography needs a
+ * dark ground to read as a transmission rather than as a photo gallery. The
+ * wrapper also carries the `dark` class so every token inside flips with it.
+ */
+.portal-night {
+  /*
+   * Radial fades on every side, never a linear band: this layer must not
+   * rotate or scale with the rings above it, and any straight edge on a
+   * rotating parent shows up as a hard diagonal seam across the page.
+   */
+  background:
+    radial-gradient(
+      55% 45% at 50% 48%,
+      color-mix(in oklch, var(--mode-accent) 20%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      72% 58% at 50% 50%,
+      oklch(0.13 0.02 272),
+      color-mix(in oklch, oklch(0.13 0.02 272) 55%, transparent) 62%,
+      transparent 80%
+    );
 }
 @keyframes doorway-open {
   0% {

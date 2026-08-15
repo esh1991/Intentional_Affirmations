@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { Check, Mic, Volume2, VolumeX } from "lucide-react";
 import {
   playChordResolve,
@@ -23,10 +24,14 @@ import {
  * one-line change and nothing else moves.
  *
  * The sequence is a closed ritual, not a highlight reel — cross the threshold,
- * scan the possibilities, lock onto one, they resolve into view, they speak,
- * you say it back and the words light up, then you come back through the same
- * door carrying the line. The same doorway every time is what makes a daily
- * practice out of a feature (docs/roadmap/phase-3-portal.md, decision 9).
+ * scan the possibilities, lock onto one, they resolve into view, they send the
+ * one line they are cleared to send, you read it back to confirm it arrived,
+ * then you come back through the same door carrying it. The same doorway every
+ * time is what makes a daily practice out of a feature
+ * (docs/roadmap/phase-3-portal.md, decisions 9 and 10).
+ *
+ * Reading it back is not decoration: it is the radio read-back handshake, which
+ * is why word-for-word verification exists at all.
  */
 
 type Phase =
@@ -40,26 +45,47 @@ type Phase =
   | "returning";
 
 /**
- * Glimpses of other lives, flickering past before one locks. Kept as a module
- * constant (not generated in render) — the React Compiler lint forbids impure
- * calls during render, and a fixed set also keeps SSR and client markup equal.
+ * Glimpses of other lives, cutting past before one locks. The same person in
+ * five different lives — one generated identity carried across five scenes, so
+ * the multiverse reads as *hers* rather than as five stock models. Abstract
+ * icons could never sell that; recognising the same face is the whole effect.
+ *
+ * Kept as a module constant (not generated in render) — the React Compiler
+ * lint forbids impure calls during render, and a fixed set also keeps SSR and
+ * client markup equal.
  */
-const VERSES: ReadonlyArray<{ label: string; hue: number }> = [
-  { label: "the one who trains at five", hue: 30 },
-  { label: "the one who shipped it", hue: 265 },
-  { label: "the one who finally said no", hue: 348 },
-  { label: "the one who paid it off", hue: 150 },
-  { label: "the one who sleeps through the night", hue: 225 },
+const VERSES: ReadonlyArray<{ label: string; hue: number; src: string }> = [
+  { label: "the one who trains at five", hue: 30, src: "/portal/trains.webp" },
+  { label: "the one who shipped it", hue: 265, src: "/portal/shipped.webp" },
+  { label: "the one who finally said no", hue: 348, src: "/portal/saidno.webp" },
+  { label: "the one who paid it off", hue: 150, src: "/portal/paidoff.webp" },
+  {
+    label: "the one who sleeps through the night",
+    hue: 225,
+    src: "/portal/slept.webp",
+  },
 ];
 
-/** The pre-baked persona. On /portal this comes from the user's own answers. */
+/** The life the signal locks onto — the craft persona, matching PERSONA below. */
+const LOCKED_PORTRAIT = "/portal/shipped.webp";
+
+/**
+ * The pre-baked persona. On /portal this comes from the visitor's own answers.
+ *
+ * The guide operates under restriction: they are not allowed to send
+ * specifics, only instruction. That constraint is load-bearing in three ways —
+ * it keeps the app honest (we genuinely cannot know anyone's future), it makes
+ * serving the effort-draining fantasy structurally impossible, and it gives
+ * the character a voice. See docs/roadmap/phase-3-portal.md, decision 10.
+ */
 const PERSONA = {
   domain: "craft",
   horizon: "twelve months from now",
-  // Warmth plus friction: the future self names the obstacle rather than
-  // glowing about the destination. Positive fantasy alone reduces effort.
-  line: "I still felt like putting it off. I said this out loud and started anyway.",
-  promise: "I finish what I start.",
+  // The redacted fragment shows the restriction instead of merely stating it.
+  saidBefore: "I could tell you how",
+  redacted: "it turns out",
+  saidAfter: ", but those are not the rules. What I can give you is the morning.",
+  promise: "I start before I feel ready.",
 } as const;
 
 const PHASE_MS: Record<Phase, number> = {
@@ -82,49 +108,6 @@ const CAPTIONS: Partial<Record<Phase, string>> = {
   revealing: "Connected.",
   returning: "Come back. Bring it with you.",
 };
-
-/**
- * Placeholder for the generated portrait: a lit bust, graded as a
- * transmission. Abstract on purpose — the marketing page should never imply
- * a real person's photo, and the real payload is the visitor's own face on
- * /portal.
- */
-function SilhouettePortrait({
-  id,
-  className,
-}: {
-  id: string;
-  className?: string;
-}) {
-  // Gradient ids must be unique per instance: duplicate ids in one document
-  // all resolve to the first definition, which would render every possible
-  // life in the same hue.
-  const gradientId = `portal-bust-${id}`;
-  return (
-    <svg viewBox="0 0 120 140" className={className} aria-hidden>
-      <defs>
-        {/* userSpaceOnUse so the head and the shoulders share one continuous
-            ramp. Object-bounding-box gradients restart per shape, which draws
-            a visible seam where the two meet. */}
-        <linearGradient
-          id={gradientId}
-          gradientUnits="userSpaceOnUse"
-          x1="0"
-          y1="16"
-          x2="0"
-          y2="140"
-        >
-          <stop offset="0%" stopColor="var(--mode-accent)" stopOpacity="0.95" />
-          <stop offset="100%" stopColor="var(--mode-accent-2)" stopOpacity="0.4" />
-        </linearGradient>
-      </defs>
-      {/* Shoulders rise to y=70, just above the head's base at y=72, so the
-          bust reads as one figure rather than a floating head. */}
-      <path d="M14 140c0-38 20.6-70 46-70s46 32 46 70Z" fill={`url(#${gradientId})`} />
-      <circle cx="60" cy="46" r="26" fill={`url(#${gradientId})`} />
-    </svg>
-  );
-}
 
 export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
   const [phase, setPhase] = useState<Phase>("threshold");
@@ -252,21 +235,27 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
   return (
     <div
       data-mode={PERSONA.domain}
-      className="grain relative mx-auto flex w-full max-w-2xl flex-col items-center overflow-hidden rounded-3xl border border-border/60 bg-card/70 px-6 py-10 shadow-xl backdrop-blur-sm sm:px-10"
-      aria-label="Demo: reaching your future self and speaking their promise"
+      className="dark relative mx-auto flex w-full max-w-3xl flex-col items-center px-4 py-16 text-foreground sm:py-20"
+      aria-label="Demo: reaching your future self and reading back the line they send"
     >
-      {/* The field */}
+      {/* The field. Bleeds well past the content — there is no card edge for
+          it to stop at, which is the point: the portal is the page, not a
+          widget sitting on it. The page root clips horizontal overflow. */}
       <div
-        className={`portal-field pointer-events-none absolute inset-0 -z-10 ${
+        className="portal-night grain pointer-events-none absolute -inset-x-48 -inset-y-40 -z-20"
+        aria-hidden
+      />
+      <div
+        className={`portal-field pointer-events-none absolute -inset-x-40 -inset-y-24 -z-10 ${
           isLocking ? "portal-locking" : ""
-        } ${showPortrait ? "opacity-40" : ""}`}
+        } ${showPortrait ? "opacity-50" : ""}`}
         aria-hidden
       />
 
       <button
         type="button"
         onClick={toggleSound}
-        className="absolute right-4 top-4 z-10 flex size-9 items-center justify-center rounded-full border border-border/60 bg-card/80 text-muted-foreground transition-colors hover:text-foreground"
+        className="absolute right-0 top-4 z-10 flex size-9 items-center justify-center rounded-full border border-border/40 bg-background/40 text-muted-foreground backdrop-blur-sm transition-colors hover:text-foreground"
         aria-label={soundOn ? "Mute the demo" : "Turn on sound"}
         aria-pressed={soundOn}
       >
@@ -275,10 +264,15 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
 
       {/* Stage: the doorway, the possibilities cutting past, or the one who
           locked in. Exactly one at a time. */}
-      <div className="relative flex h-40 w-40 items-center justify-center sm:h-48 sm:w-48">
+      <div className="relative flex h-56 w-56 items-center justify-center sm:h-72 sm:w-72">
         {showDoorway ? (
-          <div
-            className={`doorway ${
+          <Image
+            src="/portal/doorway.webp"
+            alt=""
+            width={604}
+            height={900}
+            priority
+            className={`h-full w-auto object-contain mix-blend-screen ${
               phase === "threshold" ? "doorway-opening" : "doorway-closing"
             }`}
             aria-hidden
@@ -295,35 +289,39 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
             }`}
             style={
               {
-                // Each possibility carries its own hue — a different life.
+                // Each life carries its own hue.
                 "--mode-accent": `oklch(0.6 0.18 ${VERSES[verseIndex].hue})`,
                 "--mode-accent-2": `oklch(0.72 0.13 ${VERSES[verseIndex].hue})`,
               } as React.CSSProperties
             }
             aria-hidden
           >
-            <SilhouettePortrait
-              id={`verse-${verseIndex}`}
-              className="h-24 w-20 sm:h-28 sm:w-24"
-            />
-            <span className="mt-2 max-w-[10rem] text-balance text-center text-[10px] font-semibold uppercase leading-tight tracking-widest text-muted-foreground sm:text-xs">
+            <div className="transmission relative size-40 overflow-hidden rounded-2xl sm:size-52">
+              <Image
+                src={VERSES[verseIndex].src}
+                alt=""
+                fill
+                sizes="(min-width: 640px) 13rem, 10rem"
+                priority
+                className="object-cover"
+              />
+            </div>
+            <span className="mt-3 max-w-[12rem] text-balance text-center text-[10px] font-semibold uppercase leading-tight tracking-widest text-white/70 sm:text-xs">
               {VERSES[verseIndex].label}
             </span>
           </div>
         ) : null}
 
         {showPortrait ? (
-          <div className="resolving transmission relative flex size-36 items-center justify-center overflow-hidden rounded-full sm:size-44">
-            {portraitSrc ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={portraitSrc}
-                alt="A rendered portrait of a future self"
-                className="size-full object-cover"
-              />
-            ) : (
-              <SilhouettePortrait id="locked" className="size-full" />
-            )}
+          <div className="resolving transmission relative size-44 overflow-hidden rounded-full sm:size-56">
+            <Image
+              src={portraitSrc ?? LOCKED_PORTRAIT}
+              alt="The future self the signal locked onto"
+              fill
+              sizes="(min-width: 640px) 14rem, 11rem"
+              priority
+              className="object-cover"
+            />
           </div>
         ) : null}
       </div>
@@ -347,7 +345,11 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
               You, {PERSONA.horizon}
             </p>
             <p className="font-display transmission-voice mt-3 text-balance text-lg leading-relaxed sm:text-xl">
-              &ldquo;{PERSONA.line}&rdquo;
+              &ldquo;{PERSONA.saidBefore}{" "}
+              <span className="redacted" aria-label="redacted">
+                {PERSONA.redacted}
+              </span>
+              {PERSONA.saidAfter}&rdquo;
             </p>
           </>
         ) : null}
@@ -355,7 +357,7 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
         {showPromise ? (
           <>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-mode-2">
-              {phase === "returning" ? "Carry it into today" : "Say it with them"}
+              {phase === "returning" ? "Take it into today" : "Read it back"}
             </p>
             <p className="font-display mt-3 text-balance text-2xl font-bold leading-snug tracking-tight sm:text-4xl sm:leading-snug">
               {words.map((word, i) => (
@@ -384,10 +386,12 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
       </div>
       <p className="mt-3 text-sm font-semibold text-muted-foreground" aria-live="polite">
         {sealed
-          ? "Every word verified"
+          ? "Received. Word for word."
           : phase === "yourTurn"
-            ? "Listening... say it out loud"
-            : " "}
+            ? "Listening... read it back"
+            : phase === "returning"
+              ? "Same door tomorrow."
+              : " "}
       </p>
     </div>
   );
