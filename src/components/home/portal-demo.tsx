@@ -33,12 +33,12 @@ type Phase = "scanning" | "locking" | "revealing" | "speaking" | "yourTurn" | "s
  * constant (not generated in render) — the React Compiler lint forbids impure
  * calls during render, and a fixed set also keeps SSR and client markup equal.
  */
-const VERSES: ReadonlyArray<{ label: string; hue: number; delay: string }> = [
-  { label: "the one who trains at five", hue: 30, delay: "0s" },
-  { label: "the one who shipped it", hue: 265, delay: "0.13s" },
-  { label: "the one who finally said no", hue: 348, delay: "0.27s" },
-  { label: "the one who paid it off", hue: 150, delay: "0.41s" },
-  { label: "the one who sleeps through the night", hue: 225, delay: "0.55s" },
+const VERSES: ReadonlyArray<{ label: string; hue: number }> = [
+  { label: "the one who trains at five", hue: 30 },
+  { label: "the one who shipped it", hue: 265 },
+  { label: "the one who finally said no", hue: 348 },
+  { label: "the one who paid it off", hue: 150 },
+  { label: "the one who sleeps through the night", hue: 225 },
 ];
 
 /** The pre-baked persona. On /portal this comes from the user's own answers. */
@@ -72,17 +72,39 @@ const CAPTIONS: Partial<Record<Phase, string>> = {
  * a real person's photo, and the real payload is the visitor's own face on
  * /portal.
  */
-function SilhouettePortrait({ className }: { className?: string }) {
+function SilhouettePortrait({
+  id,
+  className,
+}: {
+  id: string;
+  className?: string;
+}) {
+  // Gradient ids must be unique per instance: duplicate ids in one document
+  // all resolve to the first definition, which would render every possible
+  // life in the same hue.
+  const gradientId = `portal-bust-${id}`;
   return (
     <svg viewBox="0 0 120 140" className={className} aria-hidden>
       <defs>
-        <linearGradient id="portal-bust" x1="0" y1="0" x2="0" y2="1">
+        {/* userSpaceOnUse so the head and the shoulders share one continuous
+            ramp. Object-bounding-box gradients restart per shape, which draws
+            a visible seam where the two meet. */}
+        <linearGradient
+          id={gradientId}
+          gradientUnits="userSpaceOnUse"
+          x1="0"
+          y1="16"
+          x2="0"
+          y2="140"
+        >
           <stop offset="0%" stopColor="var(--mode-accent)" stopOpacity="0.95" />
-          <stop offset="100%" stopColor="var(--mode-accent-2)" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="var(--mode-accent-2)" stopOpacity="0.4" />
         </linearGradient>
       </defs>
-      <circle cx="60" cy="46" r="26" fill="url(#portal-bust)" />
-      <path d="M12 140c0-28 21-46 48-46s48 18 48 46Z" fill="url(#portal-bust)" />
+      {/* Shoulders rise to y=70, just above the head's base at y=72, so the
+          bust reads as one figure rather than a floating head. */}
+      <path d="M14 140c0-38 20.6-70 46-70s46 32 46 70Z" fill={`url(#${gradientId})`} />
+      <circle cx="60" cy="46" r="26" fill={`url(#${gradientId})`} />
     </svg>
   );
 }
@@ -90,6 +112,7 @@ function SilhouettePortrait({ className }: { className?: string }) {
 export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
   const [phase, setPhase] = useState<Phase>("scanning");
   const [spoken, setSpoken] = useState(0);
+  const [verseIndex, setVerseIndex] = useState(0);
   const [soundOn, setSoundOn] = useState(false);
   const soundOnRef = useRef(false);
 
@@ -136,6 +159,39 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
     }, PHASE_MS[phase]);
     return () => clearTimeout(timer);
   }, [phase, spoken, words.length]);
+
+  /**
+   * The verse-jump. One possible life on screen at a time, swapped on a hard
+   * cut — overlapping cross-fades read as mush, and the cut is the whole
+   * point. The cuts slow as the signal locks on, so the sequence lands rather
+   * than simply stopping.
+   */
+  useEffect(() => {
+    if (phase !== "scanning" && phase !== "locking") return;
+    // Effect-only read: matchMedia during render would break SSR.
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) return;
+
+    let cancelled = false;
+    let step = 0;
+    let timer: ReturnType<typeof setTimeout>;
+    const advance = () => {
+      if (cancelled) return;
+      setVerseIndex((n) => (n + 1) % VERSES.length);
+      step += 1;
+      timer = setTimeout(
+        advance,
+        phase === "scanning" ? 150 : Math.min(150 + step * 55, 620),
+      );
+    };
+    timer = setTimeout(advance, phase === "scanning" ? 150 : 200);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [phase]);
 
   // Audio cues ride alongside the phases. Silence is load-bearing: the bed
   // drops out the moment it is your turn to speak.
@@ -195,28 +251,32 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
 
       {/* Stage: either the possibilities flickering, or the one who locked in. */}
       <div className="relative flex h-40 w-40 items-center justify-center sm:h-48 sm:w-48">
-        {!showPortrait &&
-          VERSES.map((verse) => (
-            <div
-              key={verse.label}
-              className={`absolute inset-0 flex flex-col items-center justify-center ${
-                isScanning || isLocking ? "verse-flicker" : ""
-              }`}
-              style={{
-                animationDelay: verse.delay,
+        {!showPortrait ? (
+          <div
+            // Keying on the index forces a genuine remount per cut — no
+            // interpolation between one life and the next.
+            key={verseIndex}
+            className={`absolute inset-0 flex flex-col items-center justify-center ${
+              isScanning || isLocking ? "verse-cut" : ""
+            }`}
+            style={
+              {
                 // Each possibility carries its own hue — a different life.
-                "--mode-accent": `oklch(0.58 0.18 ${verse.hue})`,
-              } as React.CSSProperties}
-              aria-hidden
-            >
-              <SilhouettePortrait className="h-28 w-24 opacity-80 sm:h-32 sm:w-28" />
-              <span className="mt-1 text-[10px] font-medium uppercase tracking-widest text-muted-foreground sm:text-xs">
-                {verse.label}
-              </span>
-            </div>
-          ))}
-
-        {showPortrait && (
+                "--mode-accent": `oklch(0.6 0.18 ${VERSES[verseIndex].hue})`,
+                "--mode-accent-2": `oklch(0.72 0.13 ${VERSES[verseIndex].hue})`,
+              } as React.CSSProperties
+            }
+            aria-hidden
+          >
+            <SilhouettePortrait
+              id={`verse-${verseIndex}`}
+              className="h-24 w-20 sm:h-28 sm:w-24"
+            />
+            <span className="mt-2 max-w-[10rem] text-balance text-center text-[10px] font-semibold uppercase leading-tight tracking-widest text-muted-foreground sm:text-xs">
+              {VERSES[verseIndex].label}
+            </span>
+          </div>
+        ) : (
           <div className="resolving transmission relative flex size-36 items-center justify-center overflow-hidden rounded-full sm:size-44">
             {portraitSrc ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -226,7 +286,7 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
                 className="size-full object-cover"
               />
             ) : (
-              <SilhouettePortrait className="size-full" />
+              <SilhouettePortrait id="locked" className="size-full" />
             )}
           </div>
         )}
