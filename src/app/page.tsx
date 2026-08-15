@@ -15,30 +15,34 @@ import { WelcomeBack } from "@/components/home/welcome-back";
 import { EmailSignup } from "@/components/home/email-signup";
 
 /**
- * Marketing front door, reframed around the portal premise (P3-M1): somewhere
- * ahead is a version of you who already did it, and the daily practice is a
- * standing call with them.
+ * Marketing front door. The premise: a version of you further along can reach
+ * back, but is not permitted to tell you what happened — only what to do.
  *
- * The CTA still routes into /practice, which is the live, working app. It
- * repoints to /portal in P3-M2 once tuning and the reveal exist — the copy
- * here deliberately promises nothing that isn't already shippable.
+ * The restriction is the product, not set dressing (decision 10). It keeps the
+ * app honest, because we genuinely cannot know anyone's future; it makes
+ * serving the effort-draining fantasy structurally impossible, because they
+ * can never show you the trophy; and reading the line back out loud is a radio
+ * read-back handshake, which is why word-for-word verification exists at all.
+ *
+ * The CTA still routes into /practice, the live working app. It repoints to
+ * /portal in P3-M2 — this copy promises nothing that isn't already shippable.
  */
 
 const STEPS = [
   {
     art: ChooseArt,
-    title: "Name the version of you",
-    body: "Tell us which life you're reaching for — the body, the work, the calm, the person you want to be in the room. That's the frequency we tune to.",
+    title: "Tell them who to look for",
+    body: "Name the life you're reaching for — the body, the work, the calm, the person you want to be in the room. That's who we go looking for.",
   },
   {
     art: SpeakArt,
-    title: "Say it back, out loud",
-    body: "They hand you one line to carry today. The mic listens and every word lights up as you speak it. No skimming, no mumbling past it — the rep only counts when you say it.",
+    title: "Read it back, out loud",
+    body: "They send one line — an instruction, never a spoiler. You read it back so both ends know it landed. Every word lights up as you speak it; the rep only counts when you say it.",
   },
   {
     art: LockInArt,
-    title: "Keep the line open",
-    body: "Stars, streaks, and a 7 or 21 day arc turn a one-off rep into a standing call. Seven days to feel it. Twenty-one to become it.",
+    title: "Same door tomorrow",
+    body: "One line a day, through the same door, for 7 or 21 days. Seven to feel it, twenty-one to become it — and they only ever hand you the next thing to do.",
   },
 ];
 
@@ -76,7 +80,7 @@ const MODES: Array<{
 
 export default function Home() {
   return (
-    <div data-mode="portal" className="relative isolate flex-1">
+    <div data-mode="portal" className="relative isolate flex-1 overflow-x-hidden">
       <div className="mode-glow pointer-events-none fixed inset-0 -z-10" aria-hidden />
 
       <main className="mx-auto w-full max-w-6xl px-5 pb-24">
@@ -86,12 +90,13 @@ export default function Home() {
             Say this with me
           </p>
           <h1 className="font-display mt-4 text-balance text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
-            Your future self has already done it.
+            Your future self isn&apos;t allowed to tell you what happens.
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-pretty text-base text-muted-foreground sm:text-lg">
-            Somewhere ahead of you is a version of you who achieved the thing
-            you&apos;re dreaming about now. Open the line, hear what they have
-            to say — then say it back, out loud, until it&apos;s true.
+            They&apos;re allowed to tell you what to <em>do</em>. A version of
+            you who already made it can reach back — but only with
+            instructions, never with answers. One line gets through a day. Read
+            it back out loud and we check every word.
           </p>
           <WelcomeBack />
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -99,7 +104,7 @@ export default function Home() {
               href="/practice"
               className="rounded-full bg-mode px-8 py-3.5 font-semibold text-mode-foreground shadow-lg transition-transform hover:-translate-y-0.5"
             >
-              Talk to that version of you
+              Open the channel
             </Link>
             <Link
               href="/science"
@@ -110,7 +115,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-14 sm:mt-16" aria-label="Live demo">
+        <section className="mt-6 sm:mt-8" aria-label="Live demo">
           <PortalDemo />
         </section>
 
@@ -144,8 +149,8 @@ export default function Home() {
             Which version are you reaching for?
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-center text-pretty text-muted-foreground">
-            Different lives, one mechanic: they give you the words, you say
-            them out loud, and we verify every one.
+            Different lives, one mechanic: they send the words, you read them
+            back out loud, and we verify every one.
           </p>
           <div className="mt-10 grid gap-5 sm:grid-cols-2">
             {MODES.map((mode) => (
@@ -187,13 +192,14 @@ export default function Home() {
             <FlaskConical className="size-12 shrink-0 text-mode-2" aria-hidden />
             <div className="flex-1">
               <h2 className="font-display text-2xl font-bold tracking-tight">
-                A vivid future self is a real mechanism
+                Why they can only give you instructions
               </h2>
               <p className="mt-2 text-pretty leading-relaxed text-muted-foreground">
-                People who picture their future self clearly save more, act
-                more patiently, and follow through more often — and spoken
-                self-affirmation buffers stress. We cite the limits too. Reps,
-                not spells.
+                People who picture their future self clearly save more and
+                follow through more often. But simply savouring the win can
+                drain the drive to chase it — which is why you never get the
+                ending here, only the next thing to do. We cite the limits too.
+                Reps, not spells.
               </p>
             </div>
             <Link
