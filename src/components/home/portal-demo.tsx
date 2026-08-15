@@ -22,11 +22,22 @@ import {
  * swapping the silhouette for a real generated demo portrait later is a
  * one-line change and nothing else moves.
  *
- * Sequence: scan the possibilities, lock onto one, they resolve into view,
- * they speak, you say it back and the words light up, the chord lands.
+ * The sequence is a closed ritual, not a highlight reel — cross the threshold,
+ * scan the possibilities, lock onto one, they resolve into view, they speak,
+ * you say it back and the words light up, then you come back through the same
+ * door carrying the line. The same doorway every time is what makes a daily
+ * practice out of a feature (docs/roadmap/phase-3-portal.md, decision 9).
  */
 
-type Phase = "scanning" | "locking" | "revealing" | "speaking" | "yourTurn" | "sealed";
+type Phase =
+  | "threshold"
+  | "scanning"
+  | "locking"
+  | "revealing"
+  | "speaking"
+  | "yourTurn"
+  | "sealed"
+  | "returning";
 
 /**
  * Glimpses of other lives, flickering past before one locks. Kept as a module
@@ -45,25 +56,31 @@ const VERSES: ReadonlyArray<{ label: string; hue: number }> = [
 const PERSONA = {
   domain: "craft",
   horizon: "twelve months from now",
-  line: "I stopped waiting to feel ready. I just started saying it.",
+  // Warmth plus friction: the future self names the obstacle rather than
+  // glowing about the destination. Positive fantasy alone reduces effort.
+  line: "I still felt like putting it off. I said this out loud and started anyway.",
   promise: "I finish what I start.",
 } as const;
 
 const PHASE_MS: Record<Phase, number> = {
-  scanning: 3400,
+  threshold: 2400,
+  scanning: 3000,
   locking: 2400,
   revealing: 1400,
-  speaking: 3200,
+  speaking: 3800,
   yourTurn: 0, // driven per-word instead
-  sealed: 3400,
+  sealed: 2600,
+  returning: 2600,
 };
 
 const WORD_INTERVAL_MS = 420;
 
 const CAPTIONS: Partial<Record<Phase, string>> = {
+  threshold: "Step through.",
   scanning: "Scanning for a version of you...",
   locking: "Locking on...",
   revealing: "Connected.",
+  returning: "Come back. Bring it with you.",
 };
 
 /**
@@ -110,7 +127,7 @@ function SilhouettePortrait({
 }
 
 export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
-  const [phase, setPhase] = useState<Phase>("scanning");
+  const [phase, setPhase] = useState<Phase>("threshold");
   const [spoken, setSpoken] = useState(0);
   const [verseIndex, setVerseIndex] = useState(0);
   const [soundOn, setSoundOn] = useState(false);
@@ -147,14 +164,16 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
     }
 
     const NEXT: Record<Exclude<Phase, "yourTurn">, Phase> = {
+      threshold: "scanning",
       scanning: "locking",
       locking: "revealing",
       revealing: "speaking",
       speaking: "yourTurn",
-      sealed: "scanning",
+      sealed: "returning",
+      returning: "threshold",
     };
     const timer = setTimeout(() => {
-      if (phase === "sealed") setSpoken(0);
+      if (phase === "returning") setSpoken(0);
       setPhase(NEXT[phase]);
     }, PHASE_MS[phase]);
     return () => clearTimeout(timer);
@@ -197,7 +216,7 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
   // drops out the moment it is your turn to speak.
   useEffect(() => {
     if (!soundOnRef.current) return;
-    if (phase === "scanning") startDrone();
+    if (phase === "threshold") startDrone();
     else if (phase === "locking") riseDrone(2.2);
     else if (phase === "revealing") {
       stopDrone(0.5);
@@ -217,6 +236,8 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
 
   const isScanning = phase === "scanning";
   const isLocking = phase === "locking";
+  const showDoorway = phase === "threshold" || phase === "returning";
+  const showVerses = isScanning || isLocking;
   const showPortrait =
     phase === "revealing" ||
     phase === "speaking" ||
@@ -224,6 +245,9 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
     phase === "sealed";
   const yourTurn = phase === "yourTurn" || phase === "sealed";
   const sealed = phase === "sealed";
+  // The line stays on screen through the return — carrying it back out is the
+  // whole point of closing the ritual rather than just stopping.
+  const showPromise = yourTurn || phase === "returning";
 
   return (
     <div
@@ -249,9 +273,19 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
         {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
       </button>
 
-      {/* Stage: either the possibilities flickering, or the one who locked in. */}
+      {/* Stage: the doorway, the possibilities cutting past, or the one who
+          locked in. Exactly one at a time. */}
       <div className="relative flex h-40 w-40 items-center justify-center sm:h-48 sm:w-48">
-        {!showPortrait ? (
+        {showDoorway ? (
+          <div
+            className={`doorway ${
+              phase === "threshold" ? "doorway-opening" : "doorway-closing"
+            }`}
+            aria-hidden
+          />
+        ) : null}
+
+        {showVerses ? (
           <div
             // Keying on the index forces a genuine remount per cut — no
             // interpolation between one life and the next.
@@ -276,7 +310,9 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
               {VERSES[verseIndex].label}
             </span>
           </div>
-        ) : (
+        ) : null}
+
+        {showPortrait ? (
           <div className="resolving transmission relative flex size-36 items-center justify-center overflow-hidden rounded-full sm:size-44">
             {portraitSrc ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -289,7 +325,7 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
               <SilhouettePortrait id="locked" className="size-full" />
             )}
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* Caption / dialogue / the promise */}
@@ -316,10 +352,10 @@ export function PortalDemo({ portraitSrc }: { portraitSrc?: string }) {
           </>
         ) : null}
 
-        {yourTurn ? (
+        {showPromise ? (
           <>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-mode-2">
-              Say it with them
+              {phase === "returning" ? "Carry it into today" : "Say it with them"}
             </p>
             <p className="font-display mt-3 text-balance text-2xl font-bold leading-snug tracking-tight sm:text-4xl sm:leading-snug">
               {words.map((word, i) => (

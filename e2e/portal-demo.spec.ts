@@ -2,20 +2,22 @@ import { test, expect } from "@playwright/test";
 
 /**
  * The portal demo is the marketing centrepiece and it self-plays, so a stuck
- * phase would be invisible without a test. Walks the whole sequence:
- * scanning → locking → contact → the promise lighting up word by word.
+ * phase would be invisible without a test. Walks the whole ritual: threshold →
+ * scanning → locking → contact → the promise lighting up word by word → the
+ * return, and back to the same door.
  */
-test("portal demo cycles from scanning through to the spoken promise", async ({
-  page,
-}) => {
+test("portal demo runs the full ritual and closes the loop", async ({ page }) => {
   await page.goto("/");
   await expect(
     page.getByRole("heading", { name: /already done it/i }),
   ).toBeVisible();
 
+  // The threshold opens the ritual.
+  await expect(page.getByText("Step through.")).toBeVisible({ timeout: 6000 });
+
   // Scanning: one possible life on screen at a time (a hard cut, not a stack).
   await expect(page.getByText(/Scanning for a version of you/i)).toBeVisible({
-    timeout: 6000,
+    timeout: 8000,
   });
 
   // Locking, then contact.
@@ -37,4 +39,15 @@ test("portal demo cycles from scanning through to the spoken promise", async ({
   await expect(page.getByText(/Every word verified/i)).toBeVisible({
     timeout: 8000,
   });
+
+  // The return: the line is carried back out through the same door, and the
+  // ritual closes rather than simply stopping.
+  await expect(page.getByText(/Come back\. Bring it with you/i)).toBeVisible({
+    timeout: 8000,
+  });
+  await expect(page.getByText("Carry it into today")).toBeVisible();
+  await expect(page.locator(".affirmation-word.spoken")).toHaveCount(total);
+
+  // Same door tomorrow: the loop returns to where it began.
+  await expect(page.getByText("Step through.")).toBeVisible({ timeout: 8000 });
 });

@@ -136,6 +136,31 @@ implementation intention. Three non-negotiable design consequences:
 This is also the answer to "isn't this just manifestation?" — no. Manifestation stops at the
 vision. This stops at a verified rep, out loud, that we can prove you did.
 
+## The ritual spine
+
+*Owner approved 2026-08-15: build it into the demo now and make it the structure of `/portal`
+and `/pact`.*
+
+One sequence, used in three places, so the shape is learned once and never changes:
+
+| Beat | Home demo (M1, shipped) | `/portal` first run (M2–M4) | `/pact` daily call (M4) |
+|---|---|---|---|
+| **Threshold** | "Step through." Doorway opens. | Same doorway. Consent + coordinates sit *before* it, so the door is always the last thing before contact. | Same doorway, every single day. This is the ritual anchor. |
+| **Scan** | Possible lives cut past | Genuinely searching — the portrait job is running behind it. The wait is the theatre. | Skipped: they are already found. |
+| **Lock / contact** | Rings contract, stillness | The portrait resolves | A brief re-connect, not a re-reveal |
+| **They speak** | One pre-baked line | The streaming conversation | The day's line, in their voice |
+| **Receive** | The promise appears | The promise ends the conversation | Today's arc line |
+| **Say it back** | Words light up | `<SpeakTheLine>` | `<SpeakTheLine>` |
+| **Return** | "Come back. Bring it with you." Door closes on the lit line. | Into the arc | "Same door tomorrow." Streak + dots land here. |
+
+Two rules this creates:
+
+1. **The door never changes.** Not per domain, not per day, not per streak length. Variable
+   ritual is not ritual. Domain accent colours may tint it; the shape and the timing do not move.
+2. **The return is where the reward lands.** Stars, streak and journey dots resolve on the way
+   back out, not at the moment of verification — the sequence should close on gain, and it
+   gives the existing `recordCompletion()` path a natural home in the new flow.
+
 ## Architecture
 
 ```
@@ -341,11 +366,13 @@ face, smaller and letterspaced, so it reads as *voice* rather than UI text.
 
 ## Milestones
 
-- [x] **P3-M1 — The Signal + demo.** Domain tokens, `.portal-field`, `.verse-flicker`, grain,
+- [x] **P3-M1 — The Signal, the ritual + demo.** Domain tokens, `.portal-field`, `.verse-flicker`, grain,
       transmission grade, `.resolving`, **global `prefers-reduced-motion` block** (the codebase
       had none — a motion-heavy portal makes that a defect, not a nice-to-have),
       `src/lib/audio.ts` with the word-chord, self-playing `PortalDemo` on `/`, home copy
-      reframed, 14-day duration retired. *Ships alone, costs nothing, proves the aesthetic.*
+      reframed, 14-day duration retired, and the threshold ritual (doorway in, return out with
+      the line). *Ships alone, costs nothing, proves the aesthetic.* **Live on production
+      2026-08-15.**
 - [ ] **P3-M0 — Foundations.** `src/lib/supabase/server.ts` (schema-pinned); `0005_portal.sql`
       with RLS on every table; Vercel Blob; `generation_jobs` + quota helper; `maxDuration`;
       `images.remotePatterns`; refresh the stale `.env.example` (missing
@@ -419,8 +446,9 @@ a merge: promote the pre-revamp deployment in Vercel first (instant), then
    `arc_days` tables above are the substrate — designed for it now, built after MVP retention
    data exists.
 5. **Spoken future self** — decision 3 puts voice after text. Provider unchosen.
-6. **How far to take the threshold ritual, and when.** Goldman's sequence closes with a
-   *return* — the demo currently stops at "verified" and loops. Adding a doorway-in and a
-   come-back-through is a small change to `PortalDemo` and a structural one to `/pact`, where
-   the same doorway every day is what makes it a practice rather than a feature. Needs owner
-   sign-off because it changes the sequence the owner has not yet reviewed.
+6. ~~How far to take the threshold ritual~~ — **resolved 2026-08-15**: both. Shipped in the
+   demo; the spine above governs `/portal` and `/pact`. See "The ritual spine".
+7. **The demo persona line is placeholder copy** and now follows the mental-contrasting rule
+   ("I still felt like putting it off. I said this out loud and started anyway."). It is
+   marketing copy written in this session, not owner-approved content — worth a read before it
+   sits in front of paid traffic.
