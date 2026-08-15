@@ -9,9 +9,9 @@ test("speak-it flow completes day 1 of a journey via typing", async ({ page }) =
   // Marketing home → practice hub
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: /don't just read affirmations/i }),
+    page.getByRole("heading", { name: /your future self has already done it/i }),
   ).toBeVisible();
-  await page.getByRole("link", { name: /start practicing/i }).click();
+  await page.getByRole("link", { name: /talk to that version of you/i }).click();
   await expect(page).toHaveURL(/\/practice$/);
 
   // Default mode is Power Up; open its first category
