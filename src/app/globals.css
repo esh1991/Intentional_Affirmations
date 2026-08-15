@@ -264,3 +264,249 @@
     @apply font-sans;
   }
 }
+/* ==================================================================
+ * THE PORTAL — Phase 3
+ *
+ * Life domains reuse the existing `data-mode` attribute rather than a new
+ * `data-domain` one: --mode-accent / --mode-accent-2 already drive every
+ * fill, glow, cover, dot, star and the word highlight, so swapping the
+ * value set costs zero component changes. The four legacy mode values
+ * above stay until the /practice cutover (P3-M5).
+ * ================================================================== */
+
+[data-mode="portal"] {
+  --mode-accent: oklch(0.56 0.19 285);
+  --mode-accent-2: oklch(0.48 0.17 282);
+}
+[data-mode="body"] {
+  --mode-accent: oklch(0.58 0.18 30);
+  --mode-accent-2: oklch(0.5 0.16 32);
+}
+[data-mode="craft"] {
+  --mode-accent: oklch(0.55 0.17 265);
+  --mode-accent-2: oklch(0.47 0.15 262);
+}
+[data-mode="wealth"] {
+  --mode-accent: oklch(0.55 0.14 150);
+  --mode-accent-2: oklch(0.46 0.13 150);
+}
+[data-mode="calm"] {
+  --mode-accent: oklch(0.55 0.15 225);
+  --mode-accent-2: oklch(0.47 0.14 222);
+}
+[data-mode="connection"] {
+  --mode-accent: oklch(0.57 0.17 348);
+  --mode-accent-2: oklch(0.49 0.16 350);
+}
+.dark [data-mode="portal"] {
+  --mode-accent-2: oklch(0.74 0.13 292);
+}
+.dark [data-mode="body"] {
+  --mode-accent-2: oklch(0.75 0.13 45);
+}
+.dark [data-mode="craft"] {
+  --mode-accent-2: oklch(0.73 0.12 268);
+}
+.dark [data-mode="wealth"] {
+  --mode-accent-2: oklch(0.75 0.12 155);
+}
+.dark [data-mode="calm"] {
+  --mode-accent-2: oklch(0.74 0.11 232);
+}
+.dark [data-mode="connection"] {
+  --mode-accent-2: oklch(0.75 0.13 355);
+}
+
+/*
+ * The field. Concentric rings drifting outward — the signal you are tuning
+ * into. Extends the .mode-glow radial-gradient idea rather than replacing it.
+ */
+@keyframes portal-drift {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1.18) rotate(180deg);
+    opacity: 0.55;
+  }
+}
+.portal-field {
+  background:
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      color-mix(in oklch, var(--mode-accent) 20%, transparent) 0 1px,
+      transparent 1px 34px
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      color-mix(in oklch, var(--mode-accent-2) 32%, transparent),
+      transparent 65%
+    );
+  animation: portal-drift 18s ease-in-out infinite alternate;
+}
+
+/* Locking: the rings contract and the field tightens onto one version. */
+@keyframes portal-contract {
+  0% {
+    transform: scale(1.25);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(0.82);
+    opacity: 1;
+  }
+}
+.portal-locking {
+  animation: portal-contract 2.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/*
+ * Film grain. One SVG turbulence tile, low opacity, portal surface only —
+ * it reads as signal noise and it is what softens the uncanny valley on a
+ * generated portrait.
+ */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/*
+ * The verse-jump. Possible lives cut past one at a time before one locks —
+ * a hard cut with a flash of overexposure as each arrives, never a
+ * cross-fade. The cut is the point. Each frame is remounted by the demo, so
+ * this plays once per life rather than looping.
+ */
+@keyframes verse-cut {
+  0% {
+    opacity: 0.2;
+    filter: blur(5px) saturate(0.4);
+    transform: scale(1.07);
+  }
+  18% {
+    opacity: 1;
+    filter: blur(0) saturate(1.7) brightness(1.4);
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.85;
+    filter: blur(0) saturate(1.1) brightness(1);
+    transform: scale(1);
+  }
+}
+.verse-cut {
+  animation: verse-cut 0.32s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+/*
+ * Chromatic aberration on text, peaking through the lock. The signal is
+ * almost resolved but not quite — the split says "not yet".
+ */
+@keyframes aberrate {
+  0%,
+  100% {
+    text-shadow:
+      -1px 0 color-mix(in oklch, var(--mode-accent) 70%, transparent),
+      1px 0 color-mix(in oklch, oklch(0.7 0.2 200) 60%, transparent);
+  }
+  50% {
+    text-shadow:
+      -3px 0 color-mix(in oklch, var(--mode-accent) 80%, transparent),
+      3px 0 color-mix(in oklch, oklch(0.7 0.2 200) 70%, transparent);
+  }
+}
+.aberrating {
+  animation: aberrate 0.45s ease-in-out infinite;
+}
+
+/*
+ * The transmission grade. Does three jobs at once: reads as a signal
+ * arriving, softens the uncanny valley, and honestly signals "rendered" —
+ * never a clinical before/after.
+ */
+.transmission {
+  filter: saturate(1.08) contrast(1.04);
+  box-shadow:
+    inset 0 0 60px 20px color-mix(in oklch, var(--background) 55%, transparent),
+    0 0 80px -20px color-mix(in oklch, var(--mode-accent) 60%, transparent);
+}
+
+/* The reveal. Out of focus and grained, then it resolves. Never a hard cut. */
+@keyframes resolve-in {
+  0% {
+    opacity: 0;
+    filter: blur(26px) saturate(0.2) brightness(1.5);
+    transform: scale(1.08);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(7px) saturate(0.7) brightness(1.15);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0) saturate(1.08) brightness(1);
+    transform: scale(1);
+  }
+}
+.resolving {
+  animation: resolve-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* The future self's dialogue: same face, smaller, letterspaced — voice, not UI. */
+.transmission-voice {
+  letter-spacing: 0.06em;
+  color: color-mix(in oklch, var(--foreground) 82%, var(--mode-accent-2));
+}
+
+/* ==================================================================
+ * Reduced motion. The portal is the one place the standing "restrained
+ * motion" rule is broken, which makes this block a correctness
+ * requirement, not a nicety: drift, flicker and aberration all stop, and
+ * the reveal holds static.
+ * ================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .portal-field,
+  .portal-locking {
+    animation: none;
+    transform: none;
+    opacity: 0.8;
+  }
+  .verse-cut {
+    animation: none;
+    opacity: 0.9;
+    filter: none;
+    transform: none;
+  }
+  .aberrating {
+    animation: none;
+    text-shadow: none;
+  }
+  .resolving {
+    animation: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+  .mic-listening {
+    animation: none;
+  }
+  .affirmation-word.spoken {
+    animation: none;
+  }
+}

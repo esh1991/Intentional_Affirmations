@@ -7,6 +7,7 @@ import { readLastPractice, readStreak, restoreStreak } from "@/lib/streak";
 import {
   type JourneyMap,
   type JourneyState,
+  normalizeDuration,
   parseJourneys,
   readJourneysRaw,
   restoreJourneys,
@@ -129,7 +130,7 @@ export async function syncNow(user: User): Promise<void> {
     for (const row of (journeysRes.data ?? []) as CloudJourneyRow[]) {
       const key = `${row.mode}/${row.category}`;
       const cloudState: JourneyState = {
-        duration: row.duration as JourneyState["duration"],
+        duration: normalizeDuration(row.duration),
         startedAt: row.started_at,
         completedDays: Array.isArray(row.completed_days) ? row.completed_days : [],
       };

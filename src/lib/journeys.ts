@@ -10,9 +10,10 @@ import type { ModeKey } from "@/lib/content";
  * per duration so every length ends on identity-level statements.
  */
 
-export type JourneyDuration = 7 | 14 | 21;
+export type JourneyDuration = 7 | 21;
 
-export const JOURNEY_DURATIONS: JourneyDuration[] = [7, 14, 21];
+/** Durations offered in the UI. 14 was retired 2026-08-15 — 7 = try it, 21 = become it. */
+export const JOURNEY_DURATIONS: JourneyDuration[] = [7, 21];
 
 export interface JourneyState {
   duration: JourneyDuration;
@@ -24,12 +25,21 @@ export type JourneyMap = Record<string, JourneyState>;
 
 const KEY = "mindsetEngineJourneys";
 
-/** 1-based days of the 21-entry arc used for each duration. */
-const DAY_SAMPLES: Record<JourneyDuration, number[]> = {
+/**
+ * 1-based days of the 21-entry arc used for each duration. The retired
+ * 14-day sampling stays here so journeys already in localStorage or the
+ * cloud keep rendering; it is no longer offered as a choice.
+ */
+const DAY_SAMPLES: Record<number, number[]> = {
   7: [1, 4, 7, 10, 14, 18, 21],
   14: [1, 2, 3, 5, 7, 8, 9, 11, 13, 15, 17, 19, 20, 21],
   21: Array.from({ length: 21 }, (_, i) => i + 1),
 };
+
+/** Coerce any stored duration (incl. the retired 14) to a supported one. */
+export function normalizeDuration(value: number): JourneyDuration {
+  return value === 7 ? 7 : 21;
+}
 
 export function journeyKey(mode: ModeKey, categoryName: string): string {
   return `${mode}/${categoryName}`;
@@ -67,8 +77,10 @@ export function nextDay(state: JourneyState): number {
 }
 
 /** Index into the category's 21-entry arc for a given journey day. */
-export function arcIndexForDay(duration: JourneyDuration, day: number): number {
-  return DAY_SAMPLES[duration][day - 1] - 1;
+export function arcIndexForDay(duration: number, day: number): number {
+  const samples = DAY_SAMPLES[duration] ?? DAY_SAMPLES[21];
+  const arcDay = samples[day - 1] ?? samples[samples.length - 1];
+  return arcDay - 1;
 }
 
 function save(map: JourneyMap): string {

@@ -51,7 +51,6 @@ interface CompletionState {
 
 const DURATION_LABELS: Record<JourneyDuration, string> = {
   7: "Kickstart",
-  14: "Momentum",
   21: "Deep practice",
 };
 
