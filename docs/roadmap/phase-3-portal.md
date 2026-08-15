@@ -44,6 +44,97 @@ of two versions of you speaking together.
    `normalizeDuration()` keeps journeys already stored at 14 rendering, coerced to 21.
 7. **fal for MVP, not Higgsfield.** See providers below.
 8. **The premise animation is code, not generated video.** See providers below.
+9. **Quantum Jumping is the lineage, not the label.** Take Goldman's threshold ritual and
+   alter-ego framing; refuse the name, the physics and the skill-download claim. Anchor the
+   science on future-self continuity instead. See the two sections below.
+
+## Lineage: Burt Goldman's Quantum Jumping
+
+*Raised by the owner 2026-08-15. This is a closer precedent than the film, and unlike the film
+it comes with a market record and a ritual structure.*
+
+Burt Goldman — a Silva Method instructor who worked in the mind-power tradition and taught into
+his nineties — built a program around a guided visualization: relax, walk a corridor, step
+through a door into a parallel universe, meet the version of yourself who took the other path
+and already mastered the thing you want, and bring their skill and confidence back with you.
+His own proof was biographical rather than experimental: he took up painting, photography and
+music in his eighties and became genuinely accomplished at them.
+
+**It was distributed by Mindvalley** — already this project's design reference. Same audience,
+same vocabulary, and a demonstrated willingness to pay for precisely this experience.
+
+### What to take
+
+| Element | How it lands here |
+|---|---|
+| The alter ego who already made it | Already the premise. Goldman confirms it rather than changes it. |
+| **The threshold ritual** | The missing piece. Goldman's method is not "imagine success" — it is a *repeatable entry sequence*: settle → corridor → door → cross → meet → receive → return. A daily-practice app needs a consistent doorway, and this is a proven one. |
+| Receiving something to bring back | Maps exactly onto the promise — the line you carry into the day. |
+| **The return** | The sequence must *close*, not just stop. Currently the demo ends on "verified"; it should come back through the door. |
+
+The ritual point is the valuable one. A standing daily call needs the same doorway every time —
+that is what turns a feature into a practice, and it is the difference between the portal being
+a one-off reveal and being the thing you come back to on day 14.
+
+### What to refuse
+
+- **The name.** "Quantum Jumping" is Goldman/Mindvalley branded. It never appears in product copy.
+- **The physics.** No parallel universes as mechanism, no "quantum" as an explanation word. This
+  would break the standing honest-science brand rule exactly as hard as "21 days rewires the
+  brain" does — and this app's whole wedge against Calm/Headspace/Mindvalley is that it does not
+  do that.
+- **"Downloading" a skill.** The claim that you acquire an ability by visualising someone who
+  has it. What actually transfers is self-efficacy, motivation and rehearsal. That is still a
+  lot — it just is not telepathy.
+
+The narrative may stay vivid. The *mechanism* stays honest. Decision 1 already settled this;
+Goldman is the sharpest test of it so far.
+
+## The honest twin: future-self continuity
+
+Goldman's experience has a legitimate scientific counterpart that is almost eerily on the nose,
+and it is what lets the app deliver his experience without his claims.
+
+**Hal Hershfield's future-self continuity research** — most relevantly the age-progressed
+rendering work (Hershfield et al., 2011, *Increasing Saving Behavior Through Age-Progressed
+Renderings of the Future Self*) — showed people **photorealistic renderings of their own future
+face** and measured real behaviour change downstream. The mechanism is continuity: people who
+feel connected to their future self discount the future less and treat it better.
+
+That is precisely what this app proposes to do with a GenAI portrait. **This is not a
+nice-to-have citation — it is the scientific licence for the entire photo feature**, and it
+should anchor the `/science` rewrite in M5.
+
+Supporting and already partly on `/science`:
+
+- Episodic future thinking reduces delay discounting (Peters & Büchel).
+- Implementation intentions (Gollwitzer) — the future self should hand over a *specific* next
+  action, not a mood.
+- Self-affirmation and stress buffering (Creswell; Cascio et al. 2016).
+- The backfire finding (Wood 2009) — already engaged honestly, keep it.
+
+### The caveat that changes the design
+
+Oettingen's work on **mental contrasting** is the one finding that argues against a naive
+version of this app, so it shapes the product rather than getting buried:
+
+> **Positive fantasy alone can reduce effort.** Vividly enjoying an achieved future can drain
+> the motivation to pursue it — you collect some of the reward without doing the work.
+
+The corrective is contrast: pair the vivid future with the present obstacle, then form an
+implementation intention. Three non-negotiable design consequences:
+
+1. **The future self names the obstacle, it does not just glow.** "I know what you are going to
+   want to do at 9pm tonight" beats "it is wonderful here." Warmth plus friction, never warmth alone.
+2. **The promise is an action for today, not a description of the destination.** The existing
+   Notice→Act→Become arc structure already does this — one more reason the 273 approved entries
+   stay as the style contract.
+3. **The reveal is the hook; the rep is the product.** The portrait must always hand off to the
+   mic within one screen. A portal that ends at the portrait is the exact failure mode Oettingen
+   describes.
+
+This is also the answer to "isn't this just manifestation?" — no. Manifestation stops at the
+vision. This stops at a verified rep, out loud, that we can prove you did.
 
 ## Architecture
 
@@ -268,7 +359,9 @@ face, smaller and letterspaced, so it reads as *voice* rather than UI text.
 - [ ] **P3-M4 — The pact.** Arc generation via structured outputs; `arcs`/`arc_days`; `/pact`
       daily call; `journeys.ts` repointed to arc ids; sync extended.
 - [ ] **P3-M5 — Cutover.** Retire `/practice` routes and `home-screen.tsx`; `mindset-data.json`
-      → `arc-exemplars.json`; rewrite `/science` on self-continuity and commitment devices;
+      → `arc-exemplars.json`; rewrite `/science` on future-self continuity (lead with the age-progressed rendering
+      work — it is the licence for the photo feature), episodic future thinking, mental
+      contrasting and commitment devices;
       **extend `/api/account/delete` to purge blobs**; rewrite the Playwright smoke test for the
       portal path.
 
@@ -326,3 +419,8 @@ a merge: promote the pre-revamp deployment in Vercel first (instant), then
    `arc_days` tables above are the substrate — designed for it now, built after MVP retention
    data exists.
 5. **Spoken future self** — decision 3 puts voice after text. Provider unchosen.
+6. **How far to take the threshold ritual, and when.** Goldman's sequence closes with a
+   *return* — the demo currently stops at "verified" and loops. Adding a doorway-in and a
+   come-back-through is a small change to `PortalDemo` and a structural one to `/pact`, where
+   the same doorway every day is what makes it a practice rather than a feature. Needs owner
+   sign-off because it changes the sequence the owner has not yet reviewed.
