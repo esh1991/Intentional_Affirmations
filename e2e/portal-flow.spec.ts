@@ -45,6 +45,13 @@ test("portal tunes, runs the sequence, and hands off a line to speak", async ({ 
   await expect(page.getByRole("link", { name: /sign in to see them/i })).toBeVisible();
   await page.getByRole("button", { name: /just give me the line/i }).click();
 
+  // Signed out, the conversation offers no second account gate — one ask per
+  // journey is enough — so it passes straight through to the line.
+  await expect(page.getByRole("button", { name: /take the line/i })).toBeVisible({
+    timeout: 10000,
+  });
+  await page.getByRole("button", { name: /take the line/i }).click();
+
   // The line they are cleared to send, then the hand-off into speaking.
   await expect(page.getByText("One line is cleared to send")).toBeVisible({ timeout: 10000 });
   const promise = page.locator(".affirmation-word");

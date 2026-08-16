@@ -12,7 +12,7 @@ import { adminDb } from "@/lib/supabase/server";
  * Spec: docs/roadmap/phase-3-portal.md
  */
 
-export type JobKind = "portrait" | "arc";
+export type JobKind = "portrait" | "arc" | "conversation";
 export type JobStatus = "pending" | "running" | "completed" | "failed";
 
 export interface GenerationJob {
@@ -32,6 +32,9 @@ export interface GenerationJob {
 export const DAILY_CAP: Record<JobKind, number> = {
   portrait: 3,
   arc: 5,
+  // Per *turn*, not per conversation — this is the ceiling on how much talking
+  // one account can pay for in a day.
+  conversation: 60,
 };
 
 const DAY_MS = 24 * 60 * 60 * 1000;

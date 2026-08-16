@@ -15,6 +15,7 @@ import {
 } from "@/lib/portal/domains";
 import { guideMessage, promiseFor } from "@/lib/portal/guide";
 import { BringIntoFocus, PortraitImage } from "@/components/portal/bring-into-focus";
+import { ConversationPanel } from "@/components/portal/conversation-panel";
 import {
   playChordResolve,
   playLockTone,
@@ -48,6 +49,7 @@ type Step =
   | "scanning"
   | "contact"
   | "focus"
+  | "converse"
   | "promise";
 
 const SCAN_MS = 3200;
@@ -315,7 +317,10 @@ export function PortalFlow() {
           </div>
         ) : null}
 
-        {step === "contact" || step === "focus" || step === "promise" ? (
+        {step === "contact" ||
+        step === "focus" ||
+        step === "converse" ||
+        step === "promise" ? (
           <div className="resolving transmission relative size-48 overflow-hidden rounded-full sm:size-60">
             {futureSelfId ? (
               <PortraitImage
@@ -371,10 +376,16 @@ export function PortalFlow() {
               coords={coords}
               onDone={(id) => {
                 setFutureSelfId(id);
-                setStep("promise");
+                setStep("converse");
               }}
-              onSkip={() => setStep("promise")}
+              onSkip={() => setStep("converse")}
             />
+          </div>
+        ) : null}
+
+        {step === "converse" && coords ? (
+          <div className="mt-8 flex w-full justify-center">
+            <ConversationPanel coords={coords} onDone={() => setStep("promise")} />
           </div>
         ) : null}
 

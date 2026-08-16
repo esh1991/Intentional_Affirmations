@@ -479,7 +479,28 @@ face, smaller and letterspaced, so it reads as *voice* rather than UI text.
       behaviour change (the smoke test drives a full typed completion and still passes).
       **Callers must pass `key={affirmation}`**: resetting state from an effect is what the
       React Compiler lint forbids, and remount-on-key is the correct pattern anyway.
-- [ ] **P3-M3 — The conversation.** Streaming Claude persona; transcript ending in a promise;
+- [x] **P3-M3 — The conversation.** Shipped 2026-08-15.
+      - `src/lib/portal/conversation.ts` + `POST /api/portal/conversation`: streaming
+        `claude-opus-5` at `effort: "low"` (latency is the felt quality on a conversational
+        turn), persona cached from the second turn on. Transcript persisted to
+        `portal_conversations` fire-and-forget — failing to store it must never break the reply
+        being read.
+      - **Verified the restriction holds under pressure**, which is the whole conceit. Probed
+        with "does it get finished, yes or no" → *"No. Not that — those are not the rules"*;
+        "how many copies, give me the number" → *"That is not mine to give"*; "what do I do
+        tomorrow" → a concrete action. It refuses outcomes and pays out in actions.
+      - Sits **after** the portrait step so there is only ever one account ask per journey;
+        signed-out visitors pass straight through rather than meeting a second gate.
+      - Five turns per call. Scarcity is the product — a guide who answers forever is a chatbot.
+
+      ⚠️ **Deviation from the plan, deliberate:** the spec said the conversation runs
+      anonymously because it is "cheap, text-only". It requires sign-in instead. An
+      unauthenticated endpoint that calls an LLM is an open money faucet on a public URL, and
+      there is no anonymous identity to meter, so there is nothing to rate-limit against.
+      Making it anonymous *safely* needs an anon-usage store (hashed IP + counter table) — a
+      migration and an owner action. Revisit if the anonymous experience matters.
+
+- [ ] ~~**P3-M3 — The conversation.**~~ Streaming Claude persona; transcript ending in a promise;
       handoff into `<SpeakTheLine>` — words light up, stars/streak/session recording all fire
       through the existing untouched path.
 - [~] **P3-M4 — The pact.** `/pact` shipped 2026-08-15; generated arcs still to come.
