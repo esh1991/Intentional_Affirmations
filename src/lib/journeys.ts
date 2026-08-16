@@ -45,6 +45,15 @@ export function journeyKey(mode: ModeKey, categoryName: string): string {
   return `${mode}/${categoryName}`;
 }
 
+/**
+ * Key for a generated arc. Namespaced so it can never collide with a
+ * `mode/category` key — arcs are uuids, but the prefix makes the two kinds
+ * distinguishable when reading raw storage.
+ */
+export function arcKey(arcId: string): string {
+  return `arc/${arcId}`;
+}
+
 /** Raw storage read; feed through parseJourneys. Client-only. */
 export function readJourneysRaw(): string {
   return localStorage.getItem(KEY) ?? "";
@@ -94,28 +103,39 @@ export function restoreJourneys(map: JourneyMap): string {
   return save(map);
 }
 
-/** Starts (or restarts) a journey. Returns the new raw storage value. */
-export function startJourney(
-  mode: ModeKey,
-  categoryName: string,
-  duration: JourneyDuration,
-): string {
+/**
+ * Starts (or restarts) a journey under any key. Returns the new raw value.
+ *
+ * Key-based rather than mode/category-based because a generated arc has
+ * neither — it is identified by its row id.
+ */
+export function startJourneyAt(key: string, duration: JourneyDuration): string {
   const map = parseJourneys(localStorage.getItem(KEY));
-  map[journeyKey(mode, categoryName)] = {
-    duration,
-    startedAt: todayString(),
-    completedDays: [],
-  };
+  map[key] = { duration, startedAt: todayString(), completedDays: [] };
   return save(map);
 }
 
-/** Marks today's day complete (idempotent). Returns the new raw value. */
-export function completeJourneyDay(mode: ModeKey, categoryName: string): string {
+/** Marks today's day complete under any key (idempotent). */
+export function completeJourneyDayAt(key: string): string {
   const map = parseJourneys(localStorage.getItem(KEY));
-  const state = map[journeyKey(mode, categoryName)];
+  const state = map[key];
   if (state && !isCompletedToday(state) && !isFinished(state)) {
     state.completedDays.push(todayString());
     return save(map);
   }
   return localStorage.getItem(KEY) ?? "";
+}
+
+/** Starts (or restarts) a category journey. Returns the new raw storage value. */
+export function startJourney(
+  mode: ModeKey,
+  categoryName: string,
+  duration: JourneyDuration,
+): string {
+  return startJourneyAt(journeyKey(mode, categoryName), duration);
+}
+
+/** Marks today's day complete (idempotent). Returns the new raw value. */
+export function completeJourneyDay(mode: ModeKey, categoryName: string): string {
+  return completeJourneyDayAt(journeyKey(mode, categoryName));
 }

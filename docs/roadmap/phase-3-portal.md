@@ -495,8 +495,17 @@ face, smaller and letterspaced, so it reads as *voice* rather than UI text.
         `cache_control` prefix as the style contract, so generated arcs inherit the voice.
         Measured: 21/21 days, all ≤12 words, correct Notice→Act→Become progression, no
         banned-claim hits, ~27s at effort high.
-      - Still to do: `/pact` reading generated `arc_days` instead of the bridge-mode arc,
-        `journeys.ts` repointed to arc ids, sync extended.
+      - **`/pact` now serves the generated arc** (2026-08-15). `GET /api/portal/arc/latest`
+        returns the caller's active arc; the pact uses it when there is one and falls back to
+        the owner-approved library arc otherwise — which is what keeps the daily call working
+        for someone who never signed in. Generation fires when they **commit to a duration**,
+        because that commitment is what justifies the spend, and the ~27s wait is presented as
+        the guide writing rather than a hung button.
+      - `journeys.ts` gained a key-based API (`arcKey`, `startJourneyAt`, `completeJourneyDayAt`).
+        The mode/category functions remain as thin wrappers, so `/practice` is untouched.
+      - **A generation outage falls back to the library arc rather than blocking.** Practice must
+        never depend on a third-party API being up.
+      - Still to do: sync extended to cloud arcs (localStorage remains the source of truth).
 - [ ] **P3-M5 — Cutover.** Retire `/practice` routes and `home-screen.tsx`; `mindset-data.json`
       → `arc-exemplars.json`; rewrite `/science` on future-self continuity (lead with the age-progressed rendering
       work — it is the licence for the photo feature), episodic future thinking, mental

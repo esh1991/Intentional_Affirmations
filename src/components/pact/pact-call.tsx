@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import confetti from "canvas-confetti";
@@ -10,14 +10,15 @@ import {
   JOURNEY_DURATIONS,
   type JourneyState,
   arcIndexForDay,
-  completeJourneyDay,
+  arcKey,
+  completeJourneyDayAt,
   isCompletedToday,
   isFinished,
   journeyKey,
   nextDay,
   parseJourneys,
   readJourneysRaw,
-  startJourney,
+  startJourneyAt,
 } from "@/lib/journeys";
 import { JourneyDots } from "@/components/app/journey-dots";
 import { SpeakTheLine, type SpeakResult } from "@/components/app/speak-the-line";
@@ -28,6 +29,9 @@ import { recordSession, type SessionEntry } from "@/lib/sessions";
 import { syncCompletion } from "@/lib/sync";
 import { trackEvent } from "@/lib/analytics";
 import { playClick } from "@/lib/sound";
+import { getSupabase } from "@/lib/supabase/client";
+import { useSession } from "@/hooks/use-session";
+import type { ArcDay } from "@/lib/portal/arc";
 
 /**
  * The pact — today's call.
@@ -98,37 +102,143 @@ export function PactCall() {
   const coords = useMemo(() => parseCoordinates(coordsRaw), [coordsRaw]);
   const [rawOverride, setRawOverride] = useState<string | null>(null);
   const [landed, setLanded] = useState<Landed | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const [genError, setGenError] = useState<string | null>(null);
+  /**
+   * The caller's generated arc. `undefined` = not looked up yet, `null` =
+   * looked up and there isn't one. Distinguishing the two keeps the commit
+   * screen from flashing the wrong copy while the lookup is in flight.
+   */
+  const [personal, setPersonal] = useState<
+    { id: string; days: ArcDay[] } | null | undefined
+  >(undefined);
+  const { session, loading: sessionLoading } = useSession();
   const raw = rawOverride ?? rawFromStorage;
 
-  // Resolve today's arc: domain → bridge mode → that mode's first category.
-  // Generated per-user arcs replace this source in M4 without touching the
-  // rest of this component.
+  // Look for a generated arc once we know who is asking.
+  useEffect(() => {
+    if (sessionLoading) return;
+    let cancelled = false;
+    // Every setState lives inside the async callback: a direct setState in the
+    // effect body is what the React Compiler lint rejects.
+    void (async () => {
+      const supabase = session ? getSupabase() : null;
+      if (!supabase) {
+        if (!cancelled) setPersonal(null);
+        return;
+      }
+      try {
+        const { data } = await supabase.auth.getSession();
+        const token = data.session?.access_token;
+        if (!token) throw new Error("no session");
+        const res = await fetch("/api/portal/arc/latest", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const json = (await res.json()) as {
+          arc?: { id: string; days: ArcDay[] } | null;
+        };
+        if (!cancelled) setPersonal(json.arc ?? null);
+      } catch {
+        if (!cancelled) setPersonal(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [session, sessionLoading]);
+
+  /**
+   * Today's arc, and the storage key its progress lives under.
+   *
+   * A generated arc wins when the caller has one. Otherwise this falls back to
+   * the owner-approved library arc via the domain's bridge mode — which is what
+   * keeps the daily call working for someone who never signed in.
+   */
   const arc = useMemo(() => {
     if (!coords) return null;
+    if (personal) {
+      return {
+        key: arcKey(personal.id),
+        source: "generated" as const,
+        mode: DOMAINS[coords.domain].bridgeMode,
+        categoryName: "",
+        journey: personal.days,
+        items: personal.days,
+      };
+    }
+    if (personal === undefined) return null; // still looking
     const mode = DOMAINS[coords.domain].bridgeMode;
     const category = content[mode].categories[0];
     return {
+      key: journeyKey(mode, category.name),
+      source: "library" as const,
       mode,
       categoryName: category.name,
       journey: category.journey ?? null,
       items: category.items,
     };
-  }, [coords]);
+  }, [coords, personal]);
 
   const state: JourneyState | null | undefined = useMemo(() => {
     if (!arc) return null;
     if (raw === null) return undefined;
-    return parseJourneys(raw)[journeyKey(arc.mode, arc.categoryName)] ?? null;
+    return parseJourneys(raw)[arc.key] ?? null;
   }, [arc, raw]);
 
   const begin = useCallback(
-    (duration: 7 | 21) => {
-      if (!arc) return;
+    async (duration: 7 | 21) => {
+      if (!arc || !coords) return;
       playClick();
-      setRawOverride(startJourney(arc.mode, arc.categoryName, duration));
-      trackEvent("pact_started", { duration, mode: arc.mode });
+      setGenError(null);
+
+      // Signed in with no arc yet: this is the moment to write one. They have
+      // just committed to a duration, which is what justifies the spend.
+      const supabase = getSupabase();
+      if (session && !personal && supabase) {
+        setGenerating(true);
+        try {
+          const { data } = await supabase.auth.getSession();
+          const token = data.session?.access_token;
+          if (!token) throw new Error("no session");
+          const res = await fetch("/api/portal/arc", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              domain: coords.domain,
+              goal: coords.goal,
+              horizon: coords.horizon,
+            }),
+          });
+          const json = (await res.json()) as {
+            arcId?: string;
+            days?: ArcDay[];
+            error?: string;
+          };
+          if (!res.ok || !json.arcId || !json.days) {
+            throw new Error(json.error ?? "Couldn't write your arc.");
+          }
+          setPersonal({ id: json.arcId, days: json.days });
+          setRawOverride(startJourneyAt(arcKey(json.arcId), duration));
+          trackEvent("pact_started", { duration, source: "generated" });
+          setGenerating(false);
+          return;
+        } catch (e) {
+          // Falling through to the approved library arc is the right failure
+          // mode: a generation outage must never block the daily practice.
+          setGenError(
+            e instanceof Error ? e.message : "Couldn't write your arc.",
+          );
+          setGenerating(false);
+        }
+      }
+
+      setRawOverride(startJourneyAt(arc.key, duration));
+      trackEvent("pact_started", { duration, source: arc.source });
     },
-    [arc],
+    [arc, coords, session, personal],
   );
 
   const day = state ? nextDay(state) : 1;
@@ -142,7 +252,7 @@ export function PactCall() {
       if (!arc || !state || !line) return;
       const streak = recordCompletion();
       const { stars, trophy } = addStar();
-      setRawOverride(completeJourneyDay(arc.mode, arc.categoryName));
+      setRawOverride(completeJourneyDayAt(arc.key));
       const completed = state.completedDays.length + 1;
       const entry: SessionEntry = {
         affirmation: line.affirmation,
@@ -204,6 +314,21 @@ export function PactCall() {
     );
   }
 
+  // Generating: the wait is the theatre, same as the portal's scan.
+  if (generating) {
+    return (
+      <Frame domain={domainKey}>
+        <p className="aberrating text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+          Writing your twenty-one days&hellip;
+        </p>
+        <p className="mt-6 max-w-sm text-pretty text-center text-muted-foreground">
+          They only get to send one line a day, so they are choosing them
+          carefully. This takes about half a minute.
+        </p>
+      </Frame>
+    );
+  }
+
   // First visit after tuning: how long do you want the line open?
   if (state === null) {
     return (
@@ -218,12 +343,18 @@ export function PactCall() {
           One line a day, through the same door. Miss a day and nothing resets —
           it just waits for you.
         </p>
+        {genError ? (
+          <p className="mt-6 max-w-sm text-pretty text-center text-sm text-mode-2" aria-live="polite">
+            {genError} We&apos;ll use an approved arc for now — your practice
+            isn&apos;t blocked.
+          </p>
+        ) : null}
         <div className="mt-10 grid w-full max-w-lg gap-4 sm:grid-cols-2">
           {JOURNEY_DURATIONS.map((duration) => (
             <button
               key={duration}
               type="button"
-              onClick={() => begin(duration)}
+              onClick={() => void begin(duration)}
               className="flex flex-col items-center rounded-3xl border border-border/60 bg-card/70 p-6 transition-all hover:-translate-y-1 hover:border-mode/60"
             >
               <span className="font-display text-4xl font-bold text-mode-2">
@@ -327,7 +458,9 @@ export function PactCall() {
         header={
           <div className="flex flex-col items-center gap-3">
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-mode-2">
-              One line is cleared to send
+              {arc.source === "generated"
+                ? "Written for you alone"
+                : "One line is cleared to send"}
             </span>
             <span className="rounded-full border border-border bg-card/60 px-4 py-1.5 text-sm font-semibold">
               Day {day} of {state.duration}
