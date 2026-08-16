@@ -36,6 +36,15 @@ test("portal tunes, runs the sequence, and hands off a line to speak", async ({ 
   expect(painted.color).toBe("rgba(0, 0, 0, 0)");
   expect(painted.background).not.toBe("rgba(0, 0, 0, 0)");
 
+  // The portrait offer lands right after they speak — signed out, it shows
+  // the sign-in gate and an always-available skip. Tuning stays anonymous;
+  // only the paid step is gated.
+  await expect(
+    page.getByRole("heading", { name: /want to see their face/i }),
+  ).toBeVisible({ timeout: 12000 });
+  await expect(page.getByRole("link", { name: /sign in to see them/i })).toBeVisible();
+  await page.getByRole("button", { name: /just give me the line/i }).click();
+
   // The line they are cleared to send, then the hand-off into speaking.
   await expect(page.getByText("One line is cleared to send")).toBeVisible({ timeout: 10000 });
   const promise = page.locator(".affirmation-word");

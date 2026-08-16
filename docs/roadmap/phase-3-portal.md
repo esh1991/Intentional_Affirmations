@@ -440,8 +440,7 @@ face, smaller and letterspaced, so it reads as *voice* rather than UI text.
 
       `maxDuration` is deliberately **not** set yet: it belongs on the generation routes, which
       arrive in M2. Setting it on routes that make no provider call would be noise.
-- [~] **P3-M2 — Tune → reveal.** Sequence shipped 2026-08-15; the *generated* portrait waits on
-      the owner's keys.
+- [x] **P3-M2 — Tune → reveal.** Complete 2026-08-15.
       - `/portal` live: tune (domain → goal → horizon, anonymous, localStorage) → cross → scan →
         contact → the one line they are cleared to send → hand-off into the speaking flow.
       - `src/lib/portal/domains.ts` — the five life domains, each with a `bridgeMode` pointing at
@@ -457,7 +456,15 @@ face, smaller and letterspaced, so it reads as *voice* rather than UI text.
       **private** blobs and read back through `GET /api/portal/portrait/[id]`, which
       authenticates and checks ownership before streaming — not a presigned URL, which needs a
       two-step token delegation and would hand out a bearer credential that outlives the request.
-      **Remaining for M2: the consent + upload UI in the portal flow.**
+      **Consent + upload shipped 2026-08-15** — `src/components/portal/bring-into-focus.tsx`,
+      offered right after the guide speaks (where wanting to see the face is strongest) and
+      always skippable. Sign-in gates only this step; tuning and contact stay anonymous.
+
+      Two things worth not re-deriving: the consent copy **names the third-party provider**,
+      because "we never keep your photo" is true of our storage and misleading on its own; and
+      `<img src>` cannot carry an `Authorization` header, so a private portrait is fetched with
+      the bearer token and handed to the tag as an object URL (revoked on unmount) rather than
+      served through `next/image`, which would re-request it without the header.
 
       **Built to work without a portrait on purpose.** The reveal is the hook; the rep is the
       product — a portal that stops at the portrait is the exact failure mental-contrasting

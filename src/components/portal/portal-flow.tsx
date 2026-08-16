@@ -14,6 +14,7 @@ import {
   saveCoordinates,
 } from "@/lib/portal/domains";
 import { guideMessage, promiseFor } from "@/lib/portal/guide";
+import { BringIntoFocus, PortraitImage } from "@/components/portal/bring-into-focus";
 import {
   playChordResolve,
   playLockTone,
@@ -41,7 +42,13 @@ import { trackEvent } from "@/lib/analytics";
  * peaks and reads as narrative rather than friction.
  */
 
-type Step = "tune" | "crossing" | "scanning" | "contact" | "promise";
+type Step =
+  | "tune"
+  | "crossing"
+  | "scanning"
+  | "contact"
+  | "focus"
+  | "promise";
 
 const SCAN_MS = 3200;
 const CROSS_MS = 2200;
@@ -62,6 +69,8 @@ export function PortalFlow() {
   const [horizon, setHorizon] = useState<HorizonKey>("1y");
   const [coords, setCoords] = useState<Coordinates | null>(null);
   const [frame, setFrame] = useState(0);
+  // Set once a portrait exists; until then the stand-in stands in.
+  const [futureSelfId, setFutureSelfId] = useState<string | null>(null);
   const [soundOn, setSoundOn] = useState(false);
   const soundOnRef = useRef(false);
 
@@ -97,7 +106,9 @@ export function PortalFlow() {
       return () => clearTimeout(t);
     }
     if (step === "contact") {
-      const t = setTimeout(() => setStep("promise"), 4200);
+      // The offer lands here, right after they hear from them — where wanting
+      // to see the face is strongest.
+      const t = setTimeout(() => setStep("focus"), 4600);
       return () => clearTimeout(t);
     }
   }, [step]);
@@ -304,21 +315,23 @@ export function PortalFlow() {
           </div>
         ) : null}
 
-        {step === "contact" || step === "promise" ? (
+        {step === "contact" || step === "focus" || step === "promise" ? (
           <div className="resolving transmission relative size-48 overflow-hidden rounded-full sm:size-60">
-            {/*
-              The portrait slot. Until FAL_KEY and the blob store exist this
-              shows the pre-baked stand-in; wiring the generated portrait is a
-              src swap, nothing structural.
-            */}
-            <Image
-              src="/portal/shipped.webp"
-              alt="The version of you the channel reached"
-              fill
-              sizes="15rem"
-              priority
-              className="object-cover"
-            />
+            {futureSelfId ? (
+              <PortraitImage
+                futureSelfId={futureSelfId}
+                className="size-full object-cover"
+              />
+            ) : (
+              <Image
+                src="/portal/shipped.webp"
+                alt="A stand-in for the version of you the channel reached"
+                fill
+                sizes="15rem"
+                priority
+                className="object-cover"
+              />
+            )}
           </div>
         ) : null}
       </div>
@@ -350,6 +363,19 @@ export function PortalFlow() {
               {message.after}&rdquo;
             </p>
           </>
+        ) : null}
+
+        {step === "focus" && coords ? (
+          <div className="mt-8 flex w-full justify-center">
+            <BringIntoFocus
+              coords={coords}
+              onDone={(id) => {
+                setFutureSelfId(id);
+                setStep("promise");
+              }}
+              onSkip={() => setStep("promise")}
+            />
+          </div>
         ) : null}
 
         {step === "promise" && promise ? (
