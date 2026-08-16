@@ -26,6 +26,9 @@ import { useClientValue } from "@/hooks/use-client-value";
 import { addStar } from "@/lib/stars";
 import { readLastPractice, recordCompletion } from "@/lib/streak";
 import { signalFor } from "@/lib/portal/signal";
+import { offProtocolFor } from "@/lib/portal/protocol";
+import { clearanceFor, distinctDays } from "@/lib/portal/clearance";
+import { readSessions } from "@/lib/sessions";
 import { recordSession, type SessionEntry } from "@/lib/sessions";
 import { syncCompletion } from "@/lib/sync";
 import { trackEvent } from "@/lib/analytics";
@@ -63,6 +66,8 @@ interface Landed {
   streak: number;
   stars: number;
   trophy: boolean;
+  /** Set when they broke protocol for this one. */
+  offProtocol: string | null;
 }
 
 /**
@@ -289,7 +294,24 @@ export function PactCall() {
         input,
         surface: "pact",
       });
-      setLanded({ day, duration: state.duration, completed, streak, stars, trophy });
+      // Seeded from this completion so it is stable — a refresh cannot re-roll
+      // it, and it never changes under the reader mid-screen.
+      const clearance = clearanceFor(
+        distinctDays(readSessions().map((s) => s.completedAt)),
+      );
+      const offProtocol = offProtocolFor(
+        `${line.affirmation}@@${entry.completedAt}`,
+        clearance.level,
+      );
+      setLanded({
+        day,
+        duration: state.duration,
+        completed,
+        streak,
+        stars,
+        trophy,
+        offProtocol,
+      });
       new Audio("/success.mp3").play().catch(() => {});
       if (trophy || completed === state.duration) {
         confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
@@ -428,6 +450,17 @@ export function PactCall() {
           Day {landed.completed} of {landed.duration} · {landed.streak} day
           {landed.streak === 1 ? "" : "s"} in a row
         </p>
+        {landed.offProtocol ? (
+          <div className="mt-8 max-w-md rounded-2xl border border-mode/40 bg-mode/5 px-5 py-4">
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-mode-2">
+              Off protocol
+            </p>
+            <p className="font-display transmission-voice mt-2 text-balance text-base leading-relaxed">
+              {landed.offProtocol}
+            </p>
+          </div>
+        ) : null}
+
         <p className="font-display mt-10 text-xl font-semibold">
           {finished ? "The line stays open." : "Same door tomorrow."}
         </p>

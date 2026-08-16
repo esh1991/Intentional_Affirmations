@@ -696,8 +696,23 @@ better version of every standard mechanic, so nothing here is bolted on.
 
       A first-ever visitor reads as *clear*, not lost — they have not drifted from anything.
 - [ ] **Held frequency.** A banked protected day, earned by consistency, never bought.
-- [ ] **Breaking protocol.** Occasionally they send something extra. Highest emotional payoff
-      per line of code in the list.
+- [x] **Breaking protocol** (`src/lib/portal/protocol.ts`, shipped 2026-08-16). Occasionally the
+      return screen carries a message they should not have sent. Measured: ~1 in 8 completions,
+      rising to ~1 in 3 at Clearance 4 (the level literally named "Off protocol").
+
+      Three rules, all verified:
+      - **Still no outcomes.** Breaking protocol never means breaking decision 10. Every line is
+        about the present, memory, or how they feel. Scanned the pool against prediction,
+        certainty and mechanism patterns: zero hits. A message that leaked a prediction would
+        undo the premise for a cheap thrill.
+      - **Deterministic, not random.** Selected from a hash of `affirmation@@completedAt`, so the
+        same completion always yields the same result — it cannot be re-rolled by refreshing,
+        and it keeps `Math.random` out of render (React Compiler lint).
+      - **Pre-written, not generated.** An LLM call on the win screen would add cost and latency
+        to the single most important moment in the app, to produce something a human writes
+        better.
+
+- [ ] **Held frequency.** A banked protected day, earned by consistency, never bought.
 
 **Ruled out, deliberately:** hearts/lives (they would block someone from saying an affirmation,
 in a mental-health-adjacent app); leagues and leaderboards (ranking inner work against strangers
