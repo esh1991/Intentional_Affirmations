@@ -456,11 +456,26 @@ face, smaller and letterspaced, so it reads as *voice* rather than UI text.
       research describes. The portrait slot is reserved and lights up on a `src` swap once
       `FAL_KEY` + the blob store exist. Still to do: consent + selfie upload, the fal job,
       source-selfie deletion, polling against the scan.
+- [x] **P3-M3a — `<SpeakTheLine>` extracted.** The mic, typing fallback and word highlighting
+      now live in `src/components/app/speak-the-line.tsx`, shared by `/practice` and `/pact`.
+      It owns the mechanic and deliberately owns *nothing* about what success means — stars,
+      streaks, journeys and session logging stay with each caller, because the two surfaces
+      reward completion differently. `practice-screen.tsx` dropped 665 → 490 lines with no
+      behaviour change (the smoke test drives a full typed completion and still passes).
+      **Callers must pass `key={affirmation}`**: resetting state from an effect is what the
+      React Compiler lint forbids, and remount-on-key is the correct pattern anyway.
 - [ ] **P3-M3 — The conversation.** Streaming Claude persona; transcript ending in a promise;
       handoff into `<SpeakTheLine>` — words light up, stars/streak/session recording all fire
       through the existing untouched path.
-- [ ] **P3-M4 — The pact.** Arc generation via structured outputs; `arcs`/`arc_days`; `/pact`
-      daily call; `journeys.ts` repointed to arc ids; sync extended.
+- [~] **P3-M4 — The pact.** `/pact` shipped 2026-08-15; generated arcs still to come.
+      - `/pact` is the daily call and the portal now hands off to it instead of the old browse
+        hub — the commitment picker (7 or 21) moved here, which is where it belongs.
+      - **The reward lands on the way back out**, not at verification: stars, streak and dots all
+        resolve on the return screen, which is what makes the ritual close rather than stop.
+      - Content is still the owner-approved arc via the domain's `bridgeMode`. Swapping in
+        generated `arcs`/`arc_days` changes one memo in `pact-call.tsx` and nothing else.
+      - Still to do: arc generation via structured outputs, `journeys.ts` repointed to arc ids,
+        sync extended.
 - [ ] **P3-M5 — Cutover.** Retire `/practice` routes and `home-screen.tsx`; `mindset-data.json`
       → `arc-exemplars.json`; rewrite `/science` on future-self continuity (lead with the age-progressed rendering
       work — it is the licence for the photo feature), episodic future thinking, mental
