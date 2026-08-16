@@ -8,6 +8,7 @@ import { readStreak } from "@/lib/streak";
 import { getSupabase } from "@/lib/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { useClientValue } from "@/hooks/use-client-value";
+import { clearanceFor, nextClearance } from "@/lib/portal/clearance";
 
 /**
  * The log — every line they ever sent you, and the day you said it.
@@ -164,7 +165,35 @@ export function LogView() {
         </div>
       </header>
 
-      <div className="mt-12 flex flex-col gap-10">
+      {/*
+        Clearance, shown where it is earned. It reports what has actually
+        changed about the channel — not a badge, and never a promise about
+        outcomes.
+      */}
+      {(() => {
+        const level = clearanceFor(distinctDays);
+        const next = nextClearance(distinctDays);
+        const toGo = next ? next.days - distinctDays : 0;
+        return (
+          <div className="mt-10 rounded-2xl border border-border/60 bg-card/50 p-5">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-mode-2">
+                Clearance {level.level} &middot; {level.name}
+              </p>
+              {next ? (
+                <p className="text-xs text-muted-foreground tabular-nums">
+                  {toGo} more {toGo === 1 ? "day" : "days"} to {next.name}
+                </p>
+              ) : null}
+            </div>
+            <p className="mt-2 text-pretty text-sm text-muted-foreground">
+              {level.unlocked}
+            </p>
+          </div>
+        );
+      })()}
+
+      <div className="mt-10 flex flex-col gap-10">
         {days.map(([label, entries]) => (
           <section key={label}>
             <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">

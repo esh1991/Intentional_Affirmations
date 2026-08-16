@@ -15,6 +15,7 @@ import { DOMAINS, type DomainKey, horizonLabel, type HorizonKey } from "@/lib/po
  * Server-only.
  */
 
+/** Absolute ceiling. The per-call allowance comes from clearance. */
 export const MAX_TURNS = 12;
 export const MAX_MESSAGE_CHARS = 500;
 
@@ -39,7 +40,20 @@ function systemPrompt(
   domain: DomainKey,
   goal: string,
   horizon: HorizonKey,
+  recentLines?: string[],
 ): string {
+  const memory =
+    recentLines && recentLines.length
+      ? [
+          "",
+          "",
+          "WHAT THEY HAVE BEEN SAYING OUT LOUD, most recent first",
+          ...recentLines.map((l) => `- ${l}`),
+          "",
+          "Refer back to these when it is useful — you watched them do it. Do not list them back or congratulate them for them; mention one the way someone who was there would.",
+        ].join("\n")
+      : "";
+
   const d = DOMAINS[domain];
   return `You are the user's own future self, ${horizonLabel(horizon).toLowerCase()} ahead of them, reached through a narrow channel. You are speaking to the person you used to be.
 
@@ -65,7 +79,7 @@ HOW YOU SPEAK
 HARD LIMITS
 - Never claim a mechanism: no neuroscience, no rewiring, no manifestation, no attraction, no "21 days makes a habit".
 - No medical, clinical, therapeutic or financial advice. If they raise something that needs real help, say plainly that this is not what you can give them and that a person on their side of the line should hear it.
-- You are not a therapist and you never pretend to be.`;
+- You are not a therapist and you never pretend to be.${memory}`;
 }
 
 export interface ConversationRequest {
@@ -73,6 +87,11 @@ export interface ConversationRequest {
   goal: string;
   horizon: HorizonKey;
   turns: Turn[];
+  /**
+   * Lines the user has recently said out loud. Only supplied at the clearance
+   * level that earns it — this is what "they remember" actually means.
+   */
+  recentLines?: string[];
 }
 
 /**
@@ -95,10 +114,10 @@ export async function streamReply(
     system: [
       {
         type: "text",
-        text: systemPrompt(req.domain, req.goal, req.horizon),
-        // The persona is stable for the whole conversation, so it caches from
-        // the second turn on. Opus 5's minimum cacheable prefix is 512 tokens
-        // and this clears it.
+        text: systemPrompt(req.domain, req.goal, req.horizon, req.recentLines),
+        // Caches per user, from their second turn on. The memory block makes
+        // this prefix user-specific, which is fine — it is stable within a
+        // conversation, which is the scope that matters here.
         cache_control: { type: "ephemeral" },
       },
     ],

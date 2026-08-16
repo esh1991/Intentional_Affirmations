@@ -43,4 +43,9 @@ test("a completed line appears in the log", async ({ page }) => {
   // whole rather than one text node.
   const stat = page.locator("span", { hasText: /^1line said$/ }).first();
   await expect(stat).toBeVisible();
+
+  // Clearance starts at the bottom and reports what actually changed, plus
+  // how far the next level is. One day of practice must not skip a level.
+  await expect(page.getByText(/Clearance 1 · Contact/)).toBeVisible();
+  await expect(page.getByText(/2 more days to Open channel/)).toBeVisible();
 });

@@ -8,6 +8,7 @@ import {
   streamReply,
 } from "@/lib/portal/conversation";
 import { isDomainKey } from "@/lib/portal/domains";
+import { clearanceFor, distinctDays } from "@/lib/portal/clearance";
 
 /**
  * One turn of the conversation with the guide.
@@ -81,6 +82,37 @@ export async function POST(request: Request) {
     return Response.json({ error: "Bad request." }, { status: 400 });
   }
 
+  /*
+   * Clearance is computed HERE, from the database — never taken from the
+   * request. A client-supplied level would be a free upgrade for anyone who
+   * edits a fetch, and the whole mechanic is that it has to be earned.
+   */
+  const { data: history } = await db
+    .from("sessions")
+    .select("affirmation,completed_at")
+    .eq("user_id", user.id)
+    .order("completed_at", { ascending: false })
+    .limit(200);
+
+  const rows = history ?? [];
+  const clearance = clearanceFor(
+    distinctDays(rows.map((r) => r.completed_at as string)),
+  );
+
+  const userTurns = turns.filter((t) => t.role === "user").length;
+  if (userTurns > clearance.turns) {
+    return Response.json(
+      { error: "That's all this channel holds today.", clearance: clearance.level },
+      { status: 400 },
+    );
+  }
+
+  // "They remember" is a real capability gate, not a label: below it, the
+  // guide is simply never shown what you've been saying.
+  const recentLines = clearance.remembers
+    ? [...new Set(rows.map((r) => r.affirmation as string))].slice(0, 12)
+    : undefined;
+
   const quota = await checkQuota(user.id, "conversation");
   if (!quota.allowed) {
     return Response.json(
@@ -92,7 +124,7 @@ export async function POST(request: Request) {
   const jobId = await createJob(user.id, "conversation", "anthropic");
 
   try {
-    const stream = await streamReply({ domain, goal, horizon, turns });
+    const stream = await streamReply({ domain, goal, horizon, turns, recentLines });
     if (jobId) void updateJob(jobId, { status: "completed" });
 
     // Fire-and-forget: the transcript is substrate for later personalisation,

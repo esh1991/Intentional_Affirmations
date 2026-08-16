@@ -658,10 +658,28 @@ better version of every standard mechanic, so nothing here is bolted on.
       spoken/typed marker. Near-free to build because `sessions` has recorded completions since
       Phase 1 — the value was sitting there unread. Reads localStorage first so it works signed
       out, then merges the caller's cloud rows so it is whole across devices.
-- [ ] **Clearance.** They are cleared to send *more* the longer you show up: first one line,
-      then context, then a second line for hard days, then references to your history. This is
-      the progression system and the personalisation roadmap in one, and it never reveals
-      outcomes — so it stays inside decision 10.
+- [x] **Clearance** (`src/lib/portal/clearance.ts`, shipped 2026-08-16). Four levels earned by
+      **distinct days practised** — eight lines in one sitting is one day, because showing up is
+      the thing being rewarded.
+
+      | | Level | Days | What actually changes |
+      |---|---|---|---|
+      | 1 | Contact | 0 | 3 questions per call |
+      | 2 | Open channel | 3 | 5 questions |
+      | 3 | They remember | 7 | 8 questions, **and the guide is shown your recent lines** |
+      | 4 | Off protocol | 21 | 12 questions |
+
+      Two rules held: **every level changes what actually happens** (a level that only prints a
+      nicer word is the bolted-on gamification this design exists to avoid), and **no level
+      lifts the restriction** — clearance deepens guidance, never reveals outcomes, so it stays
+      inside decision 10 and has nothing to falsely promise.
+
+      **Enforced server-side**, computed from `sessions` in the route. A client-supplied level
+      would be a free upgrade for anyone who edits a fetch. The panel computes the same value
+      locally for UI only; the route is the authority and returns 400 on a mismatch.
+
+      Level 3 is the personalisation substrate: recent lines are injected into the guide's
+      system prompt, so "they remember" is a real capability gate rather than a label.
 - [ ] **Signal strength.** Miss days and the transmission degrades visibly (grain, drift); come
       back and it clarifies. Loss aversion made reversible — a noisy signal is an invitation
       where "streak: 0" is a punishment.

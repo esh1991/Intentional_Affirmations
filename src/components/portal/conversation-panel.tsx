@@ -7,6 +7,9 @@ import { useSession } from "@/hooks/use-session";
 import type { Coordinates } from "@/lib/portal/domains";
 import { trackEvent } from "@/lib/analytics";
 import { playClick } from "@/lib/sound";
+import { readSessions } from "@/lib/sessions";
+import { clearanceFor, distinctDays } from "@/lib/portal/clearance";
+import { useClientValue } from "@/hooks/use-client-value";
 
 /**
  * Talking to the guide.
@@ -21,7 +24,6 @@ import { playClick } from "@/lib/sound";
  * is that only so much gets through.
  */
 
-const MAX_USER_TURNS = 5;
 const MAX_CHARS = 500;
 
 interface Turn {
@@ -43,6 +45,16 @@ export function ConversationPanel({
   onDone: () => void;
 }) {
   const { session, loading } = useSession();
+  /*
+   * How many questions this call holds, from clearance. Computed locally for
+   * the UI only — the route recomputes it from the database and is the
+   * authority, so a tampered client gets a 400 rather than free turns. Sync
+   * merges cloud history into localStorage on sign-in, so the two agree.
+   */
+  const earnedTurns = useClientValue(
+    () => clearanceFor(distinctDays(readSessions().map((s) => s.completedAt))).turns,
+  );
+  const maxUserTurns = earnedTurns ?? 3;
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -50,7 +62,7 @@ export function ConversationPanel({
   const endRef = useRef<HTMLDivElement>(null);
 
   const asked = turns.filter((t) => t.role === "user").length;
-  const spent = asked >= MAX_USER_TURNS;
+  const spent = asked >= maxUserTurns;
 
   const send = useCallback(
     async (text: string) => {
