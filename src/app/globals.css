@@ -534,6 +534,23 @@
 }
 
 /* The future self's dialogue: same face, smaller, letterspaced — voice, not UI. */
+/*
+ * Redaction. The guide is not permitted to send specifics, and showing that is
+ * far stronger than saying it. A struck block, never a blur: blur reads as
+ * "loading", a bar reads as "withheld".
+ *
+ * The text stays in the DOM (screen readers get aria-label="redacted" on the
+ * span) but is painted out — this is narrative, not security, so there is
+ * nothing secret behind it.
+ */
+.redacted {
+  border-radius: 0.15em;
+  padding: 0 0.2em;
+  color: transparent;
+  background: color-mix(in oklch, var(--foreground) 78%, transparent);
+  user-select: none;
+}
+
 .transmission-voice {
   letter-spacing: 0.06em;
   color: color-mix(in oklch, var(--foreground) 82%, var(--mode-accent-2));

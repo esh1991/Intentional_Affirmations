@@ -6,12 +6,10 @@ import { test, expect } from "@playwright/test";
  * Drives the typing path — deterministic, no mic in CI.
  */
 test("speak-it flow completes day 1 of a journey via typing", async ({ page }) => {
-  // Marketing home → practice hub
-  await page.goto("/");
-  await expect(
-    page.getByRole("heading", { name: /isn.t allowed to tell you/i }),
-  ).toBeVisible();
-  await page.getByRole("link", { name: /open the channel/i }).click();
+  // The browse hub. The home CTA now opens /portal (P3-M2) and the portal's
+  // own hand-off into this flow is covered by portal-flow.spec.ts; this test
+  // owns the speaking flow itself, so it enters directly.
+  await page.goto("/practice");
   await expect(page).toHaveURL(/\/practice$/);
 
   // Default mode is Power Up; open its first category
