@@ -24,8 +24,9 @@ import { EmailSignup } from "@/components/home/email-signup";
  * can never show you the trophy; and reading the line back out loud is a radio
  * read-back handshake, which is why word-for-word verification exists at all.
  *
- * The CTA still routes into /practice, the live working app. It repoints to
- * /portal in P3-M2 — this copy promises nothing that isn't already shippable.
+ * The CTA routes to /portal (P3-M2). The browse hub at /practice stays live
+ * underneath until the M5 cutover and still owns the speaking flow, which is
+ * where the portal hands off.
  */
 
 const STEPS = [
@@ -101,7 +102,7 @@ export default function Home() {
           <WelcomeBack />
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/practice"
+              href="/portal"
               className="rounded-full bg-mode px-8 py-3.5 font-semibold text-mode-foreground shadow-lg transition-transform hover:-translate-y-0.5"
             >
               Open the channel

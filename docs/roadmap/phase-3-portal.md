@@ -440,9 +440,22 @@ face, smaller and letterspaced, so it reads as *voice* rather than UI text.
 
       `maxDuration` is deliberately **not** set yet: it belongs on the generation routes, which
       arrive in M2. Setting it on routes that make no provider call would be noise.
-- [ ] **P3-M2 — Tune → reveal.** Coordinates form; consent + selfie upload; fal portrait job;
-      source-selfie deletion; polling against the scanning sequence; the resolve. Repoint the
-      home CTA from `/practice` to `/portal`.
+- [~] **P3-M2 — Tune → reveal.** Sequence shipped 2026-08-15; the *generated* portrait waits on
+      the owner's keys.
+      - `/portal` live: tune (domain → goal → horizon, anonymous, localStorage) → cross → scan →
+        contact → the one line they are cleared to send → hand-off into the speaking flow.
+      - `src/lib/portal/domains.ts` — the five life domains, each with a `bridgeMode` pointing at
+        the closest owner-approved mode until generated arcs land in M4.
+      - `src/lib/portal/guide.ts` — the guide's message per domain, obeying decision 10 (name the
+        obstacle, hand over an action, never the outcome, never name the authority). The
+        *promise* itself is pulled from the owner-approved library, not invented.
+      - Home CTA repointed to `/portal`.
+
+      **Built to work without a portrait on purpose.** The reveal is the hook; the rep is the
+      product — a portal that stops at the portrait is the exact failure mental-contrasting
+      research describes. The portrait slot is reserved and lights up on a `src` swap once
+      `FAL_KEY` + the blob store exist. Still to do: consent + selfie upload, the fal job,
+      source-selfie deletion, polling against the scan.
 - [ ] **P3-M3 — The conversation.** Streaming Claude persona; transcript ending in a promise;
       handoff into `<SpeakTheLine>` — words light up, stars/streak/session recording all fire
       through the existing untouched path.
