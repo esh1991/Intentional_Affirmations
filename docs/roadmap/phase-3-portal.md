@@ -474,8 +474,14 @@ face, smaller and letterspaced, so it reads as *voice* rather than UI text.
         resolve on the return screen, which is what makes the ritual close rather than stop.
       - Content is still the owner-approved arc via the domain's `bridgeMode`. Swapping in
         generated `arcs`/`arc_days` changes one memo in `pact-call.tsx` and nothing else.
-      - Still to do: arc generation via structured outputs, `journeys.ts` repointed to arc ids,
-        sync extended.
+      - **Arc generation shipped 2026-08-15 and verified against the live API.** `src/lib/portal/arc.ts`
+        + `POST /api/portal/arc`: `claude-opus-5`, `effort: "high"`, structured outputs via
+        `messages.parse()` + `zodOutputFormat`. Two owner-approved arcs ride in a
+        `cache_control` prefix as the style contract, so generated arcs inherit the voice.
+        Measured: 21/21 days, all ≤12 words, correct Notice→Act→Become progression, no
+        banned-claim hits, ~27s at effort high.
+      - Still to do: `/pact` reading generated `arc_days` instead of the bridge-mode arc,
+        `journeys.ts` repointed to arc ids, sync extended.
 - [ ] **P3-M5 — Cutover.** Retire `/practice` routes and `home-screen.tsx`; `mindset-data.json`
       → `arc-exemplars.json`; rewrite `/science` on future-self continuity (lead with the age-progressed rendering
       work — it is the licence for the photo feature), episodic future thinking, mental
@@ -534,7 +540,24 @@ Code-side M0 is done; three things need the owner before M2 can be wired:
    injected automatically; it is only set by hand for local dev.
 3. **`FAL_KEY`** from a fal account. Nothing photoreal can be generated without it.
 
-`ANTHROPIC_API_KEY` is not needed until M3.
+**All three landed 2026-08-15** — migration applied and verified (RLS proven against anon),
+blob store created (private access + read-write token), keys set in Vercel.
+
+## API facts worth not re-deriving
+
+Checked against the live API 2026-08-15, because several differ from what the spec assumed:
+
+- **`usage.input_tokens` is the uncached remainder only.** With the exemplar prefix cached it
+  reads ~84 tokens for a ~2k-token prompt. Total prompt = `input_tokens` +
+  `cache_creation_input_tokens` + `cache_read_input_tokens`. Costing off `input_tokens` alone
+  under-reports by more than an order of magnitude.
+- **Structured outputs do not enforce array length.** `.length(21)` is stripped from the schema
+  sent to the API and validated client-side by the SDK instead — which is the behaviour we
+  want (fail loudly), but it is not an API guarantee.
+- **Thinking is on by default on `claude-opus-5`**, and `max_tokens` caps thinking *plus*
+  visible output. Sizing `max_tokens` to the visible arc would truncate it.
+- **Opus 5's minimum cacheable prefix is 512 tokens** (down from 1024 on Opus 4.8).
+- `temperature` / `top_p` / `top_k` return a 400 on Opus 5 — steer by prompting only.
 
 ## Open items for the owner
 
