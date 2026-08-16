@@ -451,6 +451,14 @@ face, smaller and letterspaced, so it reads as *voice* rather than UI text.
         *promise* itself is pulled from the owner-approved library, not invented.
       - Home CTA repointed to `/portal`.
 
+      **Portrait generation shipped 2026-08-15 and verified end to end.** `fal-ai/nano-banana/edit`
+      via `src/lib/portal/portrait.ts` + `POST /api/portal/portrait`. Measured: identity
+      preserved from a single reference, ~8s, data-URI input accepted. Portraits are stored as
+      **private** blobs and read back through `GET /api/portal/portrait/[id]`, which
+      authenticates and checks ownership before streaming — not a presigned URL, which needs a
+      two-step token delegation and would hand out a bearer credential that outlives the request.
+      **Remaining for M2: the consent + upload UI in the portal flow.**
+
       **Built to work without a portrait on purpose.** The reveal is the hook; the rep is the
       product — a portal that stops at the portrait is the exact failure mental-contrasting
       research describes. The portrait slot is reserved and lights up on a `src` swap once
@@ -557,6 +565,12 @@ Checked against the live API 2026-08-15, because several differ from what the sp
 - **Thinking is on by default on `claude-opus-5`**, and `max_tokens` caps thinking *plus*
   visible output. Sizing `max_tokens` to the visible arc would truncate it.
 - **Opus 5's minimum cacheable prefix is 512 tokens** (down from 1024 on Opus 4.8).
+- **fal accepts a `data:` URI in `image_urls`.** This is what makes the photo policy possible —
+  the selfie never needs a fetchable home, so it is never written to any bucket of ours.
+- **`@vercel/blob`'s `presignUrl` requires a two-step token delegation** (`issueSignedToken`
+  first). For owner-only reads, `get(pathname, {access:"private"})` streamed through an
+  authenticated route is simpler and tighter.
+- **Next 16 route handlers receive `params` as a `Promise`** — `const { id } = await params`.
 - `temperature` / `top_p` / `top_k` return a 400 on Opus 5 — steer by prompting only.
 
 ## Open items for the owner

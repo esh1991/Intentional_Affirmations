@@ -1,4 +1,4 @@
-import { del, list, put } from "@vercel/blob";
+import { del, get, list, put } from "@vercel/blob";
 
 /**
  * Portrait storage on Vercel Blob.
@@ -8,10 +8,11 @@ import { del, list, put } from "@vercel/blob";
  * two apps. Postgres holds URLs only — never bytes.
  *
  * THE PHOTO POLICY (docs/roadmap/phase-3-portal.md):
- * the source selfie is deleted the moment the portrait exists. The portrait
- * then serves as the canonical reference for every later generation. This is
- * both the strongest available privacy posture and a marketing line — we never
- * keep your photo — so it is a product promise, not an implementation detail.
+ * the source selfie is never stored at all — see src/lib/portal/portrait.ts.
+ * What lives here is the generated portrait, and it is stored **private**:
+ * these are photoreal images of the user's face, and "anyone with the URL can
+ * see it" is not an acceptable posture for that. Reads go through a
+ * short-lived signed URL minted for the owner.
  */
 
 /**
@@ -37,18 +38,49 @@ export async function putPortrait(
   userId: string,
   futureSelfId: string,
   body: Blob | ArrayBuffer | Buffer,
-  contentType = "image/webp",
+  contentType = "image/jpeg",
 ): Promise<string | null> {
   if (!isBlobEnabled()) return null;
   try {
-    const { url } = await put(
+    const { pathname } = await put(
       `${userPrefix(userId)}portrait-${futureSelfId}`,
       body,
-      { access: "public", contentType, addRandomSuffix: true },
+      { access: "private", contentType, addRandomSuffix: true },
     );
-    return url;
+    // Store the pathname, not a URL: a private blob has no durable public URL,
+    // and a signed one would expire in the database.
+    return pathname;
   } catch (error) {
     console.error("portrait upload failed", error);
+    return null;
+  }
+}
+
+/**
+ * Reads a private portrait back.
+ *
+ * Deliberately not a presigned URL: `presignUrl` needs a two-step token
+ * delegation, and a signed URL is a bearer credential that outlives the
+ * request. Streaming through our own authenticated route is simpler and
+ * strictly tighter — the caller has already proven ownership, and nothing
+ * fetchable ever leaves the server.
+ *
+ * The caller MUST establish that this user owns this pathname first; reading
+ * is not authorisation.
+ */
+export async function readPortrait(
+  pathname: string,
+): Promise<{ body: ReadableStream; contentType: string } | null> {
+  if (!isBlobEnabled()) return null;
+  try {
+    const result = await get(pathname, { access: "private" });
+    if (!result?.stream) return null;
+    return {
+      body: result.stream,
+      contentType: result.headers.get("content-type") ?? "image/jpeg",
+    };
+  } catch (error) {
+    console.error("portrait read failed", error);
     return null;
   }
 }
