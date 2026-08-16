@@ -695,7 +695,6 @@ better version of every standard mechanic, so nothing here is bolted on.
         "streak lost" is the wrong instrument.
 
       A first-ever visitor reads as *clear*, not lost — they have not drifted from anything.
-- [ ] **Held frequency.** A banked protected day, earned by consistency, never bought.
 - [x] **Breaking protocol** (`src/lib/portal/protocol.ts`, shipped 2026-08-16). Occasionally the
       return screen carries a message they should not have sent. Measured: ~1 in 8 completions,
       rising to ~1 in 3 at Clearance 4 (the level literally named "Off protocol").
