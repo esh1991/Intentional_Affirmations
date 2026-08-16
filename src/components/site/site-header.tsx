@@ -19,6 +19,12 @@ export function SiteHeader() {
             The portal
           </Link>
           <Link
+            href="/log"
+            className="hidden rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:block"
+          >
+            The log
+          </Link>
+          <Link
             href="/science"
             className="rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
           >

@@ -649,6 +649,31 @@ Checked against the live API 2026-08-15, because several differ from what the sp
 - **Next 16 route handlers receive `params` as a `Promise`** — `const { id } = await params`.
 - `temperature` / `top_p` / `top_k` return a 400 on Opus 5 — steer by prompting only.
 
+## Gamification (Phase 3b)
+
+Design rationale in the session that proposed it; the principle is that the premise generates a
+better version of every standard mechanic, so nothing here is bolted on.
+
+- [x] **The Log** (`/log`, shipped 2026-08-15). Every line ever sent, grouped by day, with the
+      spoken/typed marker. Near-free to build because `sessions` has recorded completions since
+      Phase 1 — the value was sitting there unread. Reads localStorage first so it works signed
+      out, then merges the caller's cloud rows so it is whole across devices.
+- [ ] **Clearance.** They are cleared to send *more* the longer you show up: first one line,
+      then context, then a second line for hard days, then references to your history. This is
+      the progression system and the personalisation roadmap in one, and it never reveals
+      outcomes — so it stays inside decision 10.
+- [ ] **Signal strength.** Miss days and the transmission degrades visibly (grain, drift); come
+      back and it clarifies. Loss aversion made reversible — a noisy signal is an invitation
+      where "streak: 0" is a punishment.
+- [ ] **Held frequency.** A banked protected day, earned by consistency, never bought.
+- [ ] **Breaking protocol.** Occasionally they send something extra. Highest emotional payoff
+      per line of code in the list.
+
+**Ruled out, deliberately:** hearts/lives (they would block someone from saying an affirmation,
+in a mental-health-adjacent app); leagues and leaderboards (ranking inner work against strangers
+is off-brand and risky for exactly the low-self-esteem population the Wood backfire finding
+describes); paid streak repair.
+
 ## Open items for the owner
 
 1. **Daily generation cap per user** — drives cost exposure. Suggest starting at 3/day.

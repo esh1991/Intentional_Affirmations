@@ -19,6 +19,9 @@ export function SiteFooter() {
               <Link href="/portal" className="text-muted-foreground hover:text-foreground">
                 The portal
               </Link>
+              <Link href="/log" className="text-muted-foreground hover:text-foreground">
+                The log
+              </Link>
               <Link href="/science" className="text-muted-foreground hover:text-foreground">
                 The Science
               </Link>

@@ -417,12 +417,20 @@ export function PactCall() {
         <p className="font-display mt-10 text-xl font-semibold">
           {finished ? "The line stays open." : "Same door tomorrow."}
         </p>
-        <Link
-          href="/"
-          className="mt-8 rounded-full border border-border bg-card/60 px-7 py-3 font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
-        >
-          Done for today
-        </Link>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/log"
+            className="rounded-full border border-border bg-card/60 px-7 py-3 font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+          >
+            See everything they&apos;ve sent
+          </Link>
+          <Link
+            href="/"
+            className="rounded-full border border-border bg-card/60 px-7 py-3 font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+          >
+            Done for today
+          </Link>
+        </div>
       </Frame>
     );
   }
