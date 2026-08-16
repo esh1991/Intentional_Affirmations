@@ -1,14 +1,14 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  CircleOff,
   FlaskConical,
-  RefreshCw,
-  Target,
-  Zap,
+  HeartPulse,
+  Moon,
+  Users,
+  Wallet,
+  Wrench,
 } from "lucide-react";
-import type { ModeKey } from "@/lib/content";
-import { MODE_META } from "@/lib/content";
+import { DOMAIN_LIST, type DomainKey } from "@/lib/portal/domains";
 import { ChooseArt, LockInArt, SpeakArt } from "@/components/illustrations";
 import { PortalDemo } from "@/components/home/portal-demo";
 import { WelcomeBack } from "@/components/home/welcome-back";
@@ -47,37 +47,34 @@ const STEPS = [
   },
 ];
 
-const MODES: Array<{
-  key: ModeKey;
-  icon: typeof Zap;
-  headline: string;
-  body: string;
-}> = [
-  {
-    key: "powerUp",
-    icon: Zap,
-    headline: "The one who walks in sure of themselves",
-    body: "A decisive leader. A calm parent. Your healthiest self. Speak their identity until it's yours.",
+/**
+ * The five life domains the portal tunes on. This replaced the four practice
+ * modes at the M5 cutover — the browse hub is gone, so the home page sells the
+ * axis the product actually works on. Copy lives here rather than in
+ * domains.ts, which is a data module, not a marketing one.
+ */
+const DOMAIN_CARDS: Record<DomainKey, { icon: typeof Wrench; body: string }> = {
+  body: {
+    icon: HeartPulse,
+    body: "They train before work without negotiating with themselves. Ask them what the first week actually felt like.",
   },
-  {
-    key: "breakIt",
-    icon: CircleOff,
-    headline: "The one who put the phone down",
-    body: "Mindless scrolling, overthinking, negative self-talk — the version of you who broke the loop, out loud, right when it starts.",
+  craft: {
+    icon: Wrench,
+    body: "They finished the thing you keep talking about. They can't tell you how it lands — only what they did on the mornings they didn't want to.",
   },
-  {
-    key: "primeMe",
-    icon: Target,
-    headline: "The one who was ready for it",
-    body: "A big meeting, the start of the workday, winding down for sleep. Borrow their state in thirty seconds.",
+  wealth: {
+    icon: Wallet,
+    body: "They stopped avoiding the number. Not the amount — they're not allowed to say that — the evening they finally opened it and looked.",
   },
-  {
-    key: "rewire",
-    icon: RefreshCw,
-    headline: "The one who stopped believing the old story",
-    body: "“I'm not good enough.” “I'm afraid to fail.” They put those down a long time ago. Say the flip side until you do too.",
+  calm: {
+    icon: Moon,
+    body: "They sleep without replaying the day. Ask them about two in the morning; that's the part they're cleared to talk about.",
   },
-];
+  connection: {
+    icon: Users,
+    body: "They're present with the people in front of them. They remember exactly which habit had to go first.",
+  },
+};
 
 export default function Home() {
   return (
@@ -154,36 +151,39 @@ export default function Home() {
             back out loud, and we verify every one.
           </p>
           <div className="mt-10 grid gap-5 sm:grid-cols-2">
-            {MODES.map((mode) => (
-              <Link
-                key={mode.key}
-                href={`/practice?mode=${mode.key}`}
-                data-mode={mode.key}
-                className="group flex flex-col rounded-3xl border border-border/60 bg-card p-7 shadow-sm transition-all hover:-translate-y-1 hover:border-mode/50 hover:shadow-xl"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="flex size-11 items-center justify-center rounded-2xl bg-mode text-mode-foreground shadow-md">
-                    <mode.icon className="size-5" aria-hidden />
+            {DOMAIN_LIST.map((domain) => {
+              const card = DOMAIN_CARDS[domain.key];
+              return (
+                <Link
+                  key={domain.key}
+                  href="/portal"
+                  data-mode={domain.key}
+                  className="group flex flex-col rounded-3xl border border-border/60 bg-card p-7 shadow-sm transition-all hover:-translate-y-1 hover:border-mode/50 hover:shadow-xl"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="flex size-11 items-center justify-center rounded-2xl bg-mode text-mode-foreground shadow-md">
+                      <card.icon className="size-5" aria-hidden />
+                    </span>
+                    <span className="text-sm font-semibold uppercase tracking-widest text-mode-2">
+                      {domain.label}
+                    </span>
+                  </div>
+                  <h3 className="font-display mt-5 text-balance text-2xl font-semibold leading-snug">
+                    {domain.prompt}
+                  </h3>
+                  <p className="mt-3 text-pretty leading-relaxed text-muted-foreground">
+                    {card.body}
+                  </p>
+                  <span className="mt-5 flex items-center gap-1.5 text-sm font-semibold text-mode-2">
+                    Reach them
+                    <ArrowRight
+                      className="size-4 transition-transform group-hover:translate-x-1"
+                      aria-hidden
+                    />
                   </span>
-                  <span className="text-sm font-semibold uppercase tracking-widest text-mode-2">
-                    {MODE_META[mode.key].label}
-                  </span>
-                </div>
-                <h3 className="font-display mt-5 text-balance text-2xl font-semibold leading-snug">
-                  {mode.headline}
-                </h3>
-                <p className="mt-3 text-pretty leading-relaxed text-muted-foreground">
-                  {mode.body}
-                </p>
-                <span className="mt-5 flex items-center gap-1.5 text-sm font-semibold text-mode-2">
-                  Meet them
-                  <ArrowRight
-                    className="size-4 transition-transform group-hover:translate-x-1"
-                    aria-hidden
-                  />
-                </span>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </section>
 

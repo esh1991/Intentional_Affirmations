@@ -13,10 +13,10 @@ export function SiteHeader() {
         </Link>
         <nav className="flex items-center gap-1 sm:gap-2" aria-label="Site">
           <Link
-            href="/practice"
+            href="/portal"
             className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-transform hover:-translate-y-0.5"
           >
-            Practice
+            The portal
           </Link>
           <Link
             href="/science"

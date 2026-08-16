@@ -10,7 +10,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description:
       "Speak affirmations out loud — we verify every word as you say it. Stars, streaks, and multi-day journeys reward the action.",
     // Installed app opens the practice hub, not the marketing page.
-    start_url: "/practice",
+    start_url: "/portal",
     display: "standalone",
     background_color: BRAND_DARK,
     theme_color: BRAND_DARK,

@@ -16,8 +16,8 @@ export function SiteFooter() {
           <div className="flex gap-16">
             <nav aria-label="Product" className="flex flex-col gap-3 text-sm">
               <span className="font-semibold">Product</span>
-              <Link href="/practice" className="text-muted-foreground hover:text-foreground">
-                Practice
+              <Link href="/portal" className="text-muted-foreground hover:text-foreground">
+                The portal
               </Link>
               <Link href="/science" className="text-muted-foreground hover:text-foreground">
                 The Science

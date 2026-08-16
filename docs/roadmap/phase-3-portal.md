@@ -527,7 +527,22 @@ face, smaller and letterspaced, so it reads as *voice* rather than UI text.
       - **A generation outage falls back to the library arc rather than blocking.** Practice must
         never depend on a third-party API being up.
       - Still to do: sync extended to cloud arcs (localStorage remains the source of truth).
-- [ ] **P3-M5 — Cutover.** Retire `/practice` routes and `home-screen.tsx`; `mindset-data.json`
+- [x] **P3-M5 — Cutover.** Built 2026-08-15 on `p3-m5-cutover`, held for owner preview because
+      it deletes routes.
+      - Retired `/practice`, `/practice/[mode]/[category]`, `home-screen.tsx`,
+        `practice-screen.tsx`. `<SpeakTheLine>` had already been extracted, so `/pact` was
+        unaffected.
+      - Redirects added for `/practice`, `/practice/:path*` and `/?mode=` so old shares, an
+        installed PWA's `start_url`, and bookmarks land on the portal rather than a 404.
+      - Home page now sells the **five life domains**, not the four modes. Header, footer,
+        welcome-back, sign-in redirect and manifest all repointed.
+      - **Two honest-science violations found and fixed in shipped copy** — see below.
+
+      ⚠️ **Deviation:** `mindset-data.json` was NOT renamed to `arc-exemplars.json`. It now does
+      two jobs — the few-shot corpus for arc generation *and* the fallback arc a signed-out
+      visitor practises. Renaming it "exemplars" would misname half of what it does.
+
+- [ ] ~~**P3-M5 — Cutover.**~~ Retire `/practice` routes and `home-screen.tsx`; `mindset-data.json`
       → `arc-exemplars.json`; rewrite `/science` on future-self continuity (lead with the age-progressed rendering
       work — it is the licence for the photo feature), episodic future thinking, mental
       contrasting and commitment devices;
@@ -587,6 +602,24 @@ Code-side M0 is done; three things need the owner before M2 can be wired:
 
 **All three landed 2026-08-15** — migration applied and verified (RLS proven against anon),
 blob store created (private access + read-write token), keys set in Vercel.
+
+## Honest-science violations found in shipped copy (M5)
+
+Both were live on production and both said the exact thing the brand rule exists to prevent —
+and the thing the arc-generation prompt blocks in *generated* content. Fixed on correctness
+grounds, not taste.
+
+1. **`/science` led with** *"Neuroplasticity: your brain is rewireable — you consistently speak
+   a new thought and physically build a new, stronger path."* Rewritten around future-self
+   continuity (Hershfield), episodic future thinking (Peters & Büchel), mental contrasting
+   (Oettingen — presented as the finding that argues *against* a naive version of this app),
+   spoken self-affirmation (Cascio), and the backfire finding (Wood) kept as its own section.
+2. **Root site metadata**, on every page and in every search result, promised to *"rewire your
+   brain"* and to *"speak your future into existence"*, and sold a "4-in-1 tool" that no longer
+   exists.
+
+Worth a standing check: the guardrails were being enforced on model output while the
+hand-written marketing copy quietly broke them.
 
 ## API facts worth not re-deriving
 
