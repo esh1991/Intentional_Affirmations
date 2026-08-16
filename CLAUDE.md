@@ -6,7 +6,9 @@ Standing brief for Claude Code sessions. **Read `docs/PLAN.md` first** — it ho
 
 ## What this is
 
-Voice-activated affirmation app: the user speaks an affirmation out loud, speech recognition verifies the words with live word-by-word highlighting, and stars/streaks/trophies reward completion. Live at **saythiswith.me**.
+**A portal to your future self.** You name the life you're reaching for; a version of you who already got there reaches back — but they are not permitted to tell you what happens, only what to do next. They send one line a day, you read it back out loud, and speech recognition verifies every word with live highlighting. Live at **saythiswith.me**.
+
+The restriction is the product, not set dressing: it keeps the app honest (we cannot know anyone's future) and makes it structurally incapable of serving the vivid-fantasy-without-action failure mode (Oettingen). Full premise, decisions and lineage: `docs/roadmap/phase-3-portal.md`.
 
 ## Stack & structure
 
@@ -14,8 +16,11 @@ Next.js 16 (App Router, Turbopack) · TypeScript strict · Tailwind v4 · shadcn
 
 | Path | Role |
 |---|---|
-| `src/app/` | Routes: `/` (marketing home), `/practice` (modes + category cards hub), `/practice/[mode]/[category]` (speaking flow), `/science`, `/faq`, `/signin`, `/account`, `/legal/privacy`, `/legal/terms`, `/api/subscribe`, `/api/account/delete` |
-| `src/components/app/` | App surface: home screen (the /practice hub), practice screen, streak badge |
+| `src/app/` | Routes: `/` (marketing home), `/portal` (tune → contact → portrait → conversation → the line), `/pact` (the daily call), `/science`, `/faq`, `/signin`, `/account`, `/legal/*`, `/api/portal/*`, `/api/subscribe`, `/api/account/delete` |
+| `src/components/app/` | `speak-the-line.tsx` — the mic, typing fallback and word highlighting, owned by `/pact`. Journey dots, streak badge. |
+| `src/components/portal/` | Portal flow, consent + photo upload, the conversation panel |
+| `src/components/pact/` | The daily call |
+| `src/lib/portal/` | `domains.ts` (5 life domains + coordinates), `guide.ts`, `arc.ts` (Claude arc generation), `portrait.ts` (fal), `conversation.ts`, `jobs.ts` (quota), `blob.ts` (private portrait storage) |
 | `src/components/home/` | Marketing home: self-playing hero demo, welcome-back banner, email signup |
 | `src/components/site/` | Chrome: header, footer, share button |
 | `src/lib/speech/` | `SpeechVerifier` interface, `WebSpeechVerifier`, similarity scoring — the UI never touches the Web Speech API directly |
@@ -27,7 +32,7 @@ Next.js 16 (App Router, Turbopack) · TypeScript strict · Tailwind v4 · shadcn
 
 Light + dark themes via next-themes (class attribute, default dark — the brand look). The logo renders via CSS mask (`.brand-logo`): white in dark mode, brand indigo→blue gradient in light mode. Per-mode theming via `data-mode` attribute + `--mode-accent`/`--mode-accent-2` tokens in `globals.css` (accent-2 has per-theme values — darker on light, lighter under `.dark`), consumed as Tailwind `mode`/`mode-2` colors. Type: **Bricolage Grotesque** (`font-display`) for headlines/affirmations, **Plus Jakarta Sans** body. Outline SVG illustrations per category live in `src/components/illustrations.tsx` (stroke = currentColor, theme/mode-tintable) — richer generated imagery may layer in later. Category cards are Mindvalley-style (gradient covers, rounded-3xl, grid) — **the user explicitly wants cards, never plain lists**. Live word highlighting (`.affirmation-word.spoken`) is the signature effect — polish it most. Everything must work desktop and mobile.
 
-**Journeys (live on all 13 categories)**: 7/14/21-day commitment arcs — spec, decisions, and open items in `docs/roadmap/journeys.md`. State in localStorage (`mindsetEngineJourneys`), logic in `src/lib/journeys.ts`, progressive 21-entry arcs in `mindset-data.json` (Zod-enforced). Journey content is owner-approved — don't rewrite arcs without approval. Never claim "21 days rewires the brain" — framing is "practice window" (honest-science brand rule).
+**Journeys**: 7/21-day commitment arcs — spec, decisions, and open items in `docs/roadmap/journeys.md`. State in localStorage (`mindsetEngineJourneys`), logic in `src/lib/journeys.ts`, progressive 21-entry arcs in `mindset-data.json` (Zod-enforced). Journey content is owner-approved — don't rewrite arcs without approval. Never claim "21 days rewires the brain" — framing is "practice window" (honest-science brand rule).
 
 ### localStorage keys (legacy-compatible — don't rename)
 - `mindsetEngineStarCount` — stars toward the 3-star trophy
@@ -70,6 +75,25 @@ sessions. Verified end to end — signing in with one Google account on both app
 `user_id`, and a practice completion wrote through to `saythiswith.sessions` under RLS.
 
 Details, invariants and the things that will break it: `docs/shared-backend.md`.
+
+## Phase 3 — the portal (complete 2026-08-15)
+
+`/practice`, the 4 modes and the 13-category browse hub are **retired**. `mindset-data.json`
+survives doing two jobs: the few-shot style contract for arc generation, and the fallback arc a
+signed-out visitor practises. It is not a browse source any more.
+
+- **Generation is authenticated, quota'd and server-side.** Portraits on fal, arcs and the
+  conversation on `claude-opus-5`. Quota is checked *before* any provider call, and fails closed.
+- **Photo policy:** the source selfie is never stored anywhere by us — it lives in the request
+  and the call to fal. Portraits are **private** blobs, read through an ownership-checked route
+  that streams them (an `<img>` cannot carry an auth header, so the client fetches with the
+  bearer token and uses an object URL).
+- **Honest science is enforced in the arc prompt** — no neuroplasticity, no manifestation,
+  actions never outcomes. The M5 cutover found the *hand-written* `/science` page and the root
+  site metadata breaking exactly those rules; both were rewritten. Check marketing copy against
+  the rule, not just model output.
+- Deliberate deviation: the conversation requires sign-in, though the plan said anonymous. An
+  unauthenticated LLM endpoint is an open money faucet and there is no anon identity to meter.
 
 ## Roadmap status (as of 2026-07-08)
 
