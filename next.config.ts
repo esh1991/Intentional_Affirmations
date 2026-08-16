@@ -2,6 +2,19 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  images: {
+    // Generated portraits live on Vercel Blob (src/lib/portal/blob.ts). Without
+    // this, next/image throws on a blob URL rather than rendering it. Scoped to
+    // the blob host and its public path — `domains` is gone in Next 16, and
+    // remotePatterns is the narrower grant anyway.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+        pathname: "/**",
+      },
+    ],
+  },
   async redirects() {
     return [
       // The app hub moved from / to /practice; old ?mode= deep links (science

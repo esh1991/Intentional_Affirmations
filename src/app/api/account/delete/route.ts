@@ -1,34 +1,36 @@
-import { createClient } from "@supabase/supabase-js";
+import { deleteUserBlobs } from "@/lib/portal/blob";
+import { requireUser } from "@/lib/supabase/server";
 
 /**
  * Deletes the calling user's account. The caller proves identity with their
- * access token; the admin client (secret key, server-only) verifies it and
- * deletes the auth user — FK cascades wipe profiles, sessions, streaks,
- * stars, journeys, and favorites.
+ * access token; the admin client verifies it and deletes the auth user — FK
+ * cascades wipe profiles, sessions, streaks, stars, journeys, favorites, and
+ * (from 0005) future selves, arcs, conversations and generation jobs.
+ *
+ * Blobs are deleted FIRST and explicitly. An FK cascade never reaches object
+ * storage, so a portrait would otherwise outlive the account that owned it —
+ * a privacy failure, and one the "we never keep your photo" promise makes into
+ * a broken promise. Ordering matters: if the blob purge fails we stop, because
+ * deleting the auth user first would lose the only handle on those objects.
+ *
+ * docs/shared-backend.md requires re-testing deletion after any change here.
  */
 export async function POST(request: Request) {
-  const authHeader = request.headers.get("authorization") ?? "";
-  const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
-  if (!token) {
-    return Response.json({ error: "Not signed in." }, { status: 401 });
+  const auth = await requireUser(request);
+  if (!auth.ok) return auth.response;
+
+  const { user, db } = auth;
+
+  const blobsGone = await deleteUserBlobs(user.id);
+  if (!blobsGone) {
+    // Refuse to report a clean deletion we did not achieve.
+    return Response.json(
+      { error: "Couldn't delete your stored images — nothing was removed. Try again." },
+      { status: 500 },
+    );
   }
 
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SECRET_KEY;
-  if (!url || !key) {
-    return Response.json({ error: "Not configured." }, { status: 503 });
-  }
-
-  const admin = createClient(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-
-  const { data, error } = await admin.auth.getUser(token);
-  if (error || !data.user) {
-    return Response.json({ error: "Not signed in." }, { status: 401 });
-  }
-
-  const { error: deleteError } = await admin.auth.admin.deleteUser(data.user.id);
+  const { error: deleteError } = await db.auth.admin.deleteUser(user.id);
   if (deleteError) {
     console.error("account delete failed", deleteError);
     return Response.json(
