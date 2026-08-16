@@ -7,6 +7,7 @@ import { readLastPractice, readStreak, restoreStreak } from "@/lib/streak";
 import {
   type JourneyMap,
   type JourneyState,
+  arcKey,
   normalizeDuration,
   parseJourneys,
   readJourneysRaw,
@@ -29,6 +30,25 @@ import { type Favorite, readFavorites, restoreFavorites } from "@/lib/favorites"
  */
 
 const SESSIONS_UPLOADED_FLAG = "mindsetEngineSessionsUploaded";
+
+/**
+ * Journey progress lives in two cloud tables, and which one depends on the key.
+ *
+ * A generated arc's progress belongs in `arcs` (it already has duration,
+ * started_at and completed_days); a library arc's belongs in `journeys`, keyed
+ * by mode/category. Splitting an `arc/<uuid>` key on "/" and upserting it into
+ * `journeys` would write `mode: "arc"` and a uuid as the category — a fake row
+ * that would then sync back down as a phantom journey.
+ */
+const ARC_PREFIX = "arc/";
+
+function isArcKey(key: string): boolean {
+  return key.startsWith(ARC_PREFIX);
+}
+
+function arcIdFromKey(key: string): string {
+  return key.slice(ARC_PREFIX.length);
+}
 
 /** Local-day ISO date (YYYY-MM-DD) from a toDateString() value (or now). */
 function toLocalISO(dateString?: string | null): string | null {
@@ -66,6 +86,9 @@ function sessionRow(userId: string, entry: SessionEntry) {
     input: entry.input,
     journey_day: entry.journeyDay ?? null,
     journey_duration: entry.journeyDuration ?? null,
+    // Stable pointer to the line that was spoken. The denormalised text above
+    // stays for display and analytics continuity.
+    arc_day_id: entry.arcDayId ?? null,
     completed_at: entry.completedAt,
   };
 }
@@ -96,10 +119,11 @@ export async function syncNow(user: User): Promise<void> {
   const supabase = getSupabase();
   if (!supabase) return;
   try {
-    const [streakRes, starsRes, journeysRes, favoritesRes] = await Promise.all([
+    const [streakRes, starsRes, journeysRes, arcsRes, favoritesRes] = await Promise.all([
       supabase.from("streaks").select("current_streak,longest_streak,last_practice_date").eq("user_id", user.id).maybeSingle(),
       supabase.from("stars").select("star_count").eq("user_id", user.id).maybeSingle(),
       supabase.from("journeys").select("mode,category,duration,started_at,completed_days").eq("user_id", user.id),
+      supabase.from("arcs").select("id,duration,started_at,completed_days").eq("user_id", user.id).eq("status", "active"),
       supabase.from("favorites").select("affirmation,mode,category,created_at").eq("user_id", user.id),
     ]);
 
@@ -136,6 +160,24 @@ export async function syncNow(user: User): Promise<void> {
       };
       merged[key] = merged[key] ? mergeJourney(merged[key], cloudState) : cloudState;
     }
+    // Generated arcs merge under their own key, from their own table.
+    for (const row of (arcsRes.data ?? []) as Array<{
+      id: string;
+      duration: number;
+      started_at: string;
+      completed_days: unknown;
+    }>) {
+      const key = arcKey(row.id);
+      const cloudState: JourneyState = {
+        duration: normalizeDuration(row.duration),
+        startedAt: row.started_at,
+        completedDays: Array.isArray(row.completed_days)
+          ? (row.completed_days as string[])
+          : [],
+      };
+      merged[key] = merged[key] ? mergeJourney(merged[key], cloudState) : cloudState;
+    }
+
     restoreJourneys(merged);
 
     // Favorites: union by affirmation.
@@ -168,18 +210,35 @@ export async function syncNow(user: User): Promise<void> {
         star_count: mergedStars,
         updated_at: new Date().toISOString(),
       }),
-      ...Object.entries(merged).map(([key, state]) => {
-        const [mode, ...rest] = key.split("/");
-        return supabase.from("journeys").upsert({
-          user_id: user.id,
-          mode,
-          category: rest.join("/"),
-          duration: state.duration,
-          started_at: state.startedAt,
-          completed_days: state.completedDays,
-          updated_at: new Date().toISOString(),
-        });
-      }),
+      // Library journeys go back to `journeys`; generated arcs go back to
+      // `arcs`. Never the other way round — see ARC_PREFIX above.
+      ...Object.entries(merged)
+        .filter(([key]) => !isArcKey(key))
+        .map(([key, state]) => {
+          const [mode, ...rest] = key.split("/");
+          return supabase.from("journeys").upsert({
+            user_id: user.id,
+            mode,
+            category: rest.join("/"),
+            duration: state.duration,
+            started_at: state.startedAt,
+            completed_days: state.completedDays,
+            updated_at: new Date().toISOString(),
+          });
+        }),
+      ...Object.entries(merged)
+        .filter(([key]) => isArcKey(key))
+        .map(([key, state]) =>
+          supabase
+            .from("arcs")
+            .update({
+              duration: state.duration,
+              started_at: state.startedAt,
+              completed_days: state.completedDays,
+            })
+            .eq("id", arcIdFromKey(key))
+            .eq("user_id", user.id),
+        ),
       mergedFavorites.length
         ? supabase.from("favorites").upsert(
             mergedFavorites.map((f) => ({
@@ -220,8 +279,11 @@ export async function syncCompletion(entry: SessionEntry): Promise<void> {
     const user = data.session?.user;
     if (!user) return;
 
+    // A generated-arc completion is keyed by arc id, not mode/category — the
+    // old lookup would silently miss it and never push the day.
     const journeys = parseJourneys(readJourneysRaw());
-    const journeyState = journeys[`${entry.mode}/${entry.category}`];
+    const key = entry.arcId ? arcKey(entry.arcId) : `${entry.mode}/${entry.category}`;
+    const journeyState = journeys[key];
     const currentStreak = readStreak();
     const { data: cloudStreak } = await supabase
       .from("streaks")
@@ -243,15 +305,25 @@ export async function syncCompletion(entry: SessionEntry): Promise<void> {
         updated_at: new Date().toISOString(),
       }),
       journeyState
-        ? supabase.from("journeys").upsert({
-            user_id: user.id,
-            mode: entry.mode,
-            category: entry.category,
-            duration: journeyState.duration,
-            started_at: journeyState.startedAt,
-            completed_days: journeyState.completedDays,
-            updated_at: new Date().toISOString(),
-          })
+        ? entry.arcId
+          ? supabase
+              .from("arcs")
+              .update({
+                duration: journeyState.duration,
+                started_at: journeyState.startedAt,
+                completed_days: journeyState.completedDays,
+              })
+              .eq("id", entry.arcId)
+              .eq("user_id", user.id)
+          : supabase.from("journeys").upsert({
+              user_id: user.id,
+              mode: entry.mode,
+              category: entry.category,
+              duration: journeyState.duration,
+              started_at: journeyState.startedAt,
+              completed_days: journeyState.completedDays,
+              updated_at: new Date().toISOString(),
+            })
         : Promise.resolve(),
     ]);
   } catch (error) {

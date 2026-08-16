@@ -26,6 +26,10 @@ export interface SessionEntry {
   completedAt: string;
   journeyDay?: number;
   journeyDuration?: number;
+  /** Set when the line came from a generated arc rather than the library. */
+  arcId?: string;
+  /** The `arc_days` row id — the stable id the text no longer has to be. */
+  arcDayId?: string;
 }
 
 export function readSessions(): SessionEntry[] {

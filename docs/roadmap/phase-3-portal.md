@@ -526,7 +526,13 @@ face, smaller and letterspaced, so it reads as *voice* rather than UI text.
         The mode/category functions remain as thin wrappers, so `/practice` is untouched.
       - **A generation outage falls back to the library arc rather than blocking.** Practice must
         never depend on a third-party API being up.
-      - Still to do: sync extended to cloud arcs (localStorage remains the source of truth).
+      - **Sync extended to cloud arcs 2026-08-15.** `syncNow` pulls `arcs` and merges progress
+        under the `arc/<id>` key; pushes are **partitioned by key kind** — generated arcs go to
+        `arcs`, library journeys to `journeys`. This fixed a latent bug: the old push split
+        every key on `/` and upserted it into `journeys`, so an `arc/<uuid>` key would have
+        written `mode: "arc"` with a uuid as the category, then synced back down as a phantom
+        journey. `syncCompletion` routes the same way, and `sessions.arc_day_id` is finally
+        populated — the stable pointer the migration added.
 - [x] **P3-M5 — Cutover.** Built 2026-08-15 on `p3-m5-cutover`, held for owner preview because
       it deletes routes.
       - Retired `/practice`, `/practice/[mode]/[category]`, `home-screen.tsx`,

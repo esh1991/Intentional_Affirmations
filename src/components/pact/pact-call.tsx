@@ -110,7 +110,7 @@ export function PactCall() {
    * screen from flashing the wrong copy while the lookup is in flight.
    */
   const [personal, setPersonal] = useState<
-    { id: string; days: ArcDay[] } | null | undefined
+    { id: string; days: Array<ArcDay & { id?: string }> } | null | undefined
   >(undefined);
   const { session, loading: sessionLoading } = useSession();
   const raw = rawOverride ?? rawFromStorage;
@@ -135,7 +135,7 @@ export function PactCall() {
           headers: { Authorization: `Bearer ${token}` },
         });
         const json = (await res.json()) as {
-          arc?: { id: string; days: ArcDay[] } | null;
+          arc?: { id: string; days: Array<ArcDay & { id?: string }> } | null;
         };
         if (!cancelled) setPersonal(json.arc ?? null);
       } catch {
@@ -159,6 +159,7 @@ export function PactCall() {
     if (personal) {
       return {
         key: arcKey(personal.id),
+        arcId: personal.id,
         source: "generated" as const,
         mode: DOMAINS[coords.domain].bridgeMode,
         categoryName: "",
@@ -171,6 +172,7 @@ export function PactCall() {
     const category = content[mode].categories[0];
     return {
       key: journeyKey(mode, category.name),
+      arcId: null as string | null,
       source: "library" as const,
       mode,
       categoryName: category.name,
@@ -264,6 +266,14 @@ export function PactCall() {
         completedAt: new Date().toISOString(),
         journeyDay: day,
         journeyDuration: state.duration,
+        ...(arc.arcId
+          ? {
+              arcId: arc.arcId,
+              ...((line as { id?: string }).id
+                ? { arcDayId: (line as { id?: string }).id }
+                : {}),
+            }
+          : {}),
       };
       recordSession(entry);
       void syncCompletion(entry);

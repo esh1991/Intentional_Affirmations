@@ -32,7 +32,7 @@ export async function GET(request: Request) {
 
   const { data: days, error: daysError } = await db
     .from("arc_days")
-    .select("day_index,affirmation,success_message")
+    .select("id,day_index,affirmation,success_message")
     .eq("arc_id", arc.id)
     .order("day_index", { ascending: true });
 
@@ -44,6 +44,7 @@ export async function GET(request: Request) {
     arc: {
       id: arc.id,
       days: days.map((d) => ({
+        id: d.id as string,
         affirmation: d.affirmation,
         successMessage: d.success_message ?? "",
       })),
