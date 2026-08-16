@@ -366,7 +366,7 @@ export function PortalFlow() {
               ))}
             </p>
             <Link
-              href={`/practice/${promise.mode}/${encodeURIComponent(promise.category)}`}
+              href="/pact"
               onClick={() => {
                 playClick();
                 trackEvent("portal_promise_accepted", { domain: promise.mode });
@@ -377,7 +377,7 @@ export function PortalFlow() {
               <ArrowRight className="size-5" aria-hidden />
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">
-              Same door tomorrow.
+              One a day, through the same door.
             </p>
           </div>
         ) : null}

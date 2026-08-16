@@ -113,11 +113,26 @@ export interface Coordinates {
   tunedAt: string;
 }
 
-export function readCoordinates(): Coordinates | null {
-  if (typeof window === "undefined") return null;
+/**
+ * Raw storage read — feed through parseCoordinates.
+ *
+ * Returns a string, never an object: useClientValue is built on
+ * useSyncExternalStore, whose snapshot must be referentially stable. Returning
+ * a freshly-built object each call makes React re-render forever. Returning ""
+ * for "absent" also keeps null meaning exactly one thing — still hydrating.
+ */
+export function readCoordinatesRaw(): string {
+  if (typeof window === "undefined") return "";
   try {
-    const raw = window.localStorage.getItem(KEY);
-    if (!raw) return null;
+    return window.localStorage.getItem(KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+export function parseCoordinates(raw: string | null): Coordinates | null {
+  if (!raw) return null;
+  try {
     const parsed = JSON.parse(raw) as Partial<Coordinates>;
     if (!parsed.domain || !isDomainKey(parsed.domain)) return null;
     return {
@@ -129,6 +144,11 @@ export function readCoordinates(): Coordinates | null {
   } catch {
     return null;
   }
+}
+
+/** Convenience for non-render callers (event handlers, effects). */
+export function readCoordinates(): Coordinates | null {
+  return parseCoordinates(readCoordinatesRaw());
 }
 
 export function saveCoordinates(next: Omit<Coordinates, "tunedAt">): Coordinates {

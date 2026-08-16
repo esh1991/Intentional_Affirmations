@@ -1,21 +1,13 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import confetti from "canvas-confetti";
-import { ArrowLeft, Heart, Keyboard, Mic, MicOff, RefreshCw, Zap } from "lucide-react";
+import { ArrowLeft, Heart, RefreshCw, Zap } from "lucide-react";
 import type { Affirmation, ModeKey } from "@/lib/content";
 import { MODE_META } from "@/lib/content";
-import {
-  MATCH_SCORE_THRESHOLD,
-  type SpeechVerifierError,
-} from "@/lib/speech/SpeechVerifier";
-import {
-  WebSpeechVerifier,
-  isSpeechRecognitionAvailable,
-} from "@/lib/speech/web-speech-verifier";
-import { matchedWordIndices, similarityScore } from "@/lib/speech/similarity";
+import { SpeakTheLine, type SpeakResult } from "@/components/app/speak-the-line";
 import { trackEvent } from "@/lib/analytics";
 import { playClick } from "@/lib/sound";
 import { addStar } from "@/lib/stars";
@@ -39,8 +31,6 @@ import {
 } from "@/lib/journeys";
 import { JourneyDots } from "@/components/app/journey-dots";
 import { useClientValue } from "@/hooks/use-client-value";
-
-type Phase = "ready" | "listening" | "retry" | "success";
 
 interface CompletionState {
   stars: number;
@@ -127,11 +117,6 @@ export function PracticeScreen({
   journey: Affirmation[] | null;
 }) {
   const [index, setIndex] = useState(initialIndex);
-  const [phase, setPhase] = useState<Phase>("ready");
-  const [typing, setTyping] = useState(false);
-  const [typedText, setTypedText] = useState("");
-  const [matched, setMatched] = useState<ReadonlySet<number>>(new Set());
-  const [statusNote, setStatusNote] = useState<string | null>(null);
   const [completion, setCompletion] = useState<CompletionState | null>(null);
   const [freeSession, setFreeSession] = useState(false);
   const [pickerOverride, setPickerOverride] = useState(false);
@@ -166,17 +151,10 @@ export function PracticeScreen({
     !journeyComplete;
   const journeyDay = journeySession ? nextDay(journeyState as JourneyState) : null;
 
-  const speechAvailable = useClientValue(isSpeechRecognitionAvailable);
-  const verifierRef = useRef<WebSpeechVerifier | null>(null);
-  // Verification attempts on the current affirmation (voice results + typed
-  // submissions), logged with the session on success.
-  const attemptsRef = useRef(0);
-
   const current: Affirmation =
     journeySession && journey && journeyDay
       ? journey[arcIndexForDay((journeyState as JourneyState).duration, journeyDay)]
       : items[index];
-  const words = useMemo(() => current.affirmation.split(" "), [current]);
 
   const favoritedFromStorage = useClientValue(() => isFavorite(current.affirmation));
   const [favOverride, setFavOverride] = useState<Record<string, boolean>>({});
@@ -202,16 +180,8 @@ export function PracticeScreen({
     });
   }, [current.affirmation, mode, categoryName]);
 
-  const stopVerifier = useCallback(() => {
-    verifierRef.current?.stop();
-  }, []);
-  // Release the mic if the user navigates away mid-listen
-  useEffect(() => stopVerifier, [stopVerifier]);
-
   const succeed = useCallback(
-    (matchScore: number, input: "voice" | "typed") => {
-      stopVerifier();
-      setMatched(new Set(words.map((_, i) => i)));
+    ({ matchScore, input, attempts }: SpeakResult) => {
       const streak = recordCompletion();
       const { stars, trophy } = addStar();
       let journeyResult: CompletionState["journey"] = null;
@@ -228,7 +198,7 @@ export function PracticeScreen({
         mode,
         category: categoryName,
         matchScore,
-        attempts: attemptsRef.current,
+        attempts,
         input,
         completedAt: new Date().toISOString(),
         ...(journeyResult
@@ -244,15 +214,12 @@ export function PracticeScreen({
         input,
       });
       setCompletion({ stars, trophy, streak, journey: journeyResult });
-      setPhase("success");
       new Audio("/success.mp3").play().catch(() => {});
       if (trophy || journeyResult?.completed === journeyResult?.duration) {
         confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
       }
     },
     [
-      stopVerifier,
-      words,
       journeySession,
       journeyState,
       journeyDay,
@@ -262,69 +229,18 @@ export function PracticeScreen({
     ],
   );
 
-  const reset = useCallback(
-    (nextIndex?: number) => {
-      stopVerifier();
-      if (nextIndex !== undefined) setIndex(nextIndex);
-      attemptsRef.current = 0;
-      setPhase("ready");
-      setMatched(new Set());
-      setTypedText("");
-      setStatusNote(null);
-      setCompletion(null);
-    },
-    [stopVerifier],
-  );
+  // SpeakTheLine resets itself whenever the line changes; this only clears
+  // what the caller owns.
+  const reset = useCallback((nextIndex?: number) => {
+    if (nextIndex !== undefined) setIndex(nextIndex);
+    setCompletion(null);
+  }, []);
 
   const nextAffirmation = useCallback(() => {
     let next = Math.floor(Math.random() * items.length);
     if (items.length > 1 && next === index) next = (next + 1) % items.length;
     reset(next);
   }, [items.length, index, reset]);
-
-  const handleError = useCallback((error: SpeechVerifierError) => {
-    setPhase("ready");
-    if (error === "permission-denied") {
-      setStatusNote("Microphone access was denied — you can type it instead.");
-      setTyping(true);
-    } else if (error === "no-speech") {
-      setStatusNote("Didn't catch anything. Tap the mic and try again.");
-    } else {
-      setStatusNote("Speech recognition isn't supported here — type it instead.");
-      setTyping(true);
-    }
-  }, []);
-
-  const startListening = useCallback(() => {
-    playClick();
-    setMatched(new Set());
-    setStatusNote(null);
-    setPhase("listening");
-    verifierRef.current ??= new WebSpeechVerifier();
-    verifierRef.current.start(current.affirmation, {
-      onWordMatched: (i) =>
-        setMatched((prev) => (prev.has(i) ? prev : new Set(prev).add(i))),
-      onResult: ({ matchScore }) => {
-        attemptsRef.current += 1;
-        if (matchScore >= MATCH_SCORE_THRESHOLD) {
-          succeed(matchScore, "voice");
-        } else {
-          setPhase("retry");
-        }
-      },
-      onError: handleError,
-    });
-  }, [current.affirmation, succeed, handleError]);
-
-  const submitTyped = useCallback(() => {
-    attemptsRef.current += 1;
-    const score = similarityScore(current.affirmation, typedText);
-    if (score >= MATCH_SCORE_THRESHOLD) {
-      succeed(score, "typed");
-    } else {
-      setPhase("retry");
-    }
-  }, [current.affirmation, typedText, succeed]);
 
   // --- Journey pre-screens ---
 
@@ -388,7 +304,7 @@ export function PracticeScreen({
     );
   }
 
-  if ((journeyDoneToday || journeyComplete) && !freeSession && phase !== "success") {
+  if ((journeyDoneToday || journeyComplete) && !freeSession && !completion) {
     const state = journeyState as JourneyState;
     return (
       <Shell mode={mode} categoryName={categoryName}>
@@ -442,7 +358,7 @@ export function PracticeScreen({
 
   // --- Success ---
 
-  if (phase === "success" && completion) {
+  if (completion) {
     return (
       <Shell
         mode={mode}
@@ -530,136 +446,45 @@ export function PracticeScreen({
       categoryName={categoryName}
       onNext={journeySession ? undefined : nextAffirmation}
     >
-      <div className="flex flex-col items-center text-center">
-        {journeySession && journeyState && journeyDay ? (
-          <div className="flex flex-col items-center gap-3">
-            <span className="rounded-full border border-border bg-card/70 px-4 py-1.5 text-sm font-semibold">
-              Day {journeyDay} of {journeyState.duration}
-            </span>
-            <JourneyDots
-              total={journeyState.duration}
-              completed={journeyState.completedDays.length}
-            />
-          </div>
-        ) : (
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Say this out loud
-          </p>
-        )}
-
-        <p className="font-display mt-6 max-w-3xl text-balance text-3xl font-bold leading-snug tracking-tight sm:text-5xl sm:leading-snug">
-          {words.map((word, i) => (
-            // Space lives OUTSIDE the span: inline-block collapses its own
-            // trailing whitespace, which glued the words together.
-            <Fragment key={i}>
-              <span className={`affirmation-word ${matched.has(i) ? "spoken" : ""}`}>
-                {word}
+      <SpeakTheLine
+        // Remount on a new line so nothing carries over — see SpeakTheLine.
+        key={current.affirmation}
+        affirmation={current.affirmation}
+        onSuccess={succeed}
+        header={
+          journeySession && journeyState && journeyDay ? (
+            <div className="flex flex-col items-center gap-3">
+              <span className="rounded-full border border-border bg-card/70 px-4 py-1.5 text-sm font-semibold">
+                Day {journeyDay} of {journeyState.duration}
               </span>
-              {i < words.length - 1 ? " " : null}
-            </Fragment>
-          ))}
-        </p>
-
-        <button
-          type="button"
-          onClick={toggleFav}
-          aria-pressed={favorited}
-          className="mt-5 flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <Heart
-            className={`size-4 transition-colors ${
-              favorited ? "fill-mode-2 text-mode-2" : ""
-            }`}
-            aria-hidden
-          />
-          {favorited ? "Saved to favorites" : "Save this one"}
-        </button>
-
-        {phase === "retry" && (
-          <p className="mt-6 font-medium text-mode-2">
-            That wasn&apos;t quite right — take a breath and try again.
-          </p>
-        )}
-        {statusNote && phase !== "retry" && (
-          <p className="mt-6 text-muted-foreground">{statusNote}</p>
-        )}
-
-        {!typing ? (
-          <>
-            <button
-              type="button"
-              onClick={phase === "listening" ? () => reset() : startListening}
-              aria-label={phase === "listening" ? "Stop listening" : "Start speaking"}
-              className={`mt-10 flex size-20 items-center justify-center rounded-full bg-mode text-mode-foreground shadow-xl transition-transform hover:scale-105 ${
-                phase === "listening" ? "mic-listening" : ""
-              }`}
-            >
-              {phase === "listening" ? (
-                <MicOff className="size-8" aria-hidden />
-              ) : (
-                <Mic className="size-8" aria-hidden />
-              )}
-            </button>
-            <p className="mt-4 text-sm text-muted-foreground" aria-live="polite">
-              {phase === "listening"
-                ? "Listening… speak the words above."
-                : "Tap the mic, then say the words."}
-            </p>
-            {speechAvailable !== false && (
-              <button
-                type="button"
-                onClick={() => setTyping(true)}
-                className="mt-6 flex items-center gap-2 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-              >
-                <Keyboard className="size-4" aria-hidden />
-                Can&apos;t speak right now? Type it instead
-              </button>
-            )}
-          </>
-        ) : (
-          <form
-            className="mt-10 flex w-full max-w-xl flex-col items-center gap-4"
-            onSubmit={(event) => {
-              event.preventDefault();
-              submitTyped();
-            }}
-          >
-            <textarea
-              value={typedText}
-              onChange={(event) => {
-                setTypedText(event.target.value);
-                setMatched(matchedWordIndices(words, event.target.value));
-              }}
-              rows={3}
-              autoFocus
-              placeholder="Type the affirmation word for word…"
-              className="w-full resize-none rounded-2xl border border-border bg-card/70 px-5 py-4 text-base outline-none transition-colors focus:border-mode/60"
-            />
-            <div className="flex items-center gap-3">
-              <button
-                type="submit"
-                className="rounded-full bg-mode px-7 py-3 font-semibold text-mode-foreground shadow-lg transition-transform hover:-translate-y-0.5"
-              >
-                I said it
-              </button>
-              {speechAvailable && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTyping(false);
-                    setTypedText("");
-                    setMatched(new Set());
-                  }}
-                  className="flex items-center gap-2 rounded-full border border-border bg-card/60 px-5 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
-                >
-                  <Mic className="size-4" aria-hidden />
-                  Use the mic
-                </button>
-              )}
+              <JourneyDots
+                total={journeyState.duration}
+                completed={journeyState.completedDays.length}
+              />
             </div>
-          </form>
-        )}
-      </div>
+          ) : (
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              Say this out loud
+            </p>
+          )
+        }
+        belowLine={
+          <button
+            type="button"
+            onClick={toggleFav}
+            aria-pressed={favorited}
+            className="mt-5 flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Heart
+              className={`size-4 transition-colors ${
+                favorited ? "fill-mode-2 text-mode-2" : ""
+              }`}
+              aria-hidden
+            />
+            {favorited ? "Saved to favorites" : "Save this one"}
+          </button>
+        }
+      />
     </Shell>
   );
 }

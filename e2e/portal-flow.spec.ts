@@ -41,15 +41,28 @@ test("portal tunes, runs the sequence, and hands off a line to speak", async ({ 
   const promise = page.locator(".affirmation-word");
   expect(await promise.count()).toBeGreaterThan(0);
 
+  // Hand-off into the daily call — the same door, not the old browse hub.
   await page.getByRole("link", { name: /read it back out loud/i }).click();
-  await expect(page).toHaveURL(/\/practice\//);
+  await expect(page).toHaveURL(/\/pact$/);
 
-  // The hand-off lands on the commitment picker — 7 or 21 days — which is the
-  // right next beat after receiving the line, not a dead end. /pact collapses
-  // this into the daily call in M4.
+  // First visit: commit to 7 or 21 days, then today's line arrives.
   await expect(
-    page.getByRole("heading", { name: /how long do you want to commit/i }),
+    page.getByRole("heading", { name: /how long do you want the line open/i }),
   ).toBeVisible();
-  await page.getByRole("button", { name: /kickstart/i }).click();
+  await page.getByRole("button", { name: /7\s*days/i }).click();
+
+  await expect(page.getByText("One line is cleared to send")).toBeVisible();
   await expect(page.getByText("Day 1 of 7")).toBeVisible();
+
+  // Read it back via the typing path — deterministic, no mic in CI.
+  await page.getByRole("button", { name: /type it instead/i }).click();
+  const words = await page.locator(".affirmation-word").allTextContents();
+  await page.getByPlaceholder(/type the affirmation/i).fill(words.join(" "));
+  await page.getByRole("button", { name: "I said it" }).click();
+
+  // The reward lands on the way back out, not at verification.
+  await expect(page.getByText(/Received\. Word for word/i)).toBeVisible();
+  await expect(page.getByText("Take it into today.")).toBeVisible();
+  await expect(page.getByText(/Day 1 of 7 ·/)).toBeVisible();
+  await expect(page.getByText("Same door tomorrow.")).toBeVisible();
 });
