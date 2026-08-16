@@ -680,9 +680,21 @@ better version of every standard mechanic, so nothing here is bolted on.
 
       Level 3 is the personalisation substrate: recent lines are injected into the guide's
       system prompt, so "they remember" is a real capability gate rather than a label.
-- [ ] **Signal strength.** Miss days and the transmission degrades visibly (grain, drift); come
-      back and it clarifies. Loss aversion made reversible — a noisy signal is an invitation
-      where "streak: 0" is a punishment.
+- [x] **Signal strength** (`src/lib/portal/signal.ts`, shipped 2026-08-16). Days since the last
+      line drive one CSS token, `--signal-noise` (0 → 1), so the whole surface degrades together:
+      clear (0–1 days) → drifting (2–3) → faint (4–6) → lost (7+).
+
+      Three constraints, all enforced and covered by e2e:
+      - **Fully reversible.** One completed line restores it from any state, and it clears on
+        the return screen immediately rather than next visit.
+      - **Never blocks anything.** Degradation is atmosphere plus one line of copy. Nothing is
+        hidden, gated, or made unreadable — the test asserts the page stays fully usable at
+        maximum noise, because that is the state someone returning after weeks away arrives in.
+      - **Never scolds.** The copy is an invitation ("They're still on the line — say one and it
+        clears"), never a count of their absence. This is a mental-health-adjacent product and
+        "streak lost" is the wrong instrument.
+
+      A first-ever visitor reads as *clear*, not lost — they have not drifted from anything.
 - [ ] **Held frequency.** A banked protected day, earned by consistency, never bought.
 - [ ] **Breaking protocol.** Occasionally they send something extra. Highest emotional payoff
       per line of code in the list.

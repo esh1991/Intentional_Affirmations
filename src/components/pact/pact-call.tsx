@@ -24,7 +24,8 @@ import { JourneyDots } from "@/components/app/journey-dots";
 import { SpeakTheLine, type SpeakResult } from "@/components/app/speak-the-line";
 import { useClientValue } from "@/hooks/use-client-value";
 import { addStar } from "@/lib/stars";
-import { recordCompletion } from "@/lib/streak";
+import { readLastPractice, recordCompletion } from "@/lib/streak";
+import { signalFor } from "@/lib/portal/signal";
 import { recordSession, type SessionEntry } from "@/lib/sessions";
 import { syncCompletion } from "@/lib/sync";
 import { trackEvent } from "@/lib/analytics";
@@ -71,15 +72,19 @@ interface Landed {
  */
 function Frame({
   domain,
+  noise = 0,
   children,
 }: {
   domain: string;
+  /** 0 → 1. Set from signalFor(); drives the whole surface via one token. */
+  noise?: number;
   children: React.ReactNode;
 }) {
   return (
     <div
       data-mode={domain}
-      className="dark relative mx-auto flex min-h-[70vh] w-full max-w-3xl flex-col items-center justify-center px-5 py-16 text-foreground"
+      className="signal dark relative mx-auto flex min-h-[70vh] w-full max-w-3xl flex-col items-center justify-center px-5 py-16 text-foreground"
+      style={{ "--signal-noise": noise } as React.CSSProperties}
     >
       <div
         className="portal-night grain pointer-events-none absolute -inset-x-48 -inset-y-24 -z-20"
@@ -294,11 +299,20 @@ export function PactCall() {
   );
 
   const domainKey = coords?.domain ?? "portal";
+  /*
+   * How clear the channel is. Frozen once a line lands this session: the
+   * return screen should show a cleared signal, not the state they arrived in.
+   */
+  const lastPractice = useClientValue(readLastPractice);
+  const signal = useMemo(
+    () => (landed ? signalFor(new Date().toDateString()) : signalFor(lastPractice)),
+    [lastPractice, landed],
+  );
 
   // Hydrating — null means "not read yet", never "absent".
   if (coordsRaw === null || raw === null) {
     return (
-      <Frame domain={domainKey}>
+      <Frame domain={domainKey} noise={signal.noise}>
         <div className="min-h-64" aria-hidden />
       </Frame>
     );
@@ -307,7 +321,7 @@ export function PactCall() {
   // Never tuned — there is no line to send yet.
   if (!coords || !arc) {
     return (
-      <Frame domain={domainKey}>
+      <Frame domain={domainKey} noise={signal.noise}>
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
           The line is closed
         </p>
@@ -327,7 +341,7 @@ export function PactCall() {
   // Generating: the wait is the theatre, same as the portal's scan.
   if (generating) {
     return (
-      <Frame domain={domainKey}>
+      <Frame domain={domainKey} noise={signal.noise}>
         <p className="aberrating text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
           Writing your twenty-one days&hellip;
         </p>
@@ -342,7 +356,7 @@ export function PactCall() {
   // First visit after tuning: how long do you want the line open?
   if (state === null) {
     return (
-      <Frame domain={domainKey}>
+      <Frame domain={domainKey} noise={signal.noise}>
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
           Before they start sending
         </p>
@@ -388,13 +402,13 @@ export function PactCall() {
   if (landed) {
     const finished = landed.completed >= landed.duration;
     return (
-      <Frame domain={domainKey}>
+      <Frame domain={domainKey} noise={signal.noise}>
         <Image
           src="/portal/doorway.webp"
           alt=""
           width={604}
           height={900}
-          className="doorway-closing h-40 w-auto object-contain mix-blend-screen"
+          className="signal-clearing doorway-closing h-40 w-auto object-contain mix-blend-screen"
           aria-hidden
         />
         <p className="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
@@ -437,12 +451,12 @@ export function PactCall() {
 
   // Already done today, or the arc is finished. `state` is only undefined
   // while hydrating, which returned above; narrow it so TS can follow.
-  if (state === undefined) return <Frame domain={domainKey}><div className="min-h-64" aria-hidden /></Frame>;
+  if (state === undefined) return <Frame domain={domainKey} noise={signal.noise}><div className="min-h-64" aria-hidden /></Frame>;
 
   if (isCompletedToday(state) || isFinished(state)) {
     const finished = isFinished(state);
     return (
-      <Frame domain={domainKey}>
+      <Frame domain={domainKey} noise={signal.noise}>
         <JourneyDots total={state.duration} completed={state.completedDays.length} />
         <h1 className="font-display mt-6 text-balance text-center text-3xl font-bold tracking-tight sm:text-4xl">
           {finished
@@ -467,7 +481,7 @@ export function PactCall() {
 
   /* ---- Today's line --------------------------------------------------- */
   return (
-    <Frame domain={domainKey}>
+    <Frame domain={domainKey} noise={signal.noise}>
       <SpeakTheLine
         key={line?.affirmation ?? "none"}
         affirmation={line?.affirmation ?? ""}
@@ -475,6 +489,11 @@ export function PactCall() {
         chord
         header={
           <div className="flex flex-col items-center gap-3">
+            {signal.note ? (
+              <p className="mb-1 max-w-sm text-pretty text-center text-sm text-muted-foreground">
+                {signal.note}
+              </p>
+            ) : null}
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-mode-2">
               {arc.source === "generated"
                 ? "Written for you alone"

@@ -551,6 +551,47 @@
   user-select: none;
 }
 
+/*
+ * Signal degradation. Driven by one token, --signal-noise (0 → 1), set inline
+ * from src/lib/portal/signal.ts, so the whole surface degrades together
+ * instead of each element inventing its own idea of "faint".
+ *
+ * It only ever adds atmosphere: nothing here hides text, blocks input, or
+ * reduces contrast on anything that has to be read. Someone coming back after
+ * two weeks away must be able to use the page perfectly.
+ */
+.signal {
+  --signal-noise: 0;
+}
+.signal .grain::after {
+  /* Baseline 0.16, rising to ~0.5 at full noise. */
+  opacity: calc(0.16 + (var(--signal-noise) * 0.34));
+}
+.signal .portal-field {
+  opacity: calc(1 - (var(--signal-noise) * 0.45));
+}
+.signal .transmission {
+  filter: saturate(calc(1.08 - (var(--signal-noise) * 0.55)))
+    contrast(calc(1.04 - (var(--signal-noise) * 0.12)))
+    blur(calc(var(--signal-noise) * 1.6px));
+}
+
+/*
+ * Restoring. The moment a line lands the channel clears — that payoff is the
+ * whole point of the mechanic, so it gets its own beat rather than a cut.
+ */
+@keyframes signal-clearing {
+  0% {
+    filter: saturate(0.5) blur(2px);
+  }
+  100% {
+    filter: none;
+  }
+}
+.signal-clearing {
+  animation: signal-clearing 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 .transmission-voice {
   letter-spacing: 0.06em;
   color: color-mix(in oklch, var(--foreground) 82%, var(--mode-accent-2));
@@ -599,6 +640,10 @@
     opacity: 1;
     filter: none;
     transform: none;
+  }
+  .signal-clearing {
+    animation: none;
+    filter: none;
   }
   .mic-listening {
     animation: none;
