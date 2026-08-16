@@ -424,10 +424,22 @@ face, smaller and letterspaced, so it reads as *voice* rather than UI text.
       reframed, 14-day duration retired, and the threshold ritual (doorway in, return out with
       the line). *Ships alone, costs nothing, proves the aesthetic.* **Live on production
       2026-08-15.**
-- [ ] **P3-M0 — Foundations.** `src/lib/supabase/server.ts` (schema-pinned); `0005_portal.sql`
-      with RLS on every table; Vercel Blob; `generation_jobs` + quota helper; `maxDuration`;
-      `images.remotePatterns`; refresh the stale `.env.example` (missing
-      `NEXT_PUBLIC_GOOGLE_CLIENT_ID`, PostHog, site URL — add `ANTHROPIC_API_KEY` and `FAL_KEY`).
+- [x] **P3-M0 — Foundations.** Shipped 2026-08-15, code side complete:
+      - `src/lib/supabase/server.ts` — schema-pinned admin client + `requireUser()`. Server
+        clients do **not** inherit the browser client's pin, so a fresh `createClient()` silently
+        talks to `public`, which is now First 100's territory.
+      - `supabase/migrations/0005_portal.sql` — five tables + `sessions.arc_day_id`, RLS enabled
+        on every one. **Not yet applied** (owner action, below).
+      - `src/lib/portal/jobs.ts` — job rows + the 24h quota check, failing closed.
+      - `src/lib/portal/blob.ts` — Vercel Blob storage and `deleteUserBlobs()`.
+      - `/api/account/delete` rewritten onto `requireUser()` and now purges blobs **before**
+        deleting the auth user.
+      - `next.config.ts` `images.remotePatterns` for the blob host (`domains` is gone in Next 16).
+      - `.env.example` refreshed — it was missing `NEXT_PUBLIC_GOOGLE_CLIENT_ID`, PostHog and the
+        site URL entirely; now also carries `BLOB_READ_WRITE_TOKEN`, `FAL_KEY`, `ANTHROPIC_API_KEY`.
+
+      `maxDuration` is deliberately **not** set yet: it belongs on the generation routes, which
+      arrive in M2. Setting it on routes that make no provider call would be noise.
 - [ ] **P3-M2 — Tune → reveal.** Coordinates form; consent + selfie upload; fal portrait job;
       source-selfie deletion; polling against the scanning sequence; the resolve. Repoint the
       home CTA from `/practice` to `/portal`.
@@ -481,6 +493,20 @@ a merge: promote the pre-revamp deployment in Vercel first (instant), then
 - **Quota proof:** exceed the daily cap and confirm a clean rejection with no provider call made.
 - **Reduced motion:** run the portal with the OS setting on; confirm no drift, no flicker, no
   aberration pulse, static reveal.
+
+## Blocked on the owner (M0 → M2 handoff)
+
+Code-side M0 is done; three things need the owner before M2 can be wired:
+
+1. **Apply `0005_portal.sql`.** From the Buffer_Alt repo:
+   `npm run sql ../saythiswithme/supabase/migrations/0005_portal.sql`. This repo has no Supabase
+   CLI link. Then run the **RLS proof** below — given 0004's blanket `anon` grant, verify rather
+   than assume.
+2. **Create a Vercel Blob store** and attach it to the project. `BLOB_READ_WRITE_TOKEN` is then
+   injected automatically; it is only set by hand for local dev.
+3. **`FAL_KEY`** from a fal account. Nothing photoreal can be generated without it.
+
+`ANTHROPIC_API_KEY` is not needed until M3.
 
 ## Open items for the owner
 
