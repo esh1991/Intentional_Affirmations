@@ -17,12 +17,15 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // The app hub moved from / to /practice; old ?mode= deep links (science
-      // page, shares) follow it. Query values pass through automatically.
+      // The browse hub retired at the M5 cutover. Anything that pointed at it
+      // — old shares, the PWA start_url on an installed device, bookmarks —
+      // lands on the portal instead of a 404.
+      { source: "/practice", destination: "/portal", permanent: false },
+      { source: "/practice/:path*", destination: "/portal", permanent: false },
       {
         source: "/",
         has: [{ type: "query", key: "mode" }],
-        destination: "/practice",
+        destination: "/portal",
         permanent: false,
       },
       // Old static-site URLs (indexed / linked externally)

@@ -14,7 +14,7 @@ export function WelcomeBack() {
   if (!streak) return null;
   return (
     <Link
-      href="/practice"
+      href="/pact"
       className="mt-6 inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-5 py-2.5 text-sm font-semibold shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
     >
       <Zap className="size-4 text-mode-2" fill="currentColor" aria-hidden />

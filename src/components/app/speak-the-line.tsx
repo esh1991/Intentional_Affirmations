@@ -18,7 +18,7 @@ import { useClientValue } from "@/hooks/use-client-value";
 /**
  * The speaking core: one line, said out loud, verified word by word.
  *
- * Extracted from PracticeScreen so `/practice` and `/pact` share one
+ * The speaking core, used by `/pact`. Extracted from the retired practice
  * implementation of the mechanic that is the whole product. It owns the mic,
  * the typing fallback and the highlighting — and deliberately owns **nothing**
  * about what success means. Stars, streaks, journeys and session logging stay

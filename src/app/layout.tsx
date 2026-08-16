@@ -20,20 +20,28 @@ const display = Bricolage_Grotesque({
   subsets: ["latin"],
 });
 
+/**
+ * Site metadata, rewritten at the M5 cutover.
+ *
+ * The previous copy promised to "rewire your brain" and to "speak your future
+ * into existence" — the two claims the honest-science rule exists to prevent,
+ * sitting on every page of the site and in every search result. It also sold a
+ * "4-in-1 tool", which no longer exists.
+ */
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.saythiswith.me"),
   title: {
-    default: "Say This With Me: Voice-Activated Mindset Engine",
+    default: "Say This With Me: talk to your future self",
     template: "%s — Say This With Me",
   },
   description:
-    "Rewire your brain with our Voice-Activated Mindset Engine. Speak new habits and identities into existence with daily affirmations for Powering Up, Breaking Habits, Priming for events, and Rewiring your thoughts.",
+    "Your future self isn't allowed to tell you what happens — only what to do. One line a day, read back out loud, verified word for word.",
   openGraph: {
     type: "website",
     url: "https://www.saythiswith.me",
-    title: "Say This With Me: Voice-Activated Mindset Engine",
+    title: "Say This With Me: talk to your future self",
     description:
-      "Speak your future into existence. A 4-in-1 tool to build habits, break patterns, and rewire your identity using your own voice.",
+      "A version of you who already made it can reach back, but only with instructions, never with answers. One line gets through a day.",
     images: ["/say-this-with-me-logo.png"],
   },
 };

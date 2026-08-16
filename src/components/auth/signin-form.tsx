@@ -56,7 +56,7 @@ export function SignInForm() {
               return;
             }
             trackEvent("sign_in", { method: "google" });
-            router.push("/practice");
+            router.push("/portal");
           },
         });
 
